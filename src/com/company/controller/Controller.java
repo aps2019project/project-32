@@ -1,5 +1,6 @@
 package com.company.controller;
 
+import com.company.controller.Exceptions.*;
 import com.company.controller.Menus.*;
 import com.company.models.Player;
 import com.company.view.Request;
@@ -32,8 +33,7 @@ public class Controller
         menus.add(ShopMenu.getInstance());
     }
 
-    public void run()
-    {
+    public void run() throws CardExistInDeckAlready, UserNameDidntExist, UserNameAlreadyExist, DeckIsFull, WrongPassword, WeekPassword, DeckNameAlreadyExist, CardNotFoundInCollection, InvalidDeck, DeckNotFound, DeckHasHeroAlready {
         currentMenu = EntryMenu.getInstance();
         activeMenus();
         while (true)

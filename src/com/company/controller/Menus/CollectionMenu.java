@@ -31,8 +31,7 @@ public class CollectionMenu implements AbstractMenu
     }
 
     @Override
-    public void selectOptionByCommand(String command) throws InvalidDeck, DeckNameAlreadyExist, CardNotFoundInCollection, DeckNotFound, DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready
-    {
+    public void selectOptionByCommand(String command) throws InvalidDeck, DeckNameAlreadyExist, CardNotFoundInCollection, DeckNotFound, DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready {
         if (command.matches("exit"))
         {
             Controller.getInstance().changeCurrentMenuTo(MainMenu.getInstance());
@@ -63,13 +62,15 @@ public class CollectionMenu implements AbstractMenu
         {
             String cardName = command.split(" ")[1];
             String deckName = command.split(" ")[4];
-            addCard(cardName, deckName);
+            int cardID = Controller.getInstance().getCurrentPlayer().getCollection().returnIdCardByName(cardName);
+            addCard(cardID, deckName);
         }
         else if (command.matches("remove \\w+ from deck \\w+"))
         {
             String cardName = command.split(" ")[1];
             String deckName = command.split(" ")[4];
-            removeCardFromDeck(cardName,deckName);
+            int cardID = Controller.getInstance().getCurrentPlayer().getCollection().returnIdCardByName(cardName);
+            removeCardFromDeck(cardID,deckName);
         }
         else if (command.matches("validate deck \\w+"))
         {
@@ -128,7 +129,9 @@ public class CollectionMenu implements AbstractMenu
     public void removeCardFromDeck(int cardID ,String deckName)
     {
         Player.Deck intendedDeck = Controller.getInstance().getCurrentPlayer().findDeck(deckName);
-        Card intendedCard = intendedDeck.removeCardFromDeck();
+
+        Card intendedCard = Controller.getInstance().getCurrentPlayer().getCollection().findCardInCollection(cardID);
+        intendedDeck.removeCardFromDeck(intendedCard);
 
     }
 
