@@ -1,26 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d5fe2418-431e-43d2-b220-dc9a4dcd3928" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/com/company/controller/Exceptions/CardIsExistInCollection.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/company/controller/Exceptions/CardNotFoundInShop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/company/controller/Exceptions/NotEnoughCash.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/controller/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/controller/Menus/AbstractMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/controller/Menus/AbstractMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/controller/Menus/BattleMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/controller/Menus/BattleMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/controller/Menus/ShopMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/controller/Menus/ShopMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/battle/Battle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/battle/Battle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/widget/Widget.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/widget/Widget.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/widget/cards/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/widget/cards/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/widget/cards/Spell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/widget/cards/Spell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/widget/cards/Usable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/widget/cards/Usable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/widget/cards/Warriors/Hero.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/widget/cards/Warriors/Hero.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/widget/cards/Warriors/Minion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/widget/cards/Warriors/Minion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/widget/cards/Warriors/Warrior.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/widget/cards/Warriors/Warrior.java" afterDir="false" />
-    </list>
+    <list default="true" id="d5fe2418-431e-43d2-b220-dc9a4dcd3928" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -52,8 +33,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/company/controller/Menus/ShopMenu.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="247" column="19" selection-start-line="247" selection-start-column="19" selection-end-line="247" selection-end-column="19" />
+            <state relative-caret-position="1028">
+              <caret line="250" lean-forward="true" selection-start-line="250" selection-end-line="250" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2479#2480#0" expanded="true" />
@@ -315,7 +296,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="width" value="1417" />
     <option name="height" value="1088" />
@@ -429,7 +410,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1556519057711" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1556519304069" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
@@ -494,12 +475,12 @@
       <workItem from="1556380491824" duration="9192000" />
       <workItem from="1556449331314" duration="917000" />
       <workItem from="1556458761877" duration="5584000" />
-      <workItem from="1556506559426" duration="9432000" />
+      <workItem from="1556506559426" duration="9668000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="123383000" />
+    <option name="totallyTimeSpent" value="123619000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-6" y="0" width="1133" height="870" extended-state="0" />
@@ -1097,8 +1078,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/company/controller/Menus/ShopMenu.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="247" column="19" selection-start-line="247" selection-start-column="19" selection-end-line="247" selection-end-column="19" />
+        <state relative-caret-position="1028">
+          <caret line="250" lean-forward="true" selection-start-line="250" selection-end-line="250" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2479#2480#0" expanded="true" />
