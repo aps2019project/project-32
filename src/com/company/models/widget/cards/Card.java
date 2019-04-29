@@ -9,6 +9,13 @@ public abstract class Card extends Widget
     protected int cash;
     protected int manaCost;
 
+    public Card(String name,int cash,int manaCost) {
+        super(name);
+        this.cash=cash;
+        this.manaCost = manaCost;
+    }
+
+
     public Player getOwnerPlayer()
     {
         return ownerPlayer;

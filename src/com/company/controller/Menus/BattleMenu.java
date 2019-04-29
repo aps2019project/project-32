@@ -59,7 +59,7 @@ public class BattleMenu implements AbstractMenu
     @Override
     public String help()
     {
-
+        return null;
     }
 
     @Override

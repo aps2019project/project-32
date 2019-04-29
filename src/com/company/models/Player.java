@@ -100,7 +100,9 @@ public class Player {
             else
                 return String.valueOf(intendedWidget.getID());
         }
-
+        public void addCardToCallection(Card card){
+            cards.add(card);
+        }
 
         public String toShowCollection() {
             return null;
@@ -459,6 +461,10 @@ public class Player {
 
     public Collection getCollection() {
         return collection;
+    }
+
+    public boolean equals(Player player){
+        return this.getName().equals(player.getName());
     }
 }
 

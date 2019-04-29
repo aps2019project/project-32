@@ -117,6 +117,10 @@ public abstract class Battle
             }
         }
 
+        public Widget[][] getMap() {
+            return map;
+        }
+
         public void addCollectibleItemOnMapRandomise()
         {
             ArrayList<Collectible> collectibles = new ArrayList<>(5);
@@ -173,6 +177,10 @@ public abstract class Battle
         {
             return playerHasTurn;
         }
+    }
+
+    public Map getBattleMap() {
+        return battleMap;
     }
 
     public void beginningBattleActions()

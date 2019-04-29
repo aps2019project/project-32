@@ -2,39 +2,40 @@ package com.company.models.widget;
 
 import com.company.models.Player;
 
-public abstract class Widget
-{
+public abstract class Widget {
     protected Player ownerPlayer;
     protected String name;
     protected int ID;
+    static private int IDCounter = 1;
 
-    public Player getOwnerPlayer()
-    {
+    public Widget(String name) {
+        this.name = name;
+        this.ID = IDCounter;
+        IDCounter++;
+    }
+
+
+    public Player getOwnerPlayer() {
         return ownerPlayer;
     }
 
-    public void setOwnerPlayer(Player ownerPlayer)
-    {
+    public void setOwnerPlayer(Player ownerPlayer) {
         this.ownerPlayer = ownerPlayer;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public int getID()
-    {
+    public int getID() {
         return ID;
     }
 
-    public void setID(int ID)
-    {
+    public void setID(int ID) {
         this.ID = ID;
     }
 }
