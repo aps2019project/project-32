@@ -3,55 +3,40 @@ package com.company.models.widget.cards;
 
 import com.company.models.Player;
 import com.company.models.widget.Widget;
-import com.company.models.widget.cards.Warriors.Minion;
 
 public abstract class Card extends Widget
 {
-    protected int cash;
+    protected int price;
     protected int manaCost;
-
-    public Card(String name,int cash,int manaCost) {
-        super(name);
-        this.cash=cash;
-        this.manaCost = manaCost;
-    }
-
 
     public Player getOwnerPlayer()
     {
         return ownerPlayer;
     }
-
     public void setOwnerPlayer(Player ownerPlayer)
     {
         this.ownerPlayer = ownerPlayer;
     }
-
     public String getName()
     {
         return name;
     }
-
     public void setName(String name)
     {
         this.name = name;
     }
-
-    public int getCash()
+    public int getPrice()
     {
-        return cash;
+        return price;
     }
-
-    public void setCash(int cash)
+    public void setPrice(int price)
     {
-        this.cash = cash;
+        this.price = price;
     }
-
     public int getID()
     {
         return ID;
     }
-
     public void setID(int ID)
     {
         this.ID = ID;

@@ -12,7 +12,7 @@ public abstract class Hero extends Warrior
     {
         return String.format("(Hero) Name : %s - AP : %d - HP : %d - Class : %s SellCost : %d\n",
                 this.name, this.power, this.health,
-                this.attackType.toString(), this.cash / 2);
+                this.attackType.toString(), this.price / 2);
     }
 
     public ArrayList<Flag> getCollectedFlags()

@@ -6,7 +6,7 @@ import com.company.models.Buff;
 import com.company.models.Player;
 import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
-import com.company.models.widget.cards.Spell;
+import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.items.Collectible;
 import com.company.models.widget.items.Item;
@@ -146,7 +146,7 @@ public abstract class Battle
             return null;
         }
 
-        public String toShowWidgetsInMap()
+        public String toShowMinionInMap()
         {
             String widgetsString = "";
             for (int i = 0; i < 9; i++)
@@ -180,8 +180,10 @@ public abstract class Battle
 
         public void changeCoolDownRemaining()
         {
-            firstPlayer.getMainDeck().getHero().getSpecialSpell().decreaseCoolDownRemaining();
-            secondPlayer.getMainDeck().getHero().getSpecialSpell().decreaseCoolDownRemaining();
+            for (Widget[] widgets : battleMap.map)
+                for (Widget widget : widgets)
+                    if (widget instanceof Warrior)
+                        ((Warrior) widget).getSpecialSpell().decreaseCoolDownRemaining();
         }
 
         public void changeTurn()
@@ -265,20 +267,23 @@ public abstract class Battle
         }
     }
 
-
     public void currentPlayerActions()
     {
 
     }
 
+    public String toShowEndGameDetails()
+    {
+        return new String(String.format("a"));
+    }
+
     public abstract void checkBattleResult();
 
-    public void putSpellCardOnMap(Spell spell, Position... positions)
+    public void putSpellCardOnMap(Spell spell, Position position)
     {
         if (spell.getOwnerPlayer().getPlayerCurrentMana() >= spell.getManaCost())
         {
-            spell.doEffect(positions);
-            spell.getOwnerPlayer().decreaseMana(spell.getManaCost());
+            spell.doEffectAction(battleMap, position);
         }
         else
         {
@@ -286,12 +291,12 @@ public abstract class Battle
         // do exception no mana
     }
 
-    public void doWarriorSpell(Warrior warrior, Position... positions)
+    public void doWarriorSpell(Warrior warrior, Position position)
     {
         if (warrior.getOwnerPlayer().getPlayerCurrentMana() >= warrior.getSpecialSpell().getManaCost()
                 && warrior.getSpecialSpell().getCoolDownRemaining() == 0)
         {
-            warrior.getSpecialSpell().doEffect(positions);
+            warrior.getSpecialSpell().doEffectAction(battleMap, position);
             warrior.getOwnerPlayer().decreaseMana(warrior.getSpecialSpell().getManaCost());
         }
         else if (true) // if no mana
@@ -319,6 +324,7 @@ public abstract class Battle
                     collect(intendedWarrior, destinationPosition);
                 widget = intendedWarrior;
             }
+
             if (widget instanceof Warrior)
             {
                 if (!widget.getOwnerPlayer().equals(intendedWarrior.getOwnerPlayer()))
@@ -356,7 +362,7 @@ public abstract class Battle
         {
             attacker.attack(defender);
             attacker.attackTiredAffect();
-            defender.defend(attacker);
+            if(defender.getSpecialSpell().)
             checkDeadActions(attacker, defender);
         }
         else

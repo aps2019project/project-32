@@ -1,16 +1,14 @@
 package com.company.models;
 
-import com.company.Position;
-import com.company.models.widget.cards.Spell;
+import com.company.models.widget.cards.spells.Spell;
 
 public abstract class Buff extends Spell
 {
     public Buff()
     {
-        super(0, 0);
+        super(0, 0,0,0,0,0);
     }
 
-    @Override
     public void doEffect(Position... positions)
     {
 

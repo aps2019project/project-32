@@ -17,6 +17,7 @@ public class Warrior extends Card implements Movable, Attackable, Defendable
     protected ArrayList<Spell> spellsOnWarrior;
 
 
+
     public Warrior()
     {
         super();

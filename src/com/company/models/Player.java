@@ -115,7 +115,7 @@ public class Player implements Serializable
 
         private String name;
         private Hero hero;
-        private Usable passiveItem;
+        private Spell passiveItem;
         private ArrayList<Card> cards = new ArrayList<>();
 
         public String toShowDeck()
@@ -395,7 +395,7 @@ public class Player implements Serializable
     {
 //         name;
 //         passWord;
-//         cash;
+//         price;
 //         winNumber;
 //         loseNumber;
         return String.format

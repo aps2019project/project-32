@@ -24,7 +24,7 @@ public class MainMenu implements AbstractMenu
             Controller.getInstance().changeCurrentMenuTo(CollectionMenu.getInstance());
 
         else if (command.matches("enter show leaderboard"))
-            Player.toShowLeaderBoard(); // send to view
+            toShowLeaderBoard(); // send to view
 
         else if (command.matches("enter shop"))
             Controller.getInstance().changeCurrentMenuTo(ShopMenu.getInstance());
@@ -56,5 +56,32 @@ public class MainMenu implements AbstractMenu
 
     private void save()
     {
+    }
+
+    private String toShowLeaderBoard()
+    {
+        ArrayList<Player> copiedPlayers = new ArrayList<>(Player.getPlayers());
+        copiedPlayers.sort(new CompareByWinNumber());
+
+        String leaderBoard = new String("");
+        int counter = 1;
+        for (Player copiedPlayer : copiedPlayers)
+        {
+            int playerWinNumber = copiedPlayer.getWinNumber();
+            leaderBoard = leaderBoard.concat(String.format
+                    ("%d- UserName: %s - Wins: %d\n", counter, copiedPlayer.getName(), copiedPlayer.getWinNumber()));
+            counter++;
+        }
+
+        return leaderBoard;
+    }
+
+    class CompareByWinNumber implements Comparator<Player>
+    {
+        @Override
+        public int compare(Player o1, Player o2)
+        {
+            return Integer.compare(o2.getWinNumber(), o1.getWinNumber());
+        }
     }
 }
