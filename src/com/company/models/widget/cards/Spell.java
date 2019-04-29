@@ -15,6 +15,13 @@ public abstract class Spell extends Card
         this.coolDownRemaining = 0;
     }
 
+    @Override
+    public String toShow()
+    {
+        return String.format
+                ("(Spell) - Name : %s – MP : %d - CoolDown : %d \n", this.name, this.manaCost, this.coolDown);
+    }
+
     public abstract void doEffect(Position... positions);
 
     public int getManaCost()

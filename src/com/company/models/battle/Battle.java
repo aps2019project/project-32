@@ -140,15 +140,35 @@ public abstract class Battle
         {
             for (Widget[] widgets : map)
                 for (Widget widget : widgets)
-                    if(widget.getID()==cardID)
+                    if (widget.getID() == cardID)
                         return widget;
 
             return null;
         }
 
-        public String toShowMinionInMap()
+        public String toShowWidgetsInMap()
         {
-            return null; // for in map and show all cards
+            String widgetsString = "";
+            for (int i = 0; i < 9; i++)
+                for (int j = 0; j < 5; j++)
+                {
+                    Widget widget = map[j][i];
+                    if (widget instanceof Warrior)
+                    {
+                        Warrior warrior = ((Warrior) widget);
+                        widgetsString = widgetsString.concat(String.format
+                                ("(Warrior) %s - Location (%d,%d)\n",
+                                        warrior.toShow(), i, j));
+                    }
+                    if (widget instanceof Item)
+                    {
+                        Item item = ((Item) widget);
+                        widgetsString = widgetsString.concat(String.format
+                                ("(Item) CardName : %s - Location (%d,%d)", item.getName(), i, j));
+                    }
+                }
+
+            return widgetsString;
         }
     }
 
@@ -251,11 +271,6 @@ public abstract class Battle
 
     }
 
-    public String toShowEndGameDetails()
-    {
-        return new String(String.format("a"));
-    }
-
     public abstract void checkBattleResult();
 
     public void putSpellCardOnMap(Spell spell, Position... positions)
@@ -304,7 +319,6 @@ public abstract class Battle
                     collect(intendedWarrior, destinationPosition);
                 widget = intendedWarrior;
             }
-
             if (widget instanceof Warrior)
             {
                 if (!widget.getOwnerPlayer().equals(intendedWarrior.getOwnerPlayer()))

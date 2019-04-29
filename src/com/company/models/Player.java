@@ -14,6 +14,7 @@ import com.company.models.widget.items.Item;
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 
 public class Player implements Serializable
@@ -98,7 +99,11 @@ public class Player implements Serializable
 
         public String toShowCollection()
         {
-            return null;
+            String collectionString = "";
+            for (Card card : collection.cards)
+                collectionString = collectionString.concat(card.toShow());
+
+            return collectionString;
         }
     }
 
@@ -116,7 +121,20 @@ public class Player implements Serializable
 
         public String toShowDeck()
         {
-            return null;
+            String deckString = "";
+            deckString = deckString.concat(String.format("DeckName : %s", this.name));
+            deckString = deckString.concat("Hero : \n");
+            deckString = deckString.concat(hero.toShow());
+
+            deckString = deckString.concat("PassiveItem : \n");
+            deckString = deckString.concat(passiveItem.toShow());
+
+            deckString = deckString.concat("Cards : \n");
+            int counter = 1;
+            for (Card card : cards)
+                deckString = deckString.concat(String.format("%d - %s\n", counter++, card.toShow()));
+
+            return deckString;
         }
 
         public void addCardToDeck(Card card) throws DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready
@@ -142,7 +160,6 @@ public class Player implements Serializable
                     throw new CardExistInDeckAlready();
                 else
                     hero = ((Hero) card);
-
         }
 
         public void removeCardFromDeck(int cardID) throws CardNotFound
@@ -153,7 +170,6 @@ public class Player implements Serializable
                 passiveItem = null;
             else if (!cards.removeIf(card -> card.getID() == cardID))
                 throw new CardNotFound();
-
         }
 
         public boolean isValidDeck()
@@ -266,12 +282,14 @@ public class Player implements Serializable
 
         public String toShowHand()
         {
-            return null;
-        }
+            String handString = "";
+            for (Card handCard : handCards)
+                handString = handString.concat(handCard.toShow());
 
-        public String toShowNextCard()
-        {
-            return null;
+            handString = handString.concat("NextCard : \n");
+            handString = handString.concat(nextCard.toShow());
+
+            return handString;
         }
 
         public ArrayList<Card> getHandCards()
@@ -359,14 +377,32 @@ public class Player implements Serializable
         this.playerCurrentMana -= value;
     }
 
-    public void toShowLeaderBoard()
+    public static String toShowLeaderBoard()
     {
+        String leaderBoardString = "";
+        ArrayList<Player> playersCopy = new ArrayList<>(players);
 
+        playersCopy.sort((o1, o2) -> o1.winNumber - o2.winNumber);
+
+        int counter = 1;
+        for (Player player : playersCopy)
+            leaderBoardString = leaderBoardString.concat
+                    (String.format("%d - UserName : %s - WinNumber : %d\n", counter++, player.name, player.winNumber));
+
+        return leaderBoardString;
     }
 
     public String toShowPlayer()
     {
-        return name;
+//         players
+//         name;
+//         passWord;
+//         cash;
+//         winNumber;
+//         loseNumber;
+        return String.format
+                ("UserName : %s - Cash : %d - WinNumber : %d - LoseNumber : %d",
+                        this.name, this.cash, this.winNumber, this.loseNumber);
     }
 
     public void save()
@@ -378,11 +414,6 @@ public class Player implements Serializable
     {
 
 
-    }
-
-    public String toShowHelp()
-    {
-        return null;
     }
 
     @Override

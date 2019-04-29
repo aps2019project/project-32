@@ -3,7 +3,7 @@ package com.company.models.widget.cards.Warriors;
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.Spell;
 
-public class Warrior extends Card implements Movable, Attackable, Defendable
+public abstract class Warrior extends Card implements Movable, Attackable, Defendable
 {
     protected int health;
     protected int power;
@@ -16,6 +16,13 @@ public class Warrior extends Card implements Movable, Attackable, Defendable
     public Warrior()
     {
         super();
+    }
+
+    @Override
+    public String toShow()
+    {
+        return String.format("(Warrior) CardName : %s - CardID : %d - Health : %d - Power : %d\n",
+                        this.getName(), this.getID(), this.getHealth(), this.getPower());
     }
 
     @Override

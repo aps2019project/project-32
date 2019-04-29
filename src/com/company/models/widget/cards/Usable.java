@@ -6,6 +6,12 @@ public class Usable extends Card
 {
     private int price;
 
+    @Override
+    public String toShow()
+    {
+        return String.format("(Passive) Name : %s - SellCost : %d\n", this.getName(), this.getCash() / 2);
+    }
+
     public void affectUsable(){
 
     }

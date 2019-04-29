@@ -8,9 +8,12 @@ public abstract class Hero extends Warrior
 {
     private ArrayList<Flag> collectedFlags = new ArrayList<>();
 
-    public abstract String toShowHero();
-
-
+    public String toShow()
+    {
+        return String.format("(Hero) Name : %s - AP : %d - HP : %d - Class : %s SellCost : %d\n",
+                this.name, this.power, this.health,
+                this.attackType.toString(), this.cash / 2);
+    }
 
     public ArrayList<Flag> getCollectedFlags()
     {

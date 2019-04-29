@@ -8,6 +8,8 @@ public abstract class Widget
     protected String name;
     protected int ID;
 
+    public abstract String toShow();
+
     public Player getOwnerPlayer()
     {
         return ownerPlayer;
