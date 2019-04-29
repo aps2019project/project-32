@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class Controller
 {
-
     private Controller()
     {
     }
@@ -33,13 +32,20 @@ public class Controller
         menus.add(ShopMenu.getInstance());
     }
 
-    public void run() throws CardExistInDeckAlready, UserNameDidntExist, UserNameAlreadyExist, DeckIsFull, WrongPassword, WeekPassword, DeckNameAlreadyExist, CardNotFoundInCollection, InvalidDeck, DeckNotFound, DeckHasHeroAlready {
+    public void run()
+    {
         currentMenu = EntryMenu.getInstance();
         activeMenus();
         while (true)
         {
             String command = Request.getInstance().getNewCommand();
-            currentMenu.selectOptionByCommand(command);
+            try
+            {
+                currentMenu.selectOptionByCommand(command);
+            }
+            catch (Exception e){
+                //catch all exception and send to view to show
+            }
         }
     }
 

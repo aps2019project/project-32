@@ -1,6 +1,5 @@
 package com.company.models.battle;
 
-import com.company.TimeHandler;
 import com.company.models.Player;
 
 public class DeadBattle extends Battle
@@ -26,5 +25,11 @@ public class DeadBattle extends Battle
             addBattleToBattleHistories(gameResault);
         }
         gameResault = GameResault.UnCertain;
+    }
+
+    @Override
+    public String toShowGameInfo()
+    {
+        return null;
     }
 }

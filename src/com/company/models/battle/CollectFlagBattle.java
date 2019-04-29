@@ -1,7 +1,5 @@
 package com.company.models.battle;
 
-import com.company.Position;
-import com.company.TimeHandler;
 import com.company.models.Player;
 
 public class CollectFlagBattle extends Battle
@@ -30,5 +28,11 @@ public class CollectFlagBattle extends Battle
             addBattleToBattleHistories(gameResault);
         }
         gameResault = GameResault.UnCertain;
+    }
+
+    @Override
+    public String toShowGameInfo()
+    {
+        return null;
     }
 }

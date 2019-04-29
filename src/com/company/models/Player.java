@@ -11,12 +11,15 @@ import com.company.models.widget.cards.Warriors.Minion;
 import com.company.models.widget.items.Flag;
 import com.company.models.widget.items.Item;
 
+import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Player {
-    public Player(String name, String passWord) {
+public class Player implements Serializable
+{
+    public Player(String name, String passWord)
+    {
         this.name = name;
         this.passWord = passWord;
         cash = 15000;
@@ -36,15 +39,18 @@ public class Player {
     private Deck mainDeck;
     private ArrayList<Card> copiedMainDeck;
 
-    public void addNewDeck(String name) {
+    public void addNewDeck(String name)
+    {
         decks.add(new Deck(name));
     }
 
-    public void removeDeck(String name) {
+    public void removeDeck(String name)
+    {
         decks.remove(findDeck(name));
     }
 
-    public Deck findDeck(String name) {
+    public Deck findDeck(String name)
+    {
         for (Deck deck : decks)
             if (deck.name.equals(name))
                 return deck;
@@ -52,7 +58,8 @@ public class Player {
         return null;
     }
 
-    public String toShowAllDecks() {
+    public String toShowAllDecks()
+    {
         String allDeck = Controller.getInstance().getCurrentPlayer().getMainDeck().getName();
         for (Player.Deck deck : Controller.getInstance().getCurrentPlayer().getDecks())
             allDeck = allDeck.concat(deck.toShowDeck());
@@ -67,10 +74,12 @@ public class Player {
     private int playerManaSpace;
     private int playerCurrentMana;
 
-    public class Collection {
+    public class Collection
+    {
         ArrayList<Card> cards = new ArrayList<>();
 
-        public Card findCardInCollection(int cardID) {
+        public Card findCardInCollection(int cardID)
+        {
             for (Card card : cards)
                 if (card.getID() == cardID)
                     return card;
@@ -78,37 +87,25 @@ public class Player {
             return null;
         }
 
-        public Card findCardInCollection(String cardOrItemName) {
-            for (Card card : cards)
-                if (card.getName().equals(cardOrItemName))
-                    return card;
-
-            return null;
-        }
-
-        public int returnIdCardByName(String cardOrItemName) {
-            for (Card card : cards)
-                if (card.getName().equals(cardOrItemName))
-                    return card.getID();
-            return -1;
-        }
-
-        public String toShowSearchResult(String cardOrItemName) throws CardNotFoundInCollection {
-            Widget intendedWidget = findCardInCollection(cardOrItemName);
-            if (Controller.getInstance().getCurrentPlayer().getCollection().findCardInCollection(cardOrItemName) == null)
-                throw new CardNotFoundInCollection();
+        public String toShowSearchResult(String cardOrItemName) throws CardNotFound
+        {
+            Widget intendedWidget = findCardInCollection(Integer.parseInt(cardOrItemName));
+            if (intendedWidget == null)
+                throw new CardNotFound();
             else
                 return String.valueOf(intendedWidget.getID());
         }
 
-
-        public String toShowCollection() {
+        public String toShowCollection()
+        {
             return null;
         }
     }
 
-    public class Deck {
-        private Deck(String name) {
+    public class Deck
+    {
+        private Deck(String name)
+        {
             this.name = name;
         }
 
@@ -117,11 +114,13 @@ public class Player {
         private Usable passiveItem;
         private ArrayList<Card> cards = new ArrayList<>();
 
-        public String toShowDeck() {
+        public String toShowDeck()
+        {
             return null;
         }
 
-        public void addCardToDeck(Card card) throws DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready {
+        public void addCardToDeck(Card card) throws DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready
+        {
             if (card instanceof Spell || card instanceof Minion)
                 if (cards.size() >= 20)
                     throw new DeckIsFull();
@@ -146,60 +145,74 @@ public class Player {
 
         }
 
-        public void removeCardFromDeck(Card card) {
-            cards.remove(card);
-            if (card instanceof Hero)
+        public void removeCardFromDeck(int cardID) throws CardNotFound
+        {
+            if (hero.getID() == cardID)
                 hero = null;
-            else if (card instanceof Usable)
+            else if (passiveItem.getID() == cardID)
                 passiveItem = null;
+            else if (!cards.removeIf(card -> card.getID() == cardID))
+                throw new CardNotFound();
+
         }
 
-        public boolean isValidDeck() {
+        public boolean isValidDeck()
+        {
             return hero != null && cards.size() == 20;
         }
 
-        public Hero getHero() {
+        public Hero getHero()
+        {
             return hero;
         }
 
-        public void setHero(Hero hero) {
+        public void setHero(Hero hero)
+        {
             this.hero = hero;
         }
 
-        public Usable getPassiveItem() {
+        public Usable getPassiveItem()
+        {
             return passiveItem;
         }
 
-        public void setPassiveItem(Usable passiveItem) {
+        public void setPassiveItem(Usable passiveItem)
+        {
             this.passiveItem = passiveItem;
         }
 
-        public String getName() {
+        public String getName()
+        {
             return name;
         }
 
-        public void setName(String name) {
+        public void setName(String name)
+        {
             this.name = name;
         }
 
-        public ArrayList<Card> getCards() {
+        public ArrayList<Card> getCards()
+        {
             return cards;
         }
     }
 
 
-    public class Hand {
+    public class Hand
+    {
         private ArrayList<Card> handCards = new ArrayList<>();
         private ArrayList<Item> collectedItems = new ArrayList<>();
         private Flag keepModeFlag;
         private Card nextCard;
         private SecureRandom randomMaker = new SecureRandom();
 
-        public void clearCollectedItemsAfterGame() {
+        public void clearCollectedItemsAfterGame()
+        {
             collectedItems.clear();
         }
 
-        public int getFlagNumbersInCollectedItems() {
+        public int getFlagNumbersInCollectedItems()
+        {
             int counter = 0;
             for (Item collectedItem : collectedItems)
                 if (collectedItem instanceof Flag)
@@ -208,12 +221,15 @@ public class Player {
             return counter;
         }
 
-        public void makeRandomiseHand() {
+        public void makeRandomiseHand()
+        {
             int counter = 0;
             int randomNumber;
-            while (counter != 5) {
+            while (counter != 5)
+            {
                 randomNumber = randomMaker.nextInt(20);
-                if (copiedMainDeck.get(randomNumber) != null) {
+                if (copiedMainDeck.get(randomNumber) != null)
+                {
                     handCards.add(copiedMainDeck.get(randomNumber));
                     copiedMainDeck.remove(randomNumber);
                     counter++;
@@ -221,11 +237,14 @@ public class Player {
             }
         }
 
-        private void setNextCardInHand() {
+        private void setNextCardInHand()
+        {
             int randomNumber;
-            while (true) {
+            while (true)
+            {
                 randomNumber = randomMaker.nextInt(20);
-                if (copiedMainDeck.get(randomNumber) != null) {
+                if (copiedMainDeck.get(randomNumber) != null)
+                {
                     nextCard = copiedMainDeck.get(randomNumber);
                     copiedMainDeck.remove(randomNumber);
                     break;
@@ -233,7 +252,8 @@ public class Player {
             }
         }
 
-        public Card getCardFromHandActions(Card intendedCard) {
+        public Card getCardFromHandActions(Card intendedCard)
+        {
             for (Card handCard : handCards)
                 if (handCard.equals(intendedCard))
                     return handCard;
@@ -244,220 +264,282 @@ public class Player {
             return null;
         }
 
-        public ArrayList<Card> getHandCards() {
+        public String toShowHand()
+        {
+            return null;
+        }
+
+        public String toShowNextCard()
+        {
+            return null;
+        }
+
+        public ArrayList<Card> getHandCards()
+        {
             return handCards;
         }
 
-        public void setHandCards(ArrayList<Card> handCards) {
+        public void setHandCards(ArrayList<Card> handCards)
+        {
             this.handCards = handCards;
         }
 
-        public Card getNextCard() {
+        public Card getNextCard()
+        {
             return nextCard;
         }
 
-        public void setNextCard(Card nextCard) {
+        public void setNextCard(Card nextCard)
+        {
             this.nextCard = nextCard;
         }
 
-        public ArrayList<Item> getCollectedItems() {
+        public ArrayList<Item> getCollectedItems()
+        {
             return collectedItems;
         }
 
-        public void setCollectedItems(ArrayList<Item> collectedItems) {
+        public void setCollectedItems(ArrayList<Item> collectedItems)
+        {
             this.collectedItems = collectedItems;
         }
 
-        public Flag getKeepModeFlag() {
+        public Flag getKeepModeFlag()
+        {
             return keepModeFlag;
         }
 
-        public void setKeepModeFlag(Flag keepModeFlag) {
+        public void setKeepModeFlag(Flag keepModeFlag)
+        {
             this.keepModeFlag = keepModeFlag;
         }
     }
 
-    public class GraveYard {
+    public class GraveYard
+    {
         private ArrayList<Card> graveYard = new ArrayList<>();
 
-        public ArrayList<Card> getGraveYardList() {
+        public ArrayList<Card> getGraveYardList()
+        {
             return graveYard;
         }
 
-        public void setGraveYard(ArrayList<Card> graveYard) {
+        public void setGraveYard(ArrayList<Card> graveYard)
+        {
             this.graveYard = graveYard;
         }
     }
 
-    public class BattleHistory {
+    public class BattleHistory
+    {
         Player opponent;
         boolean hasWin;
         Date battleTime;
 
-        private BattleHistory(Player opponent, boolean thisPlayerHasWin, Date battleTime) {
+        private BattleHistory(Player opponent, boolean thisPlayerHasWin, Date battleTime)
+        {
             this.opponent = opponent;
             this.hasWin = thisPlayerHasWin;
             this.battleTime = battleTime;
         }
     }
 
-    public void addGameResultToBattleHistories(Player opponent, boolean hasWin, Date battleTime) {
+    public void addGameResultToBattleHistories(Player opponent, boolean hasWin, Date battleTime)
+    {
         this.battleHistories.add(new BattleHistory(opponent, hasWin, battleTime));
     }
 
-    public Item selectItem(int ID) {
+    public Item selectItem(int ID)
+    {
         return null;
     }
 
-    public void decreaseMana(int value) {
+    public void decreaseMana(int value)
+    {
         this.playerCurrentMana -= value;
     }
 
-    public void toShowLeaderBoard() {
+    public void toShowLeaderBoard()
+    {
 
     }
 
-    public String toShowPlayer() {
+    public String toShowPlayer()
+    {
         return name;
     }
 
-    public void save() {
+    public void save()
+    {
 
     }
 
-    public void logout() {
+    public void logout()
+    {
 
 
     }
 
-    public String toShowHelp() {
+    public String toShowHelp()
+    {
         return null;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (obj instanceof Player)
             return ((Player) obj).name.equals(this.name);
         else return false;
     }
 
-    public static ArrayList<Player> getPlayers() {
+    public static ArrayList<Player> getPlayers()
+    {
         return players;
     }
 
-    public static void setPlayers(ArrayList<Player> players) {
+    public static void setPlayers(ArrayList<Player> players)
+    {
         Player.players = players;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
     }
 
-    public String getPassWord() {
+    public String getPassWord()
+    {
         return passWord;
     }
 
-    public void setPassWord(String passWord) {
+    public void setPassWord(String passWord)
+    {
         this.passWord = passWord;
     }
 
-    public int getCash() {
+    public int getCash()
+    {
         return cash;
     }
 
-    public void setCash(int cash) {
+    public void setCash(int cash)
+    {
         this.cash = cash;
     }
 
-    public int getWinNumber() {
+    public int getWinNumber()
+    {
         return winNumber;
     }
 
-    public void setWinNumber(int winNumber) {
+    public void setWinNumber(int winNumber)
+    {
         this.winNumber = winNumber;
     }
 
-    public int getLoseNumber() {
+    public int getLoseNumber()
+    {
         return loseNumber;
     }
 
-    public void setLoseNumber(int loseNumber) {
+    public void setLoseNumber(int loseNumber)
+    {
         this.loseNumber = loseNumber;
     }
 
-    public Deck getMainDeck() {
+    public Deck getMainDeck()
+    {
         return mainDeck;
     }
 
-    public void setMainDeck(Deck mainDeck) {
+    public void setMainDeck(Deck mainDeck)
+    {
         this.mainDeck = mainDeck;
     }
 
-    public ArrayList<Card> getCopiedMainDeck() {
+    public ArrayList<Card> getCopiedMainDeck()
+    {
         return copiedMainDeck;
     }
 
-    public void setCopiedMainDeck(ArrayList<Card> copiedMainDeck) {
+    public void setCopiedMainDeck(ArrayList<Card> copiedMainDeck)
+    {
         this.copiedMainDeck = copiedMainDeck;
     }
 
-    public ArrayList<Deck> getDecks() {
+    public ArrayList<Deck> getDecks()
+    {
         return decks;
     }
 
-    public Hand getPlayerHand() {
+    public Hand getPlayerHand()
+    {
         return playerHand;
     }
 
-    public void setPlayerHand(Hand playerHand) {
+    public void setPlayerHand(Hand playerHand)
+    {
         this.playerHand = playerHand;
     }
 
-    public GraveYard getGraveYard() {
+    public GraveYard getGraveYard()
+    {
         return graveYard;
     }
 
-    public void setGraveYard(GraveYard graveYard) {
+    public void setGraveYard(GraveYard graveYard)
+    {
         this.graveYard = graveYard;
     }
 
-    public ArrayList<BattleHistory> getBattleHistories() {
+    public ArrayList<BattleHistory> getBattleHistories()
+    {
         return battleHistories;
     }
 
-    public void setBattleHistories(ArrayList<BattleHistory> battleHistories) {
+    public void setBattleHistories(ArrayList<BattleHistory> battleHistories)
+    {
         this.battleHistories = battleHistories;
     }
 
-    public int getPlayerManaSpace() {
+    public int getPlayerManaSpace()
+    {
         return playerManaSpace;
     }
 
-    public void setPlayerManaSpace(int playerManaSpace) {
+    public void setPlayerManaSpace(int playerManaSpace)
+    {
         this.playerManaSpace = playerManaSpace;
     }
 
-    public int getPlayerCurrentMana() {
+    public int getPlayerCurrentMana()
+    {
         return playerCurrentMana;
     }
 
-    public void setPlayerCurrentMana(int playerCurrentMana) {
+    public void setPlayerCurrentMana(int playerCurrentMana)
+    {
         this.playerCurrentMana = playerCurrentMana;
     }
 
-    public void setCollection(Collection collection) {
+    public void setCollection(Collection collection)
+    {
         this.collection = collection;
     }
 
-    public void setDecks(ArrayList<Deck> decks) {
+    public void setDecks(ArrayList<Deck> decks)
+    {
         this.decks = decks;
     }
 
-    public Collection getCollection() {
+    public Collection getCollection()
+    {
         return collection;
     }
 }

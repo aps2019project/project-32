@@ -1,7 +1,7 @@
 package com.company.models.battle;
 
-import com.company.Position;
-import com.company.TimeHandler;
+import com.company.models.Position;
+import com.company.models.TimeHandler;
 import com.company.models.Buff;
 import com.company.models.Player;
 import com.company.models.widget.Widget;
@@ -134,6 +134,21 @@ public abstract class Battle
                 for (Widget card : cards)
                     if (intendedDeadCard.equals(card))
                         card = null;
+        }
+
+        public Widget selectCard(int cardID)
+        {
+            for (Widget[] widgets : map)
+                for (Widget widget : widgets)
+                    if(widget.getID()==cardID)
+                        return widget;
+
+            return null;
+        }
+
+        public String toShowMinionInMap()
+        {
+            return null; // for in map and show all cards
         }
     }
 
@@ -344,4 +359,66 @@ public abstract class Battle
                 battleMap.removeDeadCardFromMap(warrior);
             }
     }
+
+    public BattleMode getBattleMode()
+    {
+        return battleMode;
+    }
+
+    public void setBattleMode(BattleMode battleMode)
+    {
+        this.battleMode = battleMode;
+    }
+
+    public Map getBattleMap()
+    {
+        return battleMap;
+    }
+
+    public void setBattleMap(Map battleMap)
+    {
+        this.battleMap = battleMap;
+    }
+
+    public TurnHandler getBattleTurnHandler()
+    {
+        return battleTurnHandler;
+    }
+
+    public void setBattleTurnHandler(TurnHandler battleTurnHandler)
+    {
+        this.battleTurnHandler = battleTurnHandler;
+    }
+
+    public GameResault getGameResault()
+    {
+        return gameResault;
+    }
+
+    public void setGameResault(GameResault gameResault)
+    {
+        this.gameResault = gameResault;
+    }
+
+    public Player getFirstPlayer()
+    {
+        return firstPlayer;
+    }
+
+    public void setFirstPlayer(Player firstPlayer)
+    {
+        this.firstPlayer = firstPlayer;
+    }
+
+    public Player getSecondPlayer()
+    {
+        return secondPlayer;
+    }
+
+    public void setSecondPlayer(Player secondPlayer)
+    {
+        this.secondPlayer = secondPlayer;
+    }
+
+    public abstract String toShowGameInfo();
 }

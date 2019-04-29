@@ -1,8 +1,6 @@
 package com.company.models.widget.cards;
 
-import com.company.Position;
-
-import java.util.ArrayList;
+import com.company.models.Position;
 
 public abstract class Spell extends Card
 {

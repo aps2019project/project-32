@@ -31,24 +31,16 @@ public class EntryMenu implements AbstractMenu
     public void selectOptionByCommand(String command) throws WrongPassword, UserNameDidntExist, WeekPassword, UserNameAlreadyExist
     {
         if (command.matches("create account \\w+"))
-        {
-            String userName = command.split(" ")[2];
-            entryMenuInstance.register(userName);
-        }
+            entryMenuInstance.register(command);
+
         else if (command.matches("login \\w+"))
-        {
-            String userName = command.split(" ")[1];
-            entryMenuInstance.login(userName);
-        }
+            entryMenuInstance.login(command);
+
         else if (command.matches("help"))
-        {
-            // sendToViewToShow
-            entryMenuInstance.help();
-        }
+            entryMenuInstance.help(); //sendToView
+
         else if (command.matches("exit"))
-        {
             System.exit(0);
-        }
     }
 
     @Override
@@ -63,8 +55,9 @@ public class EntryMenu implements AbstractMenu
         return null;
     }
 
-    private void register(String userName) throws UserNameAlreadyExist, WeekPassword
+    private void register(String command) throws UserNameAlreadyExist, WeekPassword
     {
+        String userName = command.split(" ")[2];
         boolean userNameHasUsed = false;
         for (Player player : Player.getPlayers())
             if (player.getName().equals(userName))
@@ -102,8 +95,9 @@ public class EntryMenu implements AbstractMenu
     }
 
 
-    private void login(String userName) throws WrongPassword, UserNameDidntExist
+    private void login(String command) throws WrongPassword, UserNameDidntExist
     {
+        String userName = command.split(" ")[1];
         boolean playerFoundWithThisName = false;
         for (Player player : Player.getPlayers())
             if (player.getName().equals(userName))

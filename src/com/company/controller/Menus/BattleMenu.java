@@ -1,16 +1,12 @@
 package com.company.controller.Menus;
 
-import com.company.Position;
+import com.company.models.Position;
 import com.company.models.battle.Battle;
+import com.company.models.widget.Widget;
 
 public class BattleMenu implements AbstractMenu
 {
-    public enum Commands
-    {
-
-    }
-
-    private Battle battle;
+    private static Battle battle;
 
     private BattleMenu()
     {
@@ -23,9 +19,9 @@ public class BattleMenu implements AbstractMenu
         return battleMenuInstance;
     }
 
-    public void setBattle(Battle battle)
+    public static void setBattle(Battle battle)
     {
-        this.battle = battle;
+        BattleMenu.battle = battle;
     }
 
     @Override
@@ -37,29 +33,36 @@ public class BattleMenu implements AbstractMenu
     @Override
     public void selectOptionByCommand(String command)
     {
-        if(command.matches("game info")){
+        if (command.matches("game info"))
+        {
 
-        }else if(command.matches("show my minions")){
+        }
+        else if (command.matches("show my minions"))
+        {
 
-        }else if(command.matches("show opponent minions")){
+        }
+        else if (command.matches("show opponent minions"))
+        {
 
-        }else if(command.matches("show card info \\d+")){
+        }
+        else if (command.matches("show card info \\d+"))
+        {
+            int cardID = Integer.parseInt(command.split(" ")[3]);
 
-        }else if(command.matches("select \\d+")){
-
+        }
+        else if (command.matches("select \\d+"))
+        {
             // barrasi shavad item ast ya warrior
         }
-
 
 
     }
 
 
-
     @Override
     public String help()
     {
-
+        return null;
     }
 
     @Override
@@ -69,34 +72,35 @@ public class BattleMenu implements AbstractMenu
     }
 
 
-    public void toShowGameInfo()
+    public String toShowGameInfo()
     {
-
+        return battle.toShowGameInfo(); // send to view
     }
 
-    public void toShowMinion()
+    public String toShowMinion()
     {
-
+        return battle.getBattleMap().toShowMinionInMap();
     }
 
-    public void toShowHand()
+    public String toShowCardInfo(int cardID)
     {
-
+        Widget widget = battle.getBattleMap().selectCard(cardID);
+        return null; // show card info
     }
 
-    public void toShowNextCard()
+    public String toShowHand()
     {
-
+        return battle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand(); //send to view
     }
 
-    public void toShowEndGameInfo()
+    public String toShowNextCard()
     {
-
+        return battle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowNextCard();
     }
 
-    public void selectUnit(int cardID)
+    public String toShowEndGameInfo()
     {
-
+        return battle.toShowEndGameDetails();
     }
 
     public void moveTo(Position destinationPosition)

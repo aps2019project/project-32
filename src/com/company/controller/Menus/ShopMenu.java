@@ -1,5 +1,6 @@
 package com.company.controller.Menus;
 
+import com.company.controller.Controller;
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.items.Item;
 
@@ -35,27 +36,28 @@ public class ShopMenu implements AbstractMenu
     {
         if (command.matches("exit"))
         {
-
+            Controller.getInstance().changeCurrentMenuTo(MainMenu.getInstance());
         }
-        else if (command.matches("search \\w+ \\w+"))
+        else if (command.matches("search \\w+ ")) //search in shop
         {
 
         }
-        else if (command.matches("search collection \\w+ \\w+"))
+        else if (command.matches("search collection \\w+")) // search in collection
         {
 
         }
-        else if (command.matches("buy \\w+ \\w+"))
+        else if (command.matches("buy \\w+"))
         {
+
 
         }
         else if (command.matches("sell \\w+ \\w+"))
         {
 
         }
-        else if (command.matches("show"))
+        else if (command.matches("show collection"))
         {
-
+            Controller.getInstance().getCurrentPlayer().getCollection().toShowCollection(); //send to view
         }
         else if (command.matches("help"))
         {
@@ -75,7 +77,7 @@ public class ShopMenu implements AbstractMenu
         return null;
     }
 
-    public void buyCard()
+    public void buyCard(String command)
     {
 
     }
@@ -85,7 +87,7 @@ public class ShopMenu implements AbstractMenu
 
     }
 
-    public Card searchCard(String cardName)
+    public String searchCard(String cardName)
     {
         return null;
     }
