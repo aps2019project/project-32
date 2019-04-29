@@ -3,7 +3,7 @@ package com.company.models.widget.cards.Warriors;
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.Spell;
 
-public class Warrior extends Card implements Movable, Attackable, Defendable
+public abstract class Warrior extends Card implements Movable, Attackable, Defendable
 {
     protected int health;
     protected int power;
@@ -12,23 +12,36 @@ public class Warrior extends Card implements Movable, Attackable, Defendable
     protected Spell specialSpell;
     protected boolean canMove;
     protected boolean canAttack;
+    protected int numberOfTurnsDisarmed;
+    protected int numberOfFieryTurn;
+    protected int numberOfPoisonTurn;
+    protected int numberOfHolyTurn;
 
-    public Warrior()
+    public Warrior(String name,int health,int power,int cash,int manaCost,AttackType attackType)
     {
-        super();
+        super(name,cash,manaCost);
+        this.health = health;
+        this.power = power;
+        this.attackType = attackType;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getNumberOfTurnsDisarmed() {
+        return numberOfTurnsDisarmed;
+    }
+
+    public void setNumberOfTurnsDisarmed(int numberOfTurnsDisarmed) {
+        this.numberOfTurnsDisarmed = numberOfTurnsDisarmed;
     }
 
     @Override
-    public void attack(Card defender)
-    {
-
-    }
+    public abstract void attack(Card defender);
 
     @Override
-    public void defend(Card attacker)
-    {
-
-    }
+    public abstract void defend(Card attacker);
 
     @Override
     public void move()
@@ -136,5 +149,12 @@ public class Warrior extends Card implements Movable, Attackable, Defendable
     public void setCanAttack(boolean canAttack)
     {
         this.canAttack = canAttack;
+    }
+    public void increasePower(int number){
+        this.setPower(this.getPower()+number);
+    }
+
+    public void decreasePower(int number){
+        this.power-=number;
     }
 }
