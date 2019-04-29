@@ -54,6 +54,8 @@ public class BattleMenu implements AbstractMenu
         {
             // barrasi shavad item ast ya warrior
         }
+
+
     }
 
 
@@ -77,7 +79,7 @@ public class BattleMenu implements AbstractMenu
 
     public String toShowMinion()
     {
-        return battle.getBattleMap().toShowWidgetsInMap();
+        return battle.getBattleMap().toShowMinionInMap();
     }
 
     public String toShowCardInfo(int cardID)

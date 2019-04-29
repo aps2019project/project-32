@@ -1,5 +1,6 @@
 package com.company.models.battle;
 
+import com.company.Position;
 import com.company.models.Player;
 import com.company.models.widget.items.Flag;
 
@@ -23,12 +24,6 @@ public class KeepFlagBattle extends Battle
     {
 
         //use addBattleToBattleHistories(gameResault);
-    }
-
-    @Override
-    public String toShowGameInfo()
-    {
-        return null;
     }
 
     public void dropFlagAfterDeath()

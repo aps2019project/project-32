@@ -4,7 +4,7 @@ import com.company.controller.Controller;
 import com.company.controller.Exceptions.*;
 import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
-import com.company.models.widget.cards.Spell;
+import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.Usable;
 import com.company.models.widget.cards.Warriors.Hero;
 import com.company.models.widget.cards.Warriors.Minion;
@@ -14,7 +14,6 @@ import com.company.models.widget.items.Item;
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 
 public class Player implements Serializable
@@ -160,6 +159,7 @@ public class Player implements Serializable
                     throw new CardExistInDeckAlready();
                 else
                     hero = ((Hero) card);
+
         }
 
         public void removeCardFromDeck(int cardID) throws CardNotFound
@@ -170,6 +170,7 @@ public class Player implements Serializable
                 passiveItem = null;
             else if (!cards.removeIf(card -> card.getID() == cardID))
                 throw new CardNotFound();
+
         }
 
         public boolean isValidDeck()
@@ -377,7 +378,7 @@ public class Player implements Serializable
         this.playerCurrentMana -= value;
     }
 
-    public static String toShowLeaderBoard()
+    public void toShowLeaderBoard()
     {
         String leaderBoardString = "";
         ArrayList<Player> playersCopy = new ArrayList<>(players);
@@ -388,13 +389,10 @@ public class Player implements Serializable
         for (Player player : playersCopy)
             leaderBoardString = leaderBoardString.concat
                     (String.format("%d - UserName : %s - WinNumber : %d\n", counter++, player.name, player.winNumber));
-
-        return leaderBoardString;
     }
 
     public String toShowPlayer()
     {
-//         players
 //         name;
 //         passWord;
 //         cash;

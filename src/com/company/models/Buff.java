@@ -1,5 +1,6 @@
 package com.company.models;
 
+import com.company.Position;
 import com.company.models.widget.cards.Spell;
 
 public abstract class Buff extends Spell

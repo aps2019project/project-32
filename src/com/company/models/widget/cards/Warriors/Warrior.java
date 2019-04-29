@@ -1,9 +1,11 @@
 package com.company.models.widget.cards.Warriors;
 
 import com.company.models.widget.cards.Card;
-import com.company.models.widget.cards.Spell;
+import com.company.models.widget.cards.spells.Spell;
 
-public abstract class Warrior extends Card implements Movable, Attackable, Defendable
+import java.util.ArrayList;
+
+public class Warrior extends Card implements Movable, Attackable, Defendable
 {
     protected int health;
     protected int power;
@@ -12,6 +14,8 @@ public abstract class Warrior extends Card implements Movable, Attackable, Defen
     protected Spell specialSpell;
     protected boolean canMove;
     protected boolean canAttack;
+    protected ArrayList<Spell> spellsOnWarrior;
+
 
     public Warrior()
     {
@@ -22,7 +26,7 @@ public abstract class Warrior extends Card implements Movable, Attackable, Defen
     public String toShow()
     {
         return String.format("(Warrior) CardName : %s - CardID : %d - Health : %d - Power : %d\n",
-                        this.getName(), this.getID(), this.getHealth(), this.getPower());
+                this.getName(), this.getID(), this.getHealth(), this.getPower());
     }
 
     @Override

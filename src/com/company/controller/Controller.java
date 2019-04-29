@@ -3,12 +3,14 @@ package com.company.controller;
 import com.company.controller.Exceptions.*;
 import com.company.controller.Menus.*;
 import com.company.models.Player;
+import com.company.models.battle.Battle;
 import com.company.view.Request;
 
 import java.util.ArrayList;
 
 public class Controller
 {
+
     private Controller()
     {
     }
@@ -20,6 +22,7 @@ public class Controller
 
     private AbstractMenu currentMenu;
     private Player currentPlayer;
+    private Battle currentBattle;
     private ArrayList<AbstractMenu> menus = new ArrayList<>();
 
     private void activeMenus()
@@ -32,20 +35,13 @@ public class Controller
         menus.add(ShopMenu.getInstance());
     }
 
-    public void run()
-    {
+    public void run() throws CardExistInDeckAlready, UserNameDidntExist, UserNameAlreadyExist, DeckIsFull, WrongPassword, WeekPassword, DeckNameAlreadyExist, CardNotFoundInCollection, InvalidDeck, DeckNotFound, DeckHasHeroAlready, DeckHasPassiveAlready {
         currentMenu = EntryMenu.getInstance();
         activeMenus();
         while (true)
         {
             String command = Request.getInstance().getNewCommand();
-            try
-            {
-                currentMenu.selectOptionByCommand(command);
-            }
-            catch (Exception e){
-                //catch all exception and send to view to show
-            }
+            currentMenu.selectOptionByCommand(command);
         }
     }
 
@@ -58,6 +54,10 @@ public class Controller
     {
         currentMenu.help(); //send this to view
         this.currentMenu = currentMenu;
+    }
+
+    public Battle getCurrentBattle() {
+        return currentBattle;
     }
 
     public Player getCurrentPlayer()
