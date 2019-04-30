@@ -1,12 +1,9 @@
-package com.company.controller.Menus;
+package com.company.controller.Menus.battlemenus;
+
+import com.company.controller.Menus.AbstractMenu;
 
 public class GraveYardMenu implements AbstractMenu
 {
-    public enum Commands
-    {
-
-    }
-
     private GraveYardMenu()
     {
     }

@@ -1,6 +1,8 @@
 package com.company.models.widget.cards;
 
-public class Usable extends Card
+import com.company.models.widget.cards.spells.Spell;
+
+public class Usable extends Spell
 {
     @Override
     public String toShow()

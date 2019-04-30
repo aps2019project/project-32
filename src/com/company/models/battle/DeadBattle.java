@@ -30,6 +30,13 @@ public class DeadBattle extends Battle
     @Override
     public String toShowGameInfo()
     {
-        return null;
+        String gameInfoString = "";
+
+        gameInfoString = gameInfoString.concat
+                (firstPlayer.getName() + " Hero Health is " + firstPlayer.getMainDeck().getHero().getHealth() + "\n");
+        gameInfoString = gameInfoString.concat
+                (secondPlayer.getName() + " Hero Health is " + secondPlayer.getMainDeck().getHero().getHealth() + "\n");
+
+        return gameInfoString;
     }
 }

@@ -2,11 +2,7 @@ package com.company.models.widget.cards.spells;
 
 import com.company.models.Position;
 import com.company.models.battle.Battle;
-import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
-import com.company.models.widget.cards.Warriors.Warrior;
-
-import java.util.ArrayList;
 
 public class Spell extends Card
 {
@@ -19,8 +15,10 @@ public class Spell extends Card
     private int spellRange;
     private int changeAttackPoint;
     private int changeHealthPoint;
+    protected boolean isUsable;
+    protected SpecialSpellKind SpecialSpellKind;
 
-    public Spell(int manaCost, int coolDown, int affectTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint)
+    public Spell(int manaCost, int coolDown, int affectTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpecialSpellKind spellKind)
     {
         this.manaCost = manaCost;
         this.coolDown = coolDown;
@@ -132,5 +130,30 @@ public class Spell extends Card
     public void setChangeHealthPoint(int changeHealthPoint)
     {
         this.changeHealthPoint = changeHealthPoint;
+    }
+
+    public void setCoolDown(int coolDown)
+    {
+        this.coolDown = coolDown;
+    }
+
+    public boolean isUsable()
+    {
+        return isUsable;
+    }
+
+    public void setUsable(boolean usable)
+    {
+        isUsable = usable;
+    }
+
+    public com.company.models.widget.cards.spells.SpecialSpellKind getSpecialSpellKind()
+    {
+        return SpecialSpellKind;
+    }
+
+    public void setSpecialSpellKind(com.company.models.widget.cards.spells.SpecialSpellKind specialSpellKind)
+    {
+        SpecialSpellKind = specialSpellKind;
     }
 }

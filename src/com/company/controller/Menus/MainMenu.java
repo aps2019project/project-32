@@ -1,6 +1,7 @@
 package com.company.controller.Menus;
 
 import com.company.controller.Controller;
+import com.company.controller.Menus.battlemenus.BattleMenu;
 import com.company.models.Player;
 
 import java.util.ArrayList;

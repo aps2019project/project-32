@@ -1,4 +1,4 @@
-package com.company.models.widget.cards.Warriors;
+package com.company.models.widget.cards.warriors;
 
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.spells.Spell;

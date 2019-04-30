@@ -8,6 +8,12 @@ public class Position
         this.col = col;
     }
 
+    @Override
+    public String toString()
+    {
+        return String.format("Location (%d,%d)", col, row);
+    }
+
     public int row;
     public int col;
 }

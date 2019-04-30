@@ -41,4 +41,18 @@ public abstract class Card extends Widget
     {
         this.ID = ID;
     }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(!(obj instanceof Card))
+            return false;
+        return ((Card) obj).getID()==this.getID();
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return price;
+    }
 }

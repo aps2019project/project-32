@@ -10,7 +10,7 @@ public class KeepFlagBattle extends Battle
     KeepFlagBattle(Player firstPlayer, Player secondPlayer)
     {
         super(firstPlayer, secondPlayer);
-        battleMap.map[2][4] = flag;
+        battleMap.warriorsOnMap[2][4] = flag;
     }
 
     public void dropFlagAfterDead()
@@ -29,11 +29,5 @@ public class KeepFlagBattle extends Battle
     public String toShowGameInfo()
     {
         return null;
-    }
-
-    public void dropFlagAfterDeath()
-    {
-
-
     }
 }

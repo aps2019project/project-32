@@ -6,8 +6,8 @@ import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.Usable;
-import com.company.models.widget.cards.Warriors.Hero;
-import com.company.models.widget.cards.Warriors.Minion;
+import com.company.models.widget.cards.warriors.Hero;
+import com.company.models.widget.cards.warriors.Minion;
 import com.company.models.widget.items.Flag;
 import com.company.models.widget.items.Item;
 
@@ -115,7 +115,7 @@ public class Player implements Serializable
 
         private String name;
         private Hero hero;
-        private Spell passiveItem;
+        private Usable passiveItem;
         private ArrayList<Card> cards = new ArrayList<>();
 
         public String toShowDeck()
@@ -218,7 +218,7 @@ public class Player implements Serializable
     public class Hand
     {
         private ArrayList<Card> handCards = new ArrayList<>();
-        private ArrayList<Item> collectedItems = new ArrayList<>();
+        private ArrayList<Item> collectedItems; // new in battle and after game going null
         private Flag keepModeFlag;
         private Card nextCard;
         private SecureRandom randomMaker = new SecureRandom();
@@ -291,6 +291,15 @@ public class Player implements Serializable
             handString = handString.concat(nextCard.toShow());
 
             return handString;
+        }
+
+        public String toShowCollectedItems()
+        {
+            String showCollectedItems = "";
+            for (Item collectedItem : collectedItems)
+                showCollectedItems = showCollectedItems.concat(collectedItem.toShow() + "\n");
+
+            return showCollectedItems;
         }
 
         public ArrayList<Card> getHandCards()

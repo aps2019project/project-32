@@ -1,4 +1,4 @@
-package com.company.models.widget.cards.Warriors;
+package com.company.models.widget.cards.spells;
 
 public enum SpecialSpellKind
 {
