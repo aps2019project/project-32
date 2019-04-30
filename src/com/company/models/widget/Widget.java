@@ -7,15 +7,15 @@ public abstract class Widget
     protected Player ownerPlayer;
     protected String name;
     protected int ID;
+    protected static int idCounter;
 
-    Widget(String name,int ID)
-    {
-
-
+    public Widget(String name) {
+        this.name = name;
+        this.ID = idCounter;
+        idCounter++;
     }
 
     public abstract String toShow();
-
     public Player getOwnerPlayer()
     {
         return ownerPlayer;

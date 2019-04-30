@@ -7,7 +7,12 @@ import com.company.models.widget.Widget;
 public abstract class Card extends Widget
 {
     protected int price;
-    protected int manaCost;
+
+    public Card(String name, int price) {
+        super(name);
+        this.price = price;
+
+    }
 
     public Player getOwnerPlayer()
     {
@@ -40,19 +45,5 @@ public abstract class Card extends Widget
     public void setID(int ID)
     {
         this.ID = ID;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if(!(obj instanceof Card))
-            return false;
-        return ((Card) obj).getID()==this.getID();
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return price;
     }
 }

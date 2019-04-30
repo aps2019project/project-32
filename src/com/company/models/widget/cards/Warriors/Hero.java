@@ -1,12 +1,21 @@
-package com.company.models.widget.cards.warriors;
+package com.company.models.widget.cards.Warriors;
 
+import com.company.models.widget.cards.spells.Spell;
+import com.company.models.widget.cards.spells.SpellType;
 import com.company.models.widget.items.Flag;
 
 import java.util.ArrayList;
 
-public abstract class Hero extends Warrior
+public  class Hero extends Warrior
 {
     private ArrayList<Flag> collectedFlags = new ArrayList<>();
+
+    public Hero(String name, int power, int health, int price, AttackType attackType, int attackRange){
+        super(name,price,health,power,attackType,attackRange);
+
+
+    }
+
 
     public String toShowHero()
     {

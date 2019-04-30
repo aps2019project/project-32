@@ -1,7 +1,8 @@
-package com.company.models.widget.cards.warriors;
+package com.company.models.widget.cards.Warriors;
 
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.spells.Spell;
+import com.company.models.widget.cards.spells.SpellType;
 
 import java.util.ArrayList;
 
@@ -17,11 +18,15 @@ public class Warrior extends Card implements Movable, Attackable, Defendable
     protected ArrayList<Spell> spellsOnWarrior;
 
 
+    public Warrior(String name, int price, int health, int power, AttackType attackType, int attackRadius) {
+        super(name, price);
+        this.health = health;
+        this.power = power;
+        this.attackType = attackType;
+        this.attackRadius = attackRadius;
 
-    public Warrior()
-    {
-        super();
     }
+
 
     @Override
     public String toShow()
@@ -46,6 +51,14 @@ public class Warrior extends Card implements Movable, Attackable, Defendable
     public void move()
     {
 
+    }
+
+    public void changeHealth(int value){
+        this.health += value;
+    }
+
+    public void changePower(int value){
+        this.power += value;
     }
 
     public boolean isDead()
@@ -149,4 +162,9 @@ public class Warrior extends Card implements Movable, Attackable, Defendable
     {
         this.canAttack = canAttack;
     }
+
+    public void setSpecialSpell(int coolDown, int affectPoisonTurnNumber, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes){
+        this.specialSpell = new Spell("",0,0,coolDown,affectPoisonTurnNumber,affectDisarmTurnNumber,affectStunTurnNumber,spellRange,changeAttackPoint,changeHealthPoint,spellTypes);
+    }
+
 }

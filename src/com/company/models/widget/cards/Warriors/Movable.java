@@ -1,4 +1,4 @@
-package com.company.models.widget.cards.warriors;
+package com.company.models.widget.cards.Warriors;
 
 public interface Movable
 {

@@ -4,6 +4,7 @@ import com.company.controller.Controller;
 import com.company.controller.Exceptions.*;
 import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
+import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.Usable;
 import com.company.models.widget.cards.warriors.Hero;
@@ -178,7 +179,7 @@ public class Player implements Serializable
             return hero != null && cards.size() == 20;
         }
 
-        public Hero getHero()
+        public Warrior getHero()
         {
             return hero;
         }

@@ -6,6 +6,7 @@ import com.company.models.Buff;
 import com.company.models.Player;
 import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
+import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.SpecialSpellKind;
 import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.warriors.Hero;
@@ -41,6 +42,11 @@ public abstract class Battle
 
         protected Warrior[][] warriorsOnMap = new Warrior[5][9];
         protected Widget[][] spellsAndCollectibleOnMap = new Spell[5][9];
+
+
+        public Warrior[][] getWarriorsOnMap() {
+            return warriorsOnMap;
+        }
 
         private ArrayList<Buff> cellEffects = new ArrayList<>();
 
@@ -151,11 +157,11 @@ public abstract class Battle
             switch (randomNumber)
             {
                 case 0:
-                    warriorsOnMap[randomPosition.row][randomPosition.col] = new Holy();
+                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Holy();
                 case 1:
-                    warriorsOnMap[randomPosition.row][randomPosition.col] = new Fiery();
+                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Fiery();
                 case 2:
-                    warriorsOnMap[randomPosition.row][randomPosition.col] = new Poison();
+                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Poison();
             }
         }
 
