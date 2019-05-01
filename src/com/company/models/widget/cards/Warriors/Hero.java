@@ -1,7 +1,5 @@
 package com.company.models.widget.cards.Warriors;
 
-import com.company.models.widget.cards.spells.Spell;
-import com.company.models.widget.cards.spells.SpellType;
 import com.company.models.widget.items.Flag;
 
 import java.util.ArrayList;
@@ -12,10 +10,10 @@ public  class Hero extends Warrior
 
     public Hero(String name, int power, int health, int price, AttackType attackType, int attackRange){
         super(name,price,health,power,attackType,attackRange);
-
-
     }
-
+    public Hero(Hero hero){
+        this(hero.name,hero.power,hero.health,hero.price,hero.attackType,hero.attackRadius);
+    }
 
     public String toShowHero()
     {

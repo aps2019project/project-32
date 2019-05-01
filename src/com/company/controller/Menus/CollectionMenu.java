@@ -95,6 +95,7 @@ public class CollectionMenu implements AbstractMenu
             Controller.getInstance().getCurrentPlayer().setMainDeck(intendedDeck);
     }
 
+
     private void addCard(String command) throws CardNotFound, DeckNotFound, DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready
     {
         int cardID = Integer.parseInt(command.split(" ")[1]);

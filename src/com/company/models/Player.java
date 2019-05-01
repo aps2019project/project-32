@@ -4,6 +4,7 @@ import com.company.controller.Controller;
 import com.company.controller.Exceptions.*;
 import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
+import com.company.models.widget.cards.Warriors.Hero;
 import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.Usable;
@@ -79,6 +80,12 @@ public class Player implements Serializable
     {
         ArrayList<Card> cards = new ArrayList<>();
 
+        public ArrayList<Card> getCards() {
+            return cards;
+        }
+
+
+
         public Card findCardInCollection(int cardID)
         {
             for (Card card : cards)
@@ -86,6 +93,27 @@ public class Player implements Serializable
                     return card;
 
             return null;
+        }
+        public Card findCardInCollection(String cardName)
+        {
+            for (Card card : cards)
+                if (card.getName().equals(cardName))
+                    return card;
+
+            return null;
+        }
+
+        public void addTOCollection(Card card){
+            getCards().add(card);
+        }
+        public void removeFromCollection(int cardID) throws CardNotFound {
+            for (Deck deck : getDecks()) {
+                if (deck.serchCard(cardID) != null){
+                    deck.removeCardFromDeck(cardID);
+                    break;
+                }
+            }
+            getCards().remove(findCardInCollection(cardID));
         }
 
         public String toShowSearchResult(String cardOrItemName) throws CardNotFound
@@ -104,6 +132,15 @@ public class Player implements Serializable
                 collectionString = collectionString.concat(card.toShow());
 
             return collectionString;
+        }
+
+        public int getNumberOfUsable(){
+            int count = 0;
+            for (Card card : cards) {
+                if (card instanceof Usable)
+                    count++;
+            }
+            return count;
         }
     }
 
@@ -173,6 +210,15 @@ public class Player implements Serializable
                 throw new CardNotFound();
 
         }
+        public Card serchCard(int cardID){
+            for (Card card : cards) {
+                if (card.getID() == cardID)
+                    return card;
+            }
+            return null;
+        }
+
+
 
         public boolean isValidDeck()
         {
@@ -411,6 +457,12 @@ public class Player implements Serializable
         return String.format
                 ("UserName : %s - Cash : %d - WinNumber : %d - LoseNumber : %d",
                         this.name, this.cash, this.winNumber, this.loseNumber);
+    }
+    public void deCreaseCash(int value){
+        this.cash -= value;
+    }
+    public void inCreaseCash(int value){
+        this.cash += value;
     }
 
     public void save()

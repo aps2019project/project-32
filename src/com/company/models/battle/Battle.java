@@ -48,6 +48,10 @@ public abstract class Battle
             return warriorsOnMap;
         }
 
+        public Widget[][] getSpellsAndCollectibleOnMap() {
+            return spellsAndCollectibleOnMap;
+        }
+
         private ArrayList<Buff> cellEffects = new ArrayList<>();
 
         public class Poison extends Buff

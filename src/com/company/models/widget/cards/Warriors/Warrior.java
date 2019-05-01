@@ -2,12 +2,13 @@ package com.company.models.widget.cards.Warriors;
 
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.spells.Spell;
+import com.company.models.widget.cards.spells.SpellKind;
 import com.company.models.widget.cards.spells.SpellType;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class Warrior extends Card implements Movable, Attackable, Defendable
-{
+public class Warrior extends Card implements Movable, Attackable, Defendable {
     protected int health;
     protected int power;
     protected AttackType attackType;
@@ -29,142 +30,140 @@ public class Warrior extends Card implements Movable, Attackable, Defendable
 
 
     @Override
-    public String toShow()
-    {
+    public String toShow() {
         return String.format("(Warrior) CardName : %s - CardID : %d - Health : %d - Power : %d\n",
                 this.getName(), this.getID(), this.getHealth(), this.getPower());
     }
 
     @Override
-    public void attack(Card defender)
-    {
+    public void attack(Card defender) {
 
     }
 
     @Override
-    public void defend(Card attacker)
-    {
+    public void defend(Card attacker) {
 
     }
 
     @Override
-    public void move()
-    {
+    public void move() {
 
     }
 
-    public void changeHealth(int value){
+    public void changeHealth(int value) {
         this.health += value;
     }
 
-    public void changePower(int value){
+    public void changePower(int value) {
         this.power += value;
     }
 
-    public boolean isDead()
-    {
+    public boolean isDead() {
         return this.health <= 0;
     }
 
 
-    public void moveTiredAffect()
-    {
+    public void moveTiredAffect() {
         canMove = false;
     }
 
-    public void attackTiredAffect()
-    {
+    public void attackTiredAffect() {
         canAttack = false;
     }
 
-    public boolean canAttack()
-    {
+    public boolean canAttack() {
         return canAttack;
     }
 
-    public boolean canMove()
-    {
+    public boolean canMove() {
         return canMove;
     }
 
 
-    public int getHealth()
-    {
+    public int getHealth() {
         return health;
     }
 
-    public void increaseHealth(int value)
-    {
+    public void increaseHealth(int value) {
         health += value;
     }
 
-    public void decreaseHealth(int value)
-    {
+    public void decreaseHealth(int value) {
         health -= value;
     }
 
-    public int getPower()
-    {
+    public int getPower() {
         return power;
     }
 
-    public void setPower(int power)
-    {
+    public void setPower(int power) {
         this.power = power;
     }
 
-    public AttackType getAttackType()
-    {
+    public AttackType getAttackType() {
         return attackType;
     }
 
-    public void setAttackType(AttackType attackType)
-    {
+    public void setAttackType(AttackType attackType) {
         this.attackType = attackType;
     }
 
-    public int getAttackRadius()
-    {
+    public int getAttackRadius() {
         return attackRadius;
     }
 
-    public void setAttackRadius(int attackRadius)
-    {
+    public void setAttackRadius(int attackRadius) {
         this.attackRadius = attackRadius;
     }
 
-    public Spell getSpecialSpell()
-    {
+    public Spell getSpecialSpell() {
         return specialSpell;
     }
 
-    public void setSpecialSpell(Spell specialSpell)
-    {
+    public void setSpecialSpell(Spell specialSpell) {
         this.specialSpell = specialSpell;
     }
 
-    public boolean isCanMove()
-    {
+    public boolean isCanMove() {
         return canMove;
     }
 
-    public void setCanMove(boolean canMove)
-    {
+    public void setCanMove(boolean canMove) {
         this.canMove = canMove;
     }
 
-    public boolean isCanAttack()
-    {
+    public boolean isCanAttack() {
         return canAttack;
     }
 
-    public void setCanAttack(boolean canAttack)
-    {
+    public void setCanAttack(boolean canAttack) {
         this.canAttack = canAttack;
     }
 
-    public void setSpecialSpell(int coolDown, int affectPoisonTurnNumber, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes){
-        this.specialSpell = new Spell("",0,0,coolDown,affectPoisonTurnNumber,affectDisarmTurnNumber,affectStunTurnNumber,spellRange,changeAttackPoint,changeHealthPoint,spellTypes);
+    public void setSpecialSpell(SpellKind spellKind,int manaCost,int coolDown, int affectChangeAbilityTurnNumberRemain, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes) {
+        if (spellKind == SpellKind.spellCard)
+            this.specialSpell = new Spell(SpellKind.spellCard,"", 0, manaCost, coolDown, affectChangeAbilityTurnNumberRemain, affectDisarmTurnNumber, affectStunTurnNumber, spellRange, changeAttackPoint, changeHealthPoint, spellTypes);
+        else if (spellKind == SpellKind.Buff)
+            this.specialSpell = new Spell(SpellKind.Buff,"", 0, manaCost, coolDown, affectChangeAbilityTurnNumberRemain, affectDisarmTurnNumber, affectStunTurnNumber, spellRange, changeAttackPoint, changeHealthPoint, spellTypes);
+
     }
 
+    public void removeNegativeBuffs() {
+        Iterator<Spell> spellIterable = spellsOnWarrior.iterator();
+        while (spellIterable.hasNext()) {
+            Spell spell = spellIterable.next();
+            if (spell.getSpellKind()==SpellKind.Buff && (spell.getChangeHealthPoint() < 0 || spell.getChangeHealthPoint() < 0)) {
+                spellIterable.remove();
+            }
+        }
+    }
+    public void removePositiveBuffs() {
+        Iterator<Spell> spellIterable = spellsOnWarrior.iterator();
+        while (spellIterable.hasNext()) {
+            Spell spell = spellIterable.next();
+            if (spell.getSpellKind()==SpellKind.Buff && (spell.getChangeHealthPoint() > 0 || spell.getChangeHealthPoint() > 0)) {
+                spellIterable.remove();
+            }
+        }
+    }
 }

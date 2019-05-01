@@ -1,17 +1,20 @@
 package com.company.models.widget.cards.Warriors;
 
-import com.company.models.widget.cards.spells.Spell;
-import com.company.models.widget.cards.spells.SpellType;
 
-public abstract class Minion extends Warrior
+
+public class Minion extends Warrior
 {
     int manaCost;
+    MinionSpellType minionSpellType;
 
-    public Minion(String name,int manaCost, int power, int health, int price, AttackType attackType, int attackRange){
+    public Minion(String name,int manaCost, int power, int health, int price, AttackType attackType, int attackRange,MinionSpellType minionSpellType){
         super(name,price,health,power,attackType,attackRange);
         this.manaCost = manaCost;
+        this.minionSpellType = minionSpellType;
     }
-
+    public Minion(Minion minion){
+        this(minion.name,minion.manaCost,minion.power,minion.health,minion.price,minion.attackType,minion.attackRadius,minion.minionSpellType);
+    }
 
 
     public String toShowMinion()
