@@ -1,6 +1,7 @@
 package com.company.models.widget.cards.Warriors;
 
 
+import com.company.models.widget.cards.Card;
 
 public class Minion extends Warrior
 {
@@ -17,9 +18,17 @@ public class Minion extends Warrior
     }
 
 
-    public String toShowMinion()
+    public String toShow()
     {
-        return String.format("(Minion) Name : %s - Class : %s - AP : %d - HP : %d - MP : %d - SellCost : %d \n",
-                this.name, this.attackType.toString(), this.power, this.health, this.manaCost, this.price / 2);
+        return String.format("(Minion) Name : %s - Class : %s - AP : %d - HP : %d - MP : %d - SellCost : %d - Buy Cost : %d \n",
+                this.name, this.attackType.toString(), this.power, this.health, this.manaCost, this.price / 2,this.price);
+    }
+    public void attack(Card defender) {
+
+    }
+
+    @Override
+    public void defend(Card attacker) {
+
     }
 }

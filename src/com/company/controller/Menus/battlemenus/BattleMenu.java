@@ -7,7 +7,7 @@ import com.company.controller.Menus.MainMenu;
 import com.company.models.Position;
 import com.company.models.battle.Battle;
 import com.company.models.widget.Widget;
-import com.company.models.widget.cards.warriors.Warrior;
+import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.items.Collectible;
 
 public class BattleMenu implements AbstractMenu
@@ -103,6 +103,10 @@ public class BattleMenu implements AbstractMenu
     public String toShowEndGameInfo()
     {
         return battle.toShowEndGameDetails();
+    }
+
+    public static Battle getBattle() {
+        return battle;
     }
 }
 

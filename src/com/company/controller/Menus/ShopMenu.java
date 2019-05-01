@@ -75,10 +75,10 @@ public class ShopMenu implements AbstractMenu
         }
         else if (command.matches("help"))
         {
-            help();
+            toShowMenu();
         }
         else if (command.matches("show")){
-
+            showCards();
         }
     }
 
@@ -151,21 +151,28 @@ public class ShopMenu implements AbstractMenu
         return null;
     }
 
-    @Override
-    public String help()
+
+    public String showCards()
     {
-        return String.format("1. exit \n 2. search [item name | card name] \n 3. show collection \n" +
-                "4. search collection [item name | card name] \n 5. buy [card name | item name]" +
-                "6. sell [card id | card id] \n 7. show \n 8. help" );
+        String total = "";
+        int counter = 1;
+        for (Card card : getCards()) {
+            total = total.concat(counter + " ");
+            total = total.concat(card.toShow());
+            counter++;
+        }
+
+        return total;
+
     }
-
-
 
 
     @Override
     public String toShowMenu()
     {
-        return null;
+        return String.format("1. exit \n 2. search [item name | card name] \n 3. show collection \n" +
+            "4. search collection [item name | card name] \n 5. buy [card name | item name]" +
+            "6. sell [card id | card id] \n 7. show \n 8. help" );;
     }
 
 

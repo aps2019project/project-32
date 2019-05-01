@@ -6,11 +6,10 @@ import com.company.models.Buff;
 import com.company.models.Player;
 import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
+import com.company.models.widget.cards.Warriors.Hero;
 import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.SpecialSpellKind;
 import com.company.models.widget.cards.spells.Spell;
-import com.company.models.widget.cards.warriors.Hero;
-import com.company.models.widget.cards.warriors.Warrior;
 import com.company.models.widget.items.Collectible;
 import com.company.models.widget.items.Item;
 
@@ -32,6 +31,8 @@ public abstract class Battle
     protected Player firstPlayer;
     protected Player secondPlayer;
     private SecureRandom randomMaker = new SecureRandom();
+
+
 
     public class Map
     {
@@ -206,6 +207,7 @@ public abstract class Battle
 
             return widgetsString;
         }
+
     }
 
     public class TurnHandler
@@ -397,11 +399,7 @@ public abstract class Battle
         if (attacker.canAttack())
         {
             attacker.attack(defender);
-            if (attacker.getSpecialSpell().getSpecialSpellKind() == SpecialSpellKind.OnAttack)
-                attacker.attack(defender);
             attacker.attackTiredAffect();
-            if (defender.getSpecialSpell().getSpecialSpellKind() == SpecialSpellKind.OnDefend)
-                defender.attack(attacker);
             checkDeadActions(attacker, defender);
         }
         else
@@ -480,4 +478,6 @@ public abstract class Battle
     }
 
     public abstract String toShowGameInfo();
+
+
 }

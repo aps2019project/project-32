@@ -85,7 +85,7 @@ public class Spell extends Card {
     @Override
     public String toShow() {
         return String.format
-                ("(Spell) - Name : %s – MP : %d - CoolDown : %d \n", this.name, this.manaCost, this.coolDown);
+                ("(Spell) - Name : %s – MP : %d - CoolDown : %d - Sell Cost : %d - Buy Cost : %d \n", this.name, this.manaCost, this.coolDown,this.price/2,this.price);
     }
 
     public void doEffectAction(Battle.Map map, Position position) {
@@ -228,9 +228,6 @@ public class Spell extends Card {
 
     }
 
-    public void doSpell() {
-
-    }
 
     public int getManaCost() {
         return manaCost;

@@ -1,8 +1,11 @@
 package com.company.models.widget.items;
 
-public class Collectible extends Item
+import com.company.models.widget.cards.spells.Spell;
+
+public class Collectible extends Spell
 {
     public void affectCollectible(){
+
 
     }
 

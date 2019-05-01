@@ -1,5 +1,6 @@
 package com.company.models.widget.cards.Warriors;
 
+import com.company.controller.Menus.battlemenus.BattleMenu;
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.spells.SpellKind;
@@ -36,8 +37,14 @@ public class Warrior extends Card implements Movable, Attackable, Defendable {
     }
 
     @Override
-    public void attack(Card defender) {
-
+    public void attack(Warrior defender) {
+        defender.changeHealth(-this.getPower());
+        if (this instanceof Minion && ((Minion)this).minionSpellType == MinionSpellType.OnAttack){
+            this.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),BattleMenu.getBattle().getBattleMap().getPosition(defender));
+        }
+        if(defender instanceof Minion && ((Minion)this).minionSpellType == MinionSpellType.OnDefense){
+            defender.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),BattleMenu.getBattle().getBattleMap().getPosition(this));
+        }
     }
 
     @Override
@@ -140,11 +147,11 @@ public class Warrior extends Card implements Movable, Attackable, Defendable {
         this.canAttack = canAttack;
     }
 
-    public void setSpecialSpell(SpellKind spellKind,int manaCost,int coolDown, int affectChangeAbilityTurnNumberRemain, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes) {
+    public void setSpecialSpell(SpellKind spellKind,int manaCost,int coolDown, int affectPoisonTurnNumber, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes) {
         if (spellKind == SpellKind.spellCard)
-            this.specialSpell = new Spell(SpellKind.spellCard,"", 0, manaCost, coolDown, affectChangeAbilityTurnNumberRemain, affectDisarmTurnNumber, affectStunTurnNumber, spellRange, changeAttackPoint, changeHealthPoint, spellTypes);
+            this.specialSpell = new Spell(SpellKind.spellCard,"", 0, manaCost, coolDown, affectPoisonTurnNumber, affectDisarmTurnNumber, affectStunTurnNumber, spellRange, changeAttackPoint, changeHealthPoint, spellTypes);
         else if (spellKind == SpellKind.Buff)
-            this.specialSpell = new Spell(SpellKind.Buff,"", 0, manaCost, coolDown, affectChangeAbilityTurnNumberRemain, affectDisarmTurnNumber, affectStunTurnNumber, spellRange, changeAttackPoint, changeHealthPoint, spellTypes);
+            this.specialSpell = new Spell(SpellKind.Buff,"", 0, manaCost, coolDown, affectPoisonTurnNumber, affectDisarmTurnNumber, affectStunTurnNumber, spellRange, changeAttackPoint, changeHealthPoint, spellTypes);
 
     }
 

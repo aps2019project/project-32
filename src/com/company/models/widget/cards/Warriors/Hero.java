@@ -15,11 +15,12 @@ public  class Hero extends Warrior
         this(hero.name,hero.power,hero.health,hero.price,hero.attackType,hero.attackRadius);
     }
 
-    public String toShowHero()
+
+    public String toShow()
     {
-        return String.format("(Hero) Name : %s - AP : %d - HP : %d - Class : %s SellCost : %d\n",
+        return String.format("(Hero) Name : %s - AP : %d - HP : %d - Class : %s SellCost : %d - Buy Cost : %d \n",
                 this.name, this.power, this.health,
-                this.attackType.toString(), this.price / 2);
+                this.attackType.toString(), this.price / 2,this.price);
     }
 
     public ArrayList<Flag> getCollectedFlags()

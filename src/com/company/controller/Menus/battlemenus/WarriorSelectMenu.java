@@ -1,7 +1,8 @@
 package com.company.controller.Menus.battlemenus;
 
 import com.company.controller.Menus.AbstractMenu;
-import com.company.models.widget.cards.warriors.Warrior;
+import com.company.models.widget.cards.Warriors.Warrior;
+
 
 class WarriorSelectMenu implements AbstractMenu
 {

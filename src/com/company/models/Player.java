@@ -105,6 +105,7 @@ public class Player implements Serializable
 
         public void addTOCollection(Card card){
             getCards().add(card);
+            card.setOwnerPlayer(Controller.getInstance().getCurrentPlayer());
         }
         public void removeFromCollection(int cardID) throws CardNotFound {
             for (Deck deck : getDecks()) {
@@ -113,6 +114,7 @@ public class Player implements Serializable
                     break;
                 }
             }
+            findCardInCollection(cardID).setOwnerPlayer(null);
             getCards().remove(findCardInCollection(cardID));
         }
 
