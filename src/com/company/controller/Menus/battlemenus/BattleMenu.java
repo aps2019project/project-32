@@ -14,40 +14,38 @@ import com.company.view.View;
 
 public class BattleMenu implements AbstractMenu
 {
-    private static Battle battle;
+    private static Battle currentBattle;
 
     private BattleMenu()
     {
     }
-
     private static BattleMenu battleMenuInstance = new BattleMenu();
-
     public static BattleMenu getInstance()
     {
         return battleMenuInstance;
     }
 
-    public static void setBattle(Battle battle)
+    public static void setCurrentBattle(Battle currentBattle)
     {
-        BattleMenu.battle = battle;
+        BattleMenu.currentBattle = currentBattle;
     }
 
     @Override
     public void selectOptionByCommand(String command) throws UnSelectable
     {
         if (command.matches("Game Info"))
-            View.getInstance().show(battle.toShowGameInfo());
+            View.getInstance().show(currentBattle.toShowGameInfo());
 
         else if (command.matches("Show My Minions"))
-            if (battle.getBattleTurnHandler().getPlayerHasTurn().equals(battle.getFirstPlayer()))
-                View.getInstance().show(battle.getBattleMap().toShowMinionInMap(battle.getFirstPlayer()));
+            if (currentBattle.getBattleTurnHandler().getPlayerHasTurn().equals(currentBattle.getFirstPlayer()))
+                View.getInstance().show(currentBattle.getBattleMap().toShowMinionInMap(currentBattle.getFirstPlayer()));
             else
-                View.getInstance().show(battle.getBattleMap().toShowMinionInMap(battle.getSecondPlayer()));
+                View.getInstance().show(currentBattle.getBattleMap().toShowMinionInMap(currentBattle.getSecondPlayer()));
         else if (command.matches("Show Opponent Minions"))
-            if (battle.getBattleTurnHandler().getPlayerHasTurn().equals(battle.getFirstPlayer()))
-                View.getInstance().show(battle.getBattleMap().toShowMinionInMap(battle.getSecondPlayer()));
+            if (currentBattle.getBattleTurnHandler().getPlayerHasTurn().equals(currentBattle.getFirstPlayer()))
+                View.getInstance().show(currentBattle.getBattleMap().toShowMinionInMap(currentBattle.getSecondPlayer()));
             else
-                View.getInstance().show(battle.getBattleMap().toShowMinionInMap(battle.getFirstPlayer()));
+                View.getInstance().show(currentBattle.getBattleMap().toShowMinionInMap(currentBattle.getFirstPlayer()));
         else if (command.matches("Show Card Info \\d+"))
             View.getInstance().show(toShowCardInfo(Integer.parseInt(command.split(" ")[3])));
 
@@ -61,13 +59,13 @@ public class BattleMenu implements AbstractMenu
             Controller.getInstance().changeCurrentMenuTo(MainMenu.getInstance());
 
         else if (command.matches("End Turn"))
-            battle.getBattleTurnHandler().changeTurn();
+            currentBattle.getBattleTurnHandler().changeTurn();
 
         else if (command.matches("Show Collectable"))
-            View.getInstance().show(battle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowCollectedItems());
+            View.getInstance().show(currentBattle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowCollectedItems());
 
         else if (command.matches("Show Hand"))
-            View.getInstance().show(battle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand());
+            View.getInstance().show(currentBattle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand());
 
         else if (command.matches("Insert \\w+ In \\d \\d"))
         {
@@ -84,7 +82,7 @@ public class BattleMenu implements AbstractMenu
 
     public void selectActions(int cardID) throws UnSelectable
     {
-        Widget widget = battle.getBattleMap().selectCard(cardID);
+        Widget widget = currentBattle.getBattleMap().selectCard(cardID);
         if (widget instanceof Warrior)
         {
             WarriorSelectMenu.getInstance().setCurrentWarrior(((Warrior) widget));
@@ -101,24 +99,24 @@ public class BattleMenu implements AbstractMenu
 
     public String toShowCardInfo(int cardID)
     {
-        Widget widget = battle.getBattleMap().selectCard(cardID);
-        Position position = battle.getBattleMap().getPosition(widget);
+        Widget widget = currentBattle.getBattleMap().selectCard(cardID);
+        Position position = currentBattle.getBattleMap().getPosition(widget);
         return widget.toShow() + position.toString() + "\n"; // show card info
     }
 
     public String toShowHand()
     {
-        return battle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand(); //send to view
+        return currentBattle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand(); //send to view
     }
 
     public String toShowEndGameInfo()
     {
-        return battle.toShowEndGameDetails();
+        return currentBattle.toShowEndGameDetails();
     }
 
-    public static Battle getBattle()
+    public static Battle getCurrentBattle()
     {
-        return battle;
+        return currentBattle;
     }
 }
 

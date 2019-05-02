@@ -56,7 +56,7 @@ class WarriorSelectMenu implements AbstractMenu
             throw new InvalidTargetException();
         }
         if (currentWarrior instanceof Hero)
-            BattleMenu.getBattle().doWarriorSpell(currentWarrior,new Position(row,col));
+            BattleMenu.getCurrentBattle().doWarriorSpell(currentWarrior,new Position(row,col));
 
     }
 
@@ -66,8 +66,8 @@ class WarriorSelectMenu implements AbstractMenu
 
     public void moveCard(String command) throws InvalidTargetException, WarriorUnderStun, WarriorIsTired
     {
-        Position cardPosition = BattleMenu.getBattle().getBattleMap().getPosition(getCurrentWarrior());
-        Widget[][] map = BattleMenu.getBattle().getBattleMap().getWarriorsOnMap();
+        Position cardPosition = BattleMenu.getCurrentBattle().getBattleMap().getPosition(getCurrentWarrior());
+        Widget[][] map = BattleMenu.getCurrentBattle().getBattleMap().getWarriorsOnMap();
         int col = Integer.parseInt(command.split(" ")[2]);
         int row = Integer.parseInt(command.split(" ")[3]);
         if (col>=9 || row>=5 || Math.abs(cardPosition.col - col) + Math.abs(cardPosition.row - row) > 2 || map[col][row] != null) {
@@ -92,16 +92,16 @@ class WarriorSelectMenu implements AbstractMenu
         if (row != cardPosition.row && col != cardPosition.col && map[cardPosition.row][col] != null && map[row][cardPosition.col] != null) {
             throw new InvalidTargetException();
         }
-        BattleMenu.getBattle().moveWarriorOptions(currentWarrior, cardPosition, new Position(row, col));
+        BattleMenu.getCurrentBattle().moveWarriorOptions(currentWarrior, cardPosition, new Position(row, col));
 
     }
 
     public void attack(String command) throws InvalidAttackException, InvalidWarriorForAttack, OpponentMinionIsUnvalidForAttack, WarriorUnderStun, WarriorIsTired
     {
-        Position cardPosition = BattleMenu.getBattle().getBattleMap().getPosition(getCurrentWarrior());
+        Position cardPosition = BattleMenu.getCurrentBattle().getBattleMap().getPosition(getCurrentWarrior());
         int col = Integer.parseInt(command.split(" ")[2]);
         int row = Integer.parseInt(command.split(" ")[3]);
-        Widget[][] map = BattleMenu.getBattle().getBattleMap().getWarriorsOnMap();
+        Widget[][] map = BattleMenu.getCurrentBattle().getBattleMap().getWarriorsOnMap();
         if (col>=9 || row>=5 || map[row][col] != null) {
             throw new InvalidAttackException();
         }
@@ -111,7 +111,7 @@ class WarriorSelectMenu implements AbstractMenu
         if (Math.abs(cardPosition.col - col) + Math.abs(cardPosition.row - row) > currentWarrior.getAttackRadius()) {
             throw new OpponentMinionIsUnvalidForAttack();
         }
-        BattleMenu.getBattle().attackActions(currentWarrior,(Warrior) map[row][col]);
+        BattleMenu.getCurrentBattle().attackActions(currentWarrior,(Warrior) map[row][col]);
 
     }
 
