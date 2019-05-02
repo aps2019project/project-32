@@ -15,7 +15,7 @@ import com.company.view.View;
 
 public class BattleMenu implements AbstractMenu
 {
-    protected static Battle currentBattle;
+    protected Battle currentBattle;
 
     protected BattleMenu()
     {

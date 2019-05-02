@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d5fe2418-431e-43d2-b220-dc9a4dcd3928" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/com/company/controller/Exceptions/BattleHasNotInitialise.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/company/controller/Exceptions/InvalidPosition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/StartBattleMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/controller/Menus/AbstractMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/controller/Menus/AbstractMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/controller/Menus/MainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/controller/Menus/MainMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/BattleMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/BattleMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/WarriorSelectMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/WarriorSelectMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/battle/Battle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/battle/Battle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/battle/CollectFlagBattle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/battle/CollectFlagBattle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/models/battle/KeepFlagBattle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/models/battle/KeepFlagBattle.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,8 +26,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/company/models/battle/Battle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3216">
-              <caret line="145" column="12" selection-start-line="145" selection-start-column="12" selection-end-line="145" selection-end-column="12" />
+            <state relative-caret-position="-792">
+              <caret line="223" column="57" selection-start-line="223" selection-start-column="57" selection-end-line="223" selection-end-column="57" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#11722#11723#0" expanded="true" />
@@ -47,11 +37,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/WarriorSelectMenu.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7">
-              <caret line="37" column="12" lean-forward="true" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="12" />
+            <state relative-caret-position="169">
+              <caret line="129" column="42" selection-start-line="129" selection-start-column="42" selection-end-line="129" selection-end-column="42" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -81,15 +71,15 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/BattleMenu.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
+            <state relative-caret-position="192">
               <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#4583#4584#0" expanded="true" />
-                <element signature="e#4663#4664#0" expanded="true" />
+                <element signature="e#4569#4570#0" expanded="true" />
+                <element signature="e#4649#4650#0" expanded="true" />
                 <element signature="e#4822#4823#0" expanded="true" />
                 <element signature="e#4878#4879#0" expanded="true" />
               </folding>
@@ -122,6 +112,15 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/company/models/widget/cards/Warriors/Warrior.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="292">
+              <caret line="54" column="65" lean-forward="true" selection-start-line="54" selection-start-column="65" selection-end-line="54" selection-end-column="65" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/company/controller/Exceptions/BattleHasNotInitialise.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="216">
@@ -129,18 +128,6 @@
               <folding>
                 <element signature="e#140#141#0" expanded="true" />
                 <element signature="e#163#164#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/company/models/battle/CollectFlagBattle.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="8" selection-start-line="8" selection-end-line="8" />
-              <folding>
-                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -257,15 +244,15 @@
         <option value="$PROJECT_DIR$/src/com/company/models/widget/items/Flag.java" />
         <option value="$PROJECT_DIR$/src/com/company/models/widget/Flag.java" />
         <option value="$PROJECT_DIR$/src/com/company/controller/Exceptions/CantAddUsableItems.java" />
-        <option value="$PROJECT_DIR$/src/com/company/models/widget/cards/Warriors/Warrior.java" />
         <option value="$PROJECT_DIR$/src/com/company/models/battle/CollectFlagBattle.java" />
         <option value="$PROJECT_DIR$/src/com/company/controller/Exceptions/BattleHasNotInitialise.java" />
         <option value="$PROJECT_DIR$/src/com/company/controller/Menus/MainMenu.java" />
         <option value="$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/StartBattleMenu.java" />
         <option value="$PROJECT_DIR$/src/com/company/models/Player.java" />
         <option value="$PROJECT_DIR$/src/com/company/controller/Exceptions/InvalidPosition.java" />
-        <option value="$PROJECT_DIR$/src/com/company/models/battle/Battle.java" />
+        <option value="$PROJECT_DIR$/src/com/company/models/widget/cards/Warriors/Warrior.java" />
         <option value="$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/WarriorSelectMenu.java" />
+        <option value="$PROJECT_DIR$/src/com/company/models/battle/Battle.java" />
         <option value="$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/BattleMenu.java" />
       </list>
     </option>
@@ -470,7 +457,7 @@
       <workItem from="1556630316552" duration="3915000" />
       <workItem from="1556652743877" duration="25569000" />
       <workItem from="1556738015566" duration="6415000" />
-      <workItem from="1556799762031" duration="18262000" />
+      <workItem from="1556799762031" duration="18528000" />
     </task>
     <task id="LOCAL-00001" summary="debugging">
       <created>1556810309280</created>
@@ -493,24 +480,31 @@
       <option name="project" value="LOCAL" />
       <updated>1556812839033</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="some change in menus">
+      <created>1556821018517</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1556821018517</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="181818000" />
+    <option name="totallyTimeSpent" value="182084000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4978903" visible="true" weight="0.19194631" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4978903" visible="true" weight="0.19194631" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" sideWeight="0.5021097" side_tool="true" weight="0.15771812" />
-      <window_info anchor="bottom" id="Messages" order="0" weight="0.3286119" />
+      <window_info active="true" anchor="bottom" id="Messages" order="0" visible="true" weight="0.3286119" />
       <window_info anchor="bottom" id="Dependency Viewer" order="1" weight="0.3286119" />
       <window_info anchor="bottom" id="Message" order="2" />
       <window_info anchor="bottom" id="Find" order="3" weight="0.3286119" />
@@ -603,7 +597,8 @@
     <MESSAGE value="debugging" />
     <MESSAGE value="change Spell Logics" />
     <MESSAGE value="some name changed" />
-    <option name="LAST_COMMIT_MESSAGE" value="some name changed" />
+    <MESSAGE value="some change in menus" />
+    <option name="LAST_COMMIT_MESSAGE" value="some change in menus" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1012,17 +1007,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/company/models/widget/cards/Warriors/Warrior.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="83">
-          <caret line="42" column="16" selection-start-line="42" selection-start-column="16" selection-end-line="42" selection-end-column="16" />
-          <folding>
-            <element signature="e#4148#4149#0" expanded="true" />
-            <element signature="e#4181#4182#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/company/models/widget/cards/Warriors/MinionSpellType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="48">
@@ -1125,10 +1109,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/company/models/widget/cards/Warriors/Warrior.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="292">
+          <caret line="54" column="65" lean-forward="true" selection-start-line="54" selection-start-column="65" selection-end-line="54" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/company/models/battle/Battle.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3216">
-          <caret line="145" column="12" selection-start-line="145" selection-start-column="12" selection-end-line="145" selection-end-column="12" />
+        <state relative-caret-position="-792">
+          <caret line="223" column="57" selection-start-line="223" selection-start-column="57" selection-end-line="223" selection-end-column="57" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#11722#11723#0" expanded="true" />
@@ -1137,26 +1128,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/BattleMenu.java">
+    <entry file="file://$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/WarriorSelectMenu.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+        <state relative-caret-position="169">
+          <caret line="129" column="42" selection-start-line="129" selection-start-column="42" selection-end-line="129" selection-end-column="42" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4583#4584#0" expanded="true" />
-            <element signature="e#4663#4664#0" expanded="true" />
-            <element signature="e#4822#4823#0" expanded="true" />
-            <element signature="e#4878#4879#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/WarriorSelectMenu.java">
+    <entry file="file://$PROJECT_DIR$/src/com/company/controller/Menus/battlemenus/BattleMenu.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7">
-          <caret line="37" column="12" lean-forward="true" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="12" />
+        <state relative-caret-position="192">
+          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#4569#4570#0" expanded="true" />
+            <element signature="e#4649#4650#0" expanded="true" />
+            <element signature="e#4822#4823#0" expanded="true" />
+            <element signature="e#4878#4879#0" expanded="true" />
           </folding>
         </state>
       </provider>
