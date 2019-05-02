@@ -1,16 +1,14 @@
 package com.company.controller.Menus.battlemenus;
 
 import com.company.controller.Controller;
-import com.company.controller.Exceptions.BattleHasNotInitialise;
-import com.company.controller.Exceptions.UnSelectable;
+import com.company.controller.Exceptions.*;
 import com.company.controller.Menus.AbstractMenu;
 import com.company.controller.Menus.MainMenu;
 import com.company.models.Position;
 import com.company.models.battle.Battle;
 import com.company.models.widget.Widget;
+import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.Warriors.Warrior;
-import com.company.models.widget.cards.spells.Spell;
-import com.company.models.widget.cards.spells.SpellKind;
 import com.company.view.View;
 
 public class BattleMenu implements AbstractMenu
@@ -29,7 +27,7 @@ public class BattleMenu implements AbstractMenu
     }
 
     @Override
-    public void selectOptionByCommand(String command) throws UnSelectable, BattleHasNotInitialise
+    public void selectOptionByCommand(String command) throws UnSelectable, BattleHasNotInitialise, CardNotFound, InvalidPosition, InvalidTargetException, InvalidAttackException, OpponentMinionIsUnvalidForAttack, InvalidWarriorForAttack, WarriorUnderStun, WarriorIsTired, CoolDownRemaining, NotEnoughMana
     {
         if (command.matches("Game Information"))
             View.getInstance().show(currentBattle.toShowGameInfo());
@@ -59,12 +57,14 @@ public class BattleMenu implements AbstractMenu
         else if (command.matches("End Turn"))
             currentBattle.getBattleTurnHandler().changeTurn();
 
-        else if (command.matches("Show Collectable"))
+        else if (command.matches("Show Collectables"))
             View.getInstance().show(currentBattle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowCollectedItems());
 
         else if (command.matches("Show Hand"))
             View.getInstance().show(currentBattle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand());
 
+        else if (command.matches("Insert \\w+ in \\d \\d"))
+            insertCard(command);
     }
 
 
@@ -82,11 +82,6 @@ public class BattleMenu implements AbstractMenu
         {
             WarriorSelectMenu.getInstance().setCurrentWarrior(((Warrior) widget));
             Controller.getInstance().changeCurrentMenuTo(WarriorSelectMenu.getInstance());
-        }
-        else if (widget instanceof Spell && ((Spell) widget).getSpellKind() == SpellKind.Collectible)
-        {
-            CollectibleSelectMenu.getInstance().setCurrentCollectible(((Spell) widget));
-            Controller.getInstance().changeCurrentMenuTo(CollectibleSelectMenu.getInstance());
         }
         else
             throw new UnSelectable();
@@ -116,7 +111,22 @@ public class BattleMenu implements AbstractMenu
 
     public void setCurrentBattle(Battle currentBattle)
     {
-        BattleMenu.currentBattle = currentBattle;
+        BattleMenu.getInstance().currentBattle = currentBattle;
+    }
+
+    public void insertCard(String command) throws CardNotFound, InvalidPosition
+    {
+        String cardName = command.split(" ")[1];
+        int row = Integer.parseInt(command.split(" ")[4]);
+        int col = Integer.parseInt(command.split(" ")[3]);
+        Position position = new Position(row, col);
+        Card intendedCard = currentBattle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().getCardByName(cardName);
+
+        if (intendedCard == null)
+            throw new CardNotFound();
+
+        currentBattle.getBattleMap().insertCard(intendedCard, position);
+        intendedCard.getOwnerPlayer().getPlayerHand().putCardFromHandActions(intendedCard);
     }
 }
 

@@ -1,15 +1,14 @@
 package com.company.models.battle;
 
 import com.company.models.Player;
+import com.company.models.widget.Flag;
 
 public class KeepFlagBattle extends Battle
 {
-    //Flag flag = new Flag();
-
     public KeepFlagBattle(Player firstPlayer, Player secondPlayer)
     {
         super(firstPlayer, secondPlayer);
-        //battleMap.warriorsOnMap[2][4] = flag;
+        battleMap.spellsAndCollectibleOnMap[2][4] = new Flag();
     }
 
     public void dropFlagAfterDead()
@@ -20,8 +19,11 @@ public class KeepFlagBattle extends Battle
     @Override
     public void checkBattleResult()
     {
+        if (this.getBattleTurnHandler().firstPlayerHasFlagTurnNumber == 6)
+            winActions(firstPlayer, GameResault.FristPlayerWin);
 
-        //use addBattleToBattleHistories(gameResault);
+        if (this.getBattleTurnHandler().secondPlayerHasFlagTurnNumber == 6)
+            winActions(secondPlayer, GameResault.SecondPlayerWin);
     }
 
     @Override

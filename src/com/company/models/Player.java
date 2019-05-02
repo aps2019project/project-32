@@ -2,7 +2,6 @@ package com.company.models;
 
 import com.company.controller.Controller;
 import com.company.controller.Exceptions.*;
-import com.company.models.widget.Flag;
 import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.Warriors.Hero;
@@ -276,7 +275,6 @@ public class Player implements Serializable
     {
         private ArrayList<Card> handCards = new ArrayList<>();
         private ArrayList<Spell> collectedItems; // new in battle and after game going null
-        private Flag keepModeFlag;
         private Card nextCard;
         private SecureRandom randomMaker = new SecureRandom();
 
@@ -332,19 +330,18 @@ public class Player implements Serializable
                 if (handCard.getName().equals(cardName))
                     return handCard;
 
+            for (Spell collectedItem : collectedItems)
+                if (collectedItem.getName().equals(cardName))
+                    return collectedItem;
+
             return null;
         }
 
-        public Card getCardFromHandActions(Card intendedCard)
+        public void putCardFromHandActions(Card intendedCard)
         {
-            for (Card handCard : handCards)
-                if (handCard.equals(intendedCard))
-                    return handCard;
-
-            setNextCardInHand();
             handCards.add(handCards.indexOf(intendedCard), nextCard);
-            handCards.remove(handCards.indexOf(intendedCard) + 1);
-            return null;
+            handCards.remove(intendedCard);
+            setNextCardInHand();
         }
 
         public String toShowHand()
@@ -396,16 +393,6 @@ public class Player implements Serializable
         public void setCollectedItems(ArrayList<Spell> collectedItems)
         {
             this.collectedItems = collectedItems;
-        }
-
-        public Flag getKeepModeFlag()
-        {
-            return keepModeFlag;
-        }
-
-        public void setKeepModeFlag(Flag keepModeFlag)
-        {
-            this.keepModeFlag = keepModeFlag;
         }
     }
 

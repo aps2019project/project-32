@@ -1,7 +1,8 @@
 package com.company.models.battle;
 
-import com.company.controller.Exceptions.GameIsNotOver;
 import com.company.models.Player;
+import com.company.models.Position;
+import com.company.models.widget.Flag;
 
 public class CollectFlagBattle extends Battle
 {
@@ -11,23 +12,18 @@ public class CollectFlagBattle extends Battle
     {
         super(firstPlayer, secondPlayer);
         this.flagNumbers = 7;
+        addFlagsToMap();
     }
 
     @Override
-    public void checkBattleResult() throws GameIsNotOver
+    public void checkBattleResult()
     {
         if (firstPlayer.getPlayerHand().getFlagNumbersInCollectedItems() > flagNumbers / 2)
-        {
-            gameResault = GameResault.FristPlayerWin;
-            firstPlayer.setCash(firstPlayer.getCash() + 1000);
-            addBattleToBattleHistories(gameResault);
-        }
+           winActions(firstPlayer,GameResault.FristPlayerWin);
+
         if (secondPlayer.getPlayerHand().getFlagNumbersInCollectedItems() > flagNumbers / 2)
-        {
-            gameResault = GameResault.SecondPlayerWin;
-            secondPlayer.setCash(secondPlayer.getCash() + 1000);
-            addBattleToBattleHistories(gameResault);
-        }
+            winActions(secondPlayer,GameResault.SecondPlayerWin);
+
         gameResault = GameResault.UnCertain;
     }
 
@@ -35,5 +31,14 @@ public class CollectFlagBattle extends Battle
     public String toShowGameInfo()
     {
         return null;
+    }
+
+    private void addFlagsToMap()
+    {
+        for (int i = 0; i < flagNumbers; i++)
+        {
+            Position randomPosition = Position.getRandomPosition();
+            battleMap.getSpellsAndCollectibleOnMap()[randomPosition.row][randomPosition.col] = new Flag();
+        }
     }
 }

@@ -28,7 +28,6 @@ public abstract class Battle
     protected GameResault gameResault = GameResault.UnCertain;
     protected Player firstPlayer;
     protected Player secondPlayer;
-    private SecureRandom randomMaker = new SecureRandom();
 
 
     public class Map
@@ -51,26 +50,13 @@ public abstract class Battle
             return spellsAndCollectibleOnMap;
         }
 
-        public Position getRandomPosition()
-        {
-            int row;
-            int col;
-            while (true)
-            {
-                row = randomMaker.nextInt(5);
-                col = randomMaker.nextInt(9);
-                if (warriorsOnMap[row][col] == null)
-                    return new Position(row, col);
-            }
-        }
-
         public void addCollectibleItemOnMapRandomise()
         {
             ArrayList<Spell> collectibles = new ArrayList<>(5);
             // make and add 5 collectable item to collectibles
             ArrayList<Position> randomPositions = new ArrayList<>(5);
             for (int i = 0; i < 5; i++)
-                randomPositions.add(getRandomPosition());
+                randomPositions.add(Position.getRandomPosition());
 
             // add to warriorsOnMap 5 collectibles
         }
@@ -95,8 +81,8 @@ public abstract class Battle
 
         public void addBuffRandomise()
         {
-            Position randomPosition = getRandomPosition();
-            int randomNumber = randomMaker.nextInt() % 3;
+            Position randomPosition = Position.getRandomPosition();
+            int randomNumber = new SecureRandom().nextInt() % 3;
 
             switch (randomNumber)
             {
@@ -140,11 +126,18 @@ public abstract class Battle
 
         public void insertCard(Card card, Position position) throws InvalidPosition
         {
-            if (battleMap.warriorsOnMap[position.row][position.col] != null)
-                throw new InvalidPosition();
+            if (card instanceof Spell)
+            {
+                ((Spell) card).doEffectAction(battleMap, position);
+            }
+            else if (card instanceof Warrior)
+            {
+                if (battleMap.warriorsOnMap[position.row][position.col] != null)
+                    throw new InvalidPosition();
 
+                battleMap.warriorsOnMap[position.row][position.col] = ((Warrior) card);
 
-
+            }
         }
     }
 
@@ -153,6 +146,9 @@ public abstract class Battle
         Player playerHasTurn;
         Turn turn;
         int turnNumber;
+
+        int firstPlayerHasFlagTurnNumber = 0;
+        int secondPlayerHasFlagTurnNumber = 0; //Just For KeepFlag Battles
 
         public void changeCoolDownRemaining()
         {
@@ -178,6 +174,15 @@ public abstract class Battle
                 playerHasTurn = firstPlayer;
                 firstPlayer.setPlayerManaSpace(firstPlayer.getPlayerManaSpace() + 1);
                 firstPlayer.setPlayerCurrentMana(firstPlayer.getPlayerManaSpace());
+            }
+
+            if (Battle.this instanceof KeepFlagBattle)
+            {
+                if (firstPlayer.getPlayerHand().getFlagNumbersInCollectedItems() > 0)
+                    firstPlayerHasFlagTurnNumber++;
+
+                else if (secondPlayer.getPlayerHand().getFlagNumbersInCollectedItems() > 0)
+                    secondPlayerHasFlagTurnNumber++;
             }
 
             changeCoolDownRemaining();
@@ -224,10 +229,10 @@ public abstract class Battle
         secondPlayer.getPlayerHand().makeRandomiseHand();
     }
 
-    protected void addBattleToBattleHistories(GameResault gameResault) throws GameIsNotOver
+    protected void addBattleToBattleHistories(GameResault gameResault)
     {
-        if (gameResault == GameResault.UnCertain)
-            throw new GameIsNotOver();
+//        if (gameResault == GameResault.UnCertain)
+//            throw new GameIsNotOver();
 
         if (gameResault == GameResault.FristPlayerWin)
         {
@@ -270,6 +275,23 @@ public abstract class Battle
 
         warrior.getSpecialSpell().doEffectAction(battleMap, position);
         warrior.getOwnerPlayer().decreaseMana(warrior.getSpecialSpell().getManaCost());
+    }
+
+    public void winActions(Player player, GameResault gr)
+    {
+        gameResault = gr;
+        player.setCash(player.getCash() + 1000);
+        addBattleToBattleHistories(gr);
+        player.setWinNumber(player.getWinNumber() + 1);
+        getOtherPlayer(player).setLoseNumber(getOtherPlayer(player).getLoseNumber() + 1);
+    }
+
+    public Player getOtherPlayer(Player player)
+    {
+        if (player.equals(firstPlayer))
+            return secondPlayer;
+
+        return firstPlayer;
     }
 
     public void moveWarriorOptions(Warrior intendedWarrior, Position sourcePosition, Position destinationPosition) throws WarriorIsTired, WarriorUnderStun

@@ -10,7 +10,8 @@ import com.company.models.widget.cards.Warriors.Warrior;
 
 import java.util.ArrayList;
 
-public class Spell extends Card {
+public class Spell extends Card
+{
     protected int manaCost;
     protected int coolDown;
     protected int affectChangeAbilityTurnNumber;
@@ -29,7 +30,8 @@ public class Spell extends Card {
     private SpellKind spellKind;
 
 
-    public Spell(SpellKind spellKind,String name, int price, int manaCost, int coolDown, int affectChangeAbilityTurnNumber, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes) {
+    public Spell(SpellKind spellKind, String name, int price, int manaCost, int coolDown, int affectChangeAbilityTurnNumber, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes)
+    {
         super(name, price);
         this.spellKind = spellKind;
         addSpellTypes(spellTypes);
@@ -45,175 +47,252 @@ public class Spell extends Card {
         this.changeHealthPoint = changeHealthPoint;
     }
 
-    public SpellKind getSpellKind() {
-        return spellKind;
-    }
-
-    public Spell(Spell spell, boolean inShopCopy){
-        this(spell.getSpellKind(),spell.name,spell.price,spell.manaCost,spell.coolDown,spell.affectChangeAbilityTurnNumber,spell.affectDisarmTurnNumber,spell.affectStunTurnNumber,spell.spellRange,spell.changeAttackPoint,spell.changeHealthPoint, (SpellType) null);
+    public Spell(Spell spell, boolean inShopCopy)
+    {
+        this(spell.getSpellKind(), spell.name, spell.price, spell.manaCost, spell.coolDown, spell.affectChangeAbilityTurnNumber, spell.affectDisarmTurnNumber, spell.affectStunTurnNumber, spell.spellRange, spell.changeAttackPoint, spell.changeHealthPoint, (SpellType) null);
         this.setSpellTypes(spell.getSpellTypes());
-        if (!inShopCopy){
+        if (!inShopCopy)
+        {
             this.setAffectChangeAbilityTurnNumberRemain(this.affectChangeAbilityTurnNumber);
             this.setAffectDisarmTurnNumberRemain(this.affectDisarmTurnNumber);
             this.setAffectStunTurnNumberRemain(this.affectStunTurnNumber);
         }
     }
 
-    private void addSpellTypes(SpellType... spellTypes) {
-        for (SpellType spellType : spellTypes) {
+
+    public SpellKind getSpellKind()
+    {
+        return spellKind;
+    }
+
+    private void addSpellTypes(SpellType... spellTypes)
+    {
+        for (SpellType spellType : spellTypes)
+        {
             this.getSpellTypes().add(spellType);
         }
     }
 
-    public ArrayList<SpellType> getSpellTypes() {
+    public ArrayList<SpellType> getSpellTypes()
+    {
         return spellTypes;
     }
 
 
-    public void setAffectChangeAbilityTurnNumberRemain(int affectChangeAbilityTurnNumberRemain) {
+    public void setAffectChangeAbilityTurnNumberRemain(int affectChangeAbilityTurnNumberRemain)
+    {
         this.affectChangeAbilityTurnNumberRemain = affectChangeAbilityTurnNumberRemain;
     }
 
-    public void setAffectStunTurnNumberRemain(int affectStunTurnNumberRemain) {
+    public void setAffectStunTurnNumberRemain(int affectStunTurnNumberRemain)
+    {
         this.affectStunTurnNumberRemain = affectStunTurnNumberRemain;
     }
 
-    public void setAffectDisarmTurnNumberRemain(int affectDisarmTurnNumberRemain) {
+    public void setAffectDisarmTurnNumberRemain(int affectDisarmTurnNumberRemain)
+    {
         this.affectDisarmTurnNumberRemain = affectDisarmTurnNumberRemain;
     }
 
     @Override
-    public String toShow() {
-        return String.format
-                ("(Spell) - Name : %s – MP : %d - CoolDown : %d - Sell Cost : %d - Buy Cost : %d \n", this.name, this.manaCost, this.coolDown,this.price/2,this.price);
+    public String toShow()
+    {
+        if (this.spellKind != SpellKind.Collectible)
+            return String.format("(Spell) - Name : %s – MP : %d - CoolDown : %d - Sell Cost : %d" + " - " +
+                            "Buy Cost : %d \n", this.name, this.manaCost, this.coolDown, this.price / 2, this.price);
+        else
+            return String.format("(Collectible) - Name : %s", this.name);
     }
 
-    public void doEffectAction(Battle.Map map, Position position) {
+    public void doEffectAction(Battle.Map map, Position position)
+    {
         Widget widget = map.getWarriorsOnMap()[position.row][position.col];
-        if (getSpellTypes().contains(SpellType.onFriend)) {
-            if (widget != null) {
-                if (widget instanceof Warrior && widget.getOwnerPlayer() == this.getOwnerPlayer()) {
+        if (getSpellTypes().contains(SpellType.onFriend))
+        {
+            if (widget != null)
+            {
+                if (widget.getOwnerPlayer() == this.getOwnerPlayer())
+                {
 
-                    if (getSpellTypes().contains(SpellType.onHero)) {
-                        if (widget instanceof Hero) {
+                    if (getSpellTypes().contains(SpellType.onHero))
+                    {
+                        if (widget instanceof Hero)
+                        {
 
-                            if (getSpellTypes().contains(SpellType.AttackPoint)) {
+                            if (getSpellTypes().contains(SpellType.AttackPoint))
+                            {
                                 doAttackPoint(widget);
                             }
-                            if (getSpellTypes().contains(SpellType.HealthPoint)) {
+                            if (getSpellTypes().contains(SpellType.HealthPoint))
+                            {
                                 doHealthPoint(widget);
                             }
-                            ((Hero) widget).addToSpellsOnWarrior(new Spell(this,false));
-                        } else {
+                            ((Hero) widget).addToSpellsOnWarrior(new Spell(this, false));
+                        }
+                        else
+                        {
                             // invalid attack
                         }
-                    } else if (getSpellTypes().contains(SpellType.onMinion)) {
-                        if (widget instanceof Minion) {
-                            if (getSpellTypes().contains(SpellType.healHeroByMinion)) {
+                    }
+                    else if (getSpellTypes().contains(SpellType.onMinion))
+                    {
+                        if (widget instanceof Minion)
+                        {
+                            if (getSpellTypes().contains(SpellType.healHeroByMinion))
+                            {
                                 doHealHeroByMinion(widget);
                             }
-                            if (getSpellTypes().contains(SpellType.AttackPoint)) {
+                            if (getSpellTypes().contains(SpellType.AttackPoint))
+                            {
                                 doAttackPoint(widget);
                             }
-                            if (getSpellTypes().contains(SpellType.HealthPoint)) {
+                            if (getSpellTypes().contains(SpellType.HealthPoint))
+                            {
                                 doHealthPoint(widget);
                             }
-                            ((Minion) widget).addToSpellsOnWarrior(new Spell(this,false));
-                        } else {
+                            ((Minion) widget).addToSpellsOnWarrior(new Spell(this, false));
+                        }
+                        else
+                        {
                             //invalid attack
                         }
-                    } else if (getSpellTypes().contains(SpellType.onMinionOrHero)) {
+                    }
+                    else if (getSpellTypes().contains(SpellType.onMinionOrHero))
+                    {
 
-                        if (getSpellTypes().contains(SpellType.AttackPoint)) {
+                        if (getSpellTypes().contains(SpellType.AttackPoint))
+                        {
                             doAttackPoint(widget);
                         }
-                        if (getSpellTypes().contains(SpellType.HealthPoint)) {
+                        if (getSpellTypes().contains(SpellType.HealthPoint))
+                        {
                             doHealthPoint(widget);
                         }
-                        ((Warrior) widget).addToSpellsOnWarrior(new Spell(this,false));
+                        ((Warrior) widget).addToSpellsOnWarrior(new Spell(this, false));
                     }
                 }
-            } else {
+            }
+            else
+            {
                 // invalid attack
             }
 
-        } else if (getSpellTypes().contains(SpellType.onEnemy)) {
-            if (widget != null) {
-                if (widget instanceof Warrior && widget.getOwnerPlayer() != this.getOwnerPlayer()) {
+        }
+        else if (getSpellTypes().contains(SpellType.onEnemy))
+        {
+            if (widget != null)
+            {
+                if (widget.getOwnerPlayer() != this.getOwnerPlayer())
+                {
 
-                    if (getSpellTypes().contains(SpellType.onHero)) {
-                        if (widget instanceof Hero) {
+                    if (getSpellTypes().contains(SpellType.onHero))
+                    {
+                        if (widget instanceof Hero)
+                        {
 
-                            if (getSpellTypes().contains(SpellType.HealthPoint)) {
+                            if (getSpellTypes().contains(SpellType.HealthPoint))
+                            {
                                 doHealthPoint(widget);
                             }
-                            ((Hero) widget).addToSpellsOnWarrior(new Spell(this,false));
-                        } else {
+                            ((Hero) widget).addToSpellsOnWarrior(new Spell(this, false));
+                        }
+                        else
+                        {
                             // invalid attack
                         }
-                    } else if (getSpellTypes().contains(SpellType.onMinion)) {
-                        if (widget instanceof Minion) {
-                            if (getSpellTypes().contains(SpellType.onMinionNearHero)) {
+                    }
+                    else if (getSpellTypes().contains(SpellType.onMinion))
+                    {
+                        if (widget instanceof Minion)
+                        {
+                            if (getSpellTypes().contains(SpellType.onMinionNearHero))
+                            {
 
                             }
-                            else {
-                                if (getSpellTypes().contains(SpellType.HealthPoint)) {
+                            else
+                            {
+                                if (getSpellTypes().contains(SpellType.HealthPoint))
+                                {
                                     doHealthPoint(widget);
                                 }
-                                if (getSpellTypes().contains(SpellType.AttackPoint)) {
+                                if (getSpellTypes().contains(SpellType.AttackPoint))
+                                {
                                     doAttackPoint(widget);
                                 }
                                 ((Minion) widget).addToSpellsOnWarrior(new Spell(this, false));
                             }
-                        } else {
+                        }
+                        else
+                        {
                             //invalid attack
                         }
 
-                    } else if (getSpellTypes().contains(SpellType.onMinionOrHero)) {
-                        if (getSpellTypes().contains(SpellType.HealthPoint)) {
+                    }
+                    else if (getSpellTypes().contains(SpellType.onMinionOrHero))
+                    {
+                        if (getSpellTypes().contains(SpellType.HealthPoint))
+                        {
                             doHealHeroByMinion(widget);
                         }
-                        if (getSpellTypes().contains(SpellType.AttackPoint)) {
+                        if (getSpellTypes().contains(SpellType.AttackPoint))
+                        {
                             doAttackPoint(widget);
                         }
-                        if (getSpellTypes().contains(SpellType.onEnemiesInCol)) {
-                            for (int i = 0; i < 5; i++) {
+                        if (getSpellTypes().contains(SpellType.onEnemiesInCol))
+                        {
+                            for (int i = 0; i < 5; i++)
+                            {
                                 if (map.getWarriorsOnMap()[i][position.col] instanceof Warrior && map.getWarriorsOnMap()[i][position.col].getOwnerPlayer() != this.getOwnerPlayer())
                                     doAttackPoint(map.getWarriorsOnMap()[i][position.col]);
                             }
                         }
-                        ((Warrior) widget).addToSpellsOnWarrior(new Spell(this,false));
+                        ((Warrior) widget).addToSpellsOnWarrior(new Spell(this, false));
                     }
-                } else {
+                }
+                else
+                {
                     // invalid attack
                 }
             }
-            else {
+            else
+            {
                 // invalid attack
             }
-        } else if (getSpellTypes().contains(SpellType.onEnemyOrFriend)) {
+        }
+        else if (getSpellTypes().contains(SpellType.onEnemyOrFriend))
+        {
 
 
-        } else if (getSpellTypes().contains(SpellType.allEnemy)) {
+        }
+        else if (getSpellTypes().contains(SpellType.allEnemy))
+        {
 
-        } else if (getSpellTypes().contains(SpellType.cellEffect)) {
-            if (getSpellTypes().contains(SpellType.inactiveBuffs)){
-                inActiveBuffs(map,position);
+        }
+        else if (getSpellTypes().contains(SpellType.cellEffect))
+        {
+            if (getSpellTypes().contains(SpellType.inactiveBuffs))
+            {
+                inActiveBuffs(map, position);
             }
         }
 
     }
 
 
-    public void inActiveBuffs(Battle.Map map,Position position){
-        for (int i = position.row;i<position.row+this.getSpellRange();i++){
-            for (int j = position.col;i<position.col+this.getSpellRange();j++) {
+    public void inActiveBuffs(Battle.Map map, Position position)
+    {
+        for (int i = position.row; i < position.row + this.getSpellRange(); i++)
+        {
+            for (int j = position.col; i < position.col + this.getSpellRange(); j++)
+            {
                 Warrior warrior = map.getWarriorsOnMap()[i][j];
                 {
-                    if (warrior.getOwnerPlayer() == this.getOwnerPlayer()) {
+                    if (warrior.getOwnerPlayer() == this.getOwnerPlayer())
+                    {
                         warrior.removeNegativeBuffs();
                     }
-                    if (warrior.getOwnerPlayer() != this.getOwnerPlayer()) {
+                    if (warrior.getOwnerPlayer() != this.getOwnerPlayer())
+                    {
                         warrior.removePositiveBuffs();
                     }
                 }
@@ -221,94 +300,114 @@ public class Spell extends Card {
         }
     }
 
-    private void doHealHeroByMinion(Widget widget) {
-
+    private void doHealHeroByMinion(Widget widget)
+    {
         //TODO
     }
 
-    private void doHealthPoint(Widget widget) {
+    private void doHealthPoint(Widget widget)
+    {
 
         ((Warrior) widget).changeHealth(this.getChangeHealthPoint());
     }
 
-    private void doAttackPoint(Widget widget) {
+    private void doAttackPoint(Widget widget)
+    {
 
         ((Warrior) widget).changeHealth(this.getChangeAttackPoint());
 
     }
 
 
-    public int getManaCost() {
+    public int getManaCost()
+    {
         return manaCost;
     }
 
-    public int getCoolDown() {
+    public int getCoolDown()
+    {
         return coolDown;
     }
 
-    public int getCoolDownRemaining() {
+    public int getCoolDownRemaining()
+    {
         return coolDownRemaining;
     }
 
-    public void setCoolDownRemaining(int coolDownRemaining) {
+    public void setCoolDownRemaining(int coolDownRemaining)
+    {
         this.coolDownRemaining = coolDownRemaining;
     }
 
-    public void decreaseCoolDownRemaining() {
+    public void decreaseCoolDownRemaining()
+    {
         if (coolDownRemaining >= 1)
             coolDownRemaining -= 1;
     }
 
-    public void setManaCost(int manaCost) {
+    public void setManaCost(int manaCost)
+    {
         this.manaCost = manaCost;
     }
 
 
-    public int getAffectTurnNumberRemaining() {
+    public int getAffectTurnNumberRemaining()
+    {
         return affectTurnNumberRemaining;
     }
 
-    public void setAffectTurnNumberRemaining(int affectTurnNumberRemaining) {
+    public void setAffectTurnNumberRemaining(int affectTurnNumberRemaining)
+    {
         this.affectTurnNumberRemaining = affectTurnNumberRemaining;
     }
 
-    public void setSpellTypes(ArrayList<SpellType> spellTypes) {
+    public void setSpellTypes(ArrayList<SpellType> spellTypes)
+    {
         this.spellTypes = spellTypes;
     }
 
-    public int getSpellRange() {
+    public int getSpellRange()
+    {
         return spellRange;
     }
 
-    public void setSpellRange(int spellRange) {
+    public void setSpellRange(int spellRange)
+    {
         this.spellRange = spellRange;
     }
 
-    public int getChangeAttackPoint() {
+    public int getChangeAttackPoint()
+    {
         return changeAttackPoint;
     }
 
-    public void setChangeAttackPoint(int changeAttackPoint) {
+    public void setChangeAttackPoint(int changeAttackPoint)
+    {
         this.changeAttackPoint = changeAttackPoint;
     }
 
-    public int getChangeHealthPoint() {
+    public int getChangeHealthPoint()
+    {
         return changeHealthPoint;
     }
 
-    public void setChangeHealthPoint(int changeHealthPoint) {
+    public void setChangeHealthPoint(int changeHealthPoint)
+    {
         this.changeHealthPoint = changeHealthPoint;
     }
 
-    public int getAffectChangeAbilityTurnNumberRemain() {
+    public int getAffectChangeAbilityTurnNumberRemain()
+    {
         return affectChangeAbilityTurnNumberRemain;
     }
 
-    public int getAffectStunTurnNumberRemain() {
+    public int getAffectStunTurnNumberRemain()
+    {
         return affectStunTurnNumberRemain;
     }
 
-    public int getAffectDisarmTurnNumberRemain() {
+    public int getAffectDisarmTurnNumberRemain()
+    {
         return affectDisarmTurnNumberRemain;
     }
 }

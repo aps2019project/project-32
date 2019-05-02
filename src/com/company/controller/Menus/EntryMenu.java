@@ -14,7 +14,9 @@ public class EntryMenu implements AbstractMenu
     private EntryMenu()
     {
     }
+
     private static EntryMenu entryMenuInstance = new EntryMenu();
+
     public static AbstractMenu getInstance()
     {
         return entryMenuInstance;
@@ -49,12 +51,18 @@ public class EntryMenu implements AbstractMenu
             if (player.getName().equals(userName))
                 throw new UserNameAlreadyExist();
 
-        View.getInstance().show("Enter PassWord!:");
-        String passWord = Request.getInstance().getNewCommand();
-        //if (checkPassWordSafety(passWord))
-            Player.getPlayers().add(new Player(userName, passWord));
-        //else
-          //  throw new WeekPassword();
+        while (true)
+        {
+            View.getInstance().show("Enter PassWord!:");
+            String passWord = Request.getInstance().getNewCommand();
+            if (checkPassWordSafety(passWord))
+            {
+                Player.getPlayers().add(new Player(userName, passWord));
+                break;
+            }
+            else
+                throw new WeekPassword();
+        }
     }
 
     private boolean checkPassWordSafety(String passWord)
