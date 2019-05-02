@@ -5,12 +5,12 @@ import com.company.models.Player;
 
 public class CollectFlagBattle extends Battle
 {
-    private int flagNumbers = 7;
+    private int flagNumbers;
 
-    CollectFlagBattle(Player firstPlayer, Player secondPlayer, int flagNumbers)
+    public CollectFlagBattle(Player firstPlayer, Player secondPlayer)
     {
         super(firstPlayer, secondPlayer);
-        this.flagNumbers = flagNumbers;
+        this.flagNumbers = 7;
     }
 
     @Override

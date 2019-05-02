@@ -1,6 +1,7 @@
 package com.company.controller.Menus.battlemenus;
 
 import com.company.controller.Controller;
+import com.company.controller.Exceptions.BattleHasNotInitialise;
 import com.company.controller.Exceptions.UnSelectable;
 import com.company.controller.Menus.AbstractMenu;
 import com.company.controller.Menus.MainMenu;
@@ -14,26 +15,23 @@ import com.company.view.View;
 
 public class BattleMenu implements AbstractMenu
 {
-    private static Battle currentBattle;
+    protected static Battle currentBattle;
 
-    private BattleMenu()
+    protected BattleMenu()
     {
     }
+
     private static BattleMenu battleMenuInstance = new BattleMenu();
+
     public static BattleMenu getInstance()
     {
         return battleMenuInstance;
     }
 
-    public static void setCurrentBattle(Battle currentBattle)
-    {
-        BattleMenu.currentBattle = currentBattle;
-    }
-
     @Override
-    public void selectOptionByCommand(String command) throws UnSelectable
+    public void selectOptionByCommand(String command) throws UnSelectable, BattleHasNotInitialise
     {
-        if (command.matches("Game Info"))
+        if (command.matches("Game Information"))
             View.getInstance().show(currentBattle.toShowGameInfo());
 
         else if (command.matches("Show My Minions"))
@@ -67,20 +65,17 @@ public class BattleMenu implements AbstractMenu
         else if (command.matches("Show Hand"))
             View.getInstance().show(currentBattle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand());
 
-        else if (command.matches("Insert \\w+ In \\d \\d"))
-        {
-
-        }
     }
+
 
     @Override
     public String toShowMenu()
     {
         return "1.Game Information 2.My Minions 3.Opponent Minions 4.Show Card Information 5.Select 6.Enter GraveYard" +
-                " 7.End Game 8.End Turn 9.Show Collectible 10.Show Hand 11.Insert Card";
+                " 7.End Game 8.End Turn 9.Show Collectible 10.Show Hand";
     }
 
-    public void selectActions(int cardID) throws UnSelectable
+    private void selectActions(int cardID) throws UnSelectable
     {
         Widget widget = currentBattle.getBattleMap().selectCard(cardID);
         if (widget instanceof Warrior)
@@ -97,7 +92,7 @@ public class BattleMenu implements AbstractMenu
             throw new UnSelectable();
     }
 
-    public String toShowCardInfo(int cardID)
+    private String toShowCardInfo(int cardID)
     {
         Widget widget = currentBattle.getBattleMap().selectCard(cardID);
         Position position = currentBattle.getBattleMap().getPosition(widget);
@@ -114,9 +109,14 @@ public class BattleMenu implements AbstractMenu
         return currentBattle.toShowEndGameDetails();
     }
 
-    public static Battle getCurrentBattle()
+    public Battle getCurrentBattle()
     {
         return currentBattle;
+    }
+
+    public void setCurrentBattle(Battle currentBattle)
+    {
+        BattleMenu.currentBattle = currentBattle;
     }
 }
 

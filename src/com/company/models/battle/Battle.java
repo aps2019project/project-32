@@ -45,6 +45,7 @@ public abstract class Battle
         {
             return warriorsOnMap;
         }
+
         public Widget[][] getSpellsAndCollectibleOnMap()
         {
             return spellsAndCollectibleOnMap;
@@ -100,11 +101,11 @@ public abstract class Battle
             switch (randomNumber)
             {
                 case 0:
-                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff,"PoisonBuff",0,0,0,3,0,0,0,0,-1, SpellType.HealthPoint,SpellType.onMinionOrHero,SpellType.onEnemyOrFriend);
+                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff, "PoisonBuff", 0, 0, 0, 3, 0, 0, 0, 0, -1, SpellType.HealthPoint, SpellType.onMinionOrHero, SpellType.onEnemyOrFriend);
                 case 1:
-                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff,"FieryBuff",0,0,0,3,0,0,0,0,-2, SpellType.HealthPoint,SpellType.onMinionOrHero,SpellType.onEnemyOrFriend);
+                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff, "FieryBuff", 0, 0, 0, 3, 0, 0, 0, 0, -2, SpellType.HealthPoint, SpellType.onMinionOrHero, SpellType.onEnemyOrFriend);
                 case 2:
-                   // spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col];
+                    // spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col];
             }
         }
 
@@ -137,6 +138,14 @@ public abstract class Battle
             return widgetsString;
         }
 
+        public void insertCard(Card card, Position position) throws InvalidPosition
+        {
+            if (battleMap.warriorsOnMap[position.row][position.col] != null)
+                throw new InvalidPosition();
+
+
+
+        }
     }
 
     public class TurnHandler
@@ -275,7 +284,7 @@ public abstract class Battle
         battleMap.warriorsOnMap[sourcePosition.row][sourcePosition.col] = null;
         Widget widget = battleMap.spellsAndCollectibleOnMap[destinationPosition.row][destinationPosition.col];
 
-        if (widget instanceof Spell && ((Spell) widget).getSpellKind()==SpellKind.Collectible)
+        if (widget instanceof Spell && ((Spell) widget).getSpellKind() == SpellKind.Collectible)
             collect(intendedWarrior, widget);
 
         battleMap.warriorsOnMap[destinationPosition.row][destinationPosition.col] = intendedWarrior;
@@ -340,4 +349,9 @@ public abstract class Battle
     }
 
     public abstract String toShowGameInfo();
+
+    public static Player createAIPlayer()
+    {
+        return new Player("AI", "AI");
+    }
 }

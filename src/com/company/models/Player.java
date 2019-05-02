@@ -326,6 +326,15 @@ public class Player implements Serializable
             }
         }
 
+        public Card getCardByName(String cardName)
+        {
+            for (Card handCard : handCards)
+                if (handCard.getName().equals(cardName))
+                    return handCard;
+
+            return null;
+        }
+
         public Card getCardFromHandActions(Card intendedCard)
         {
             for (Card handCard : handCards)

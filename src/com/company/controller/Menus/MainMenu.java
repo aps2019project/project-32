@@ -1,7 +1,7 @@
 package com.company.controller.Menus;
 
 import com.company.controller.Controller;
-import com.company.controller.Menus.battlemenus.BattleMenu;
+import com.company.controller.Menus.battlemenus.StartBattleMenu;
 import com.company.models.Player;
 import com.company.view.View;
 
@@ -33,7 +33,7 @@ public class MainMenu implements AbstractMenu
             Controller.getInstance().changeCurrentMenuTo(ShopMenu.getInstance());
 
         else if (command.matches("Battle"))
-            Controller.getInstance().changeCurrentMenuTo(BattleMenu.getInstance());
+            Controller.getInstance().changeCurrentMenuTo(StartBattleMenu.getInstance());
 
         else if (command.matches("Exit"))
             Controller.getInstance().changeCurrentMenuTo(EntryMenu.getInstance());

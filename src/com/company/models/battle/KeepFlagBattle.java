@@ -6,7 +6,7 @@ public class KeepFlagBattle extends Battle
 {
     //Flag flag = new Flag();
 
-    KeepFlagBattle(Player firstPlayer, Player secondPlayer)
+    public KeepFlagBattle(Player firstPlayer, Player secondPlayer)
     {
         super(firstPlayer, secondPlayer);
         //battleMap.warriorsOnMap[2][4] = flag;

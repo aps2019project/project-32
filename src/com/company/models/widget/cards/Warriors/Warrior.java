@@ -42,19 +42,19 @@ public class Warrior extends Card implements Attackable
     @Override
     public void attack(Warrior defender)
     {
-        Position attackerPosition = BattleMenu.getCurrentBattle().getBattleMap().getPosition(this);
-        Position defenderPosition = BattleMenu.getCurrentBattle().getBattleMap().getPosition(defender);
+        Position attackerPosition = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getPosition(this);
+        Position defenderPosition = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getPosition(defender);
         defender.changeHealth(-this.getPower());
         if (this instanceof Minion && ((Minion) this).getMinionSpellType() == MinionSpellType.OnAttack)
         {
-            this.getSpecialSpell().doEffectAction(BattleMenu.getCurrentBattle().getBattleMap(), defenderPosition);
+            this.getSpecialSpell().doEffectAction(BattleMenu.getInstance().getCurrentBattle().getBattleMap(), defenderPosition);
         }
         else if (!defender.isDisarm() && defender instanceof Minion && ((Minion) this).getMinionSpellType() == MinionSpellType.OnDefense)
         {
             if (defender.getSpecialSpell().getSpellTypes().contains(SpellType.onEnemy))
-                defender.getSpecialSpell().doEffectAction(BattleMenu.getCurrentBattle().getBattleMap(), attackerPosition);
+                defender.getSpecialSpell().doEffectAction(BattleMenu.getInstance().getCurrentBattle().getBattleMap(), attackerPosition);
             if (defender.getSpecialSpell().getSpellTypes().contains(SpellType.onFriend))
-                defender.getSpecialSpell().doEffectAction(BattleMenu.getCurrentBattle().getBattleMap(), defenderPosition);
+                defender.getSpecialSpell().doEffectAction(BattleMenu.getInstance().getCurrentBattle().getBattleMap(), defenderPosition);
 
         }
         if (!defender.isDisarm() && defender.getAttackType() == AttackType.Melee)
