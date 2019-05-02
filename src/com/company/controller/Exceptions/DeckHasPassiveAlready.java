@@ -4,6 +4,6 @@ public class DeckHasPassiveAlready extends Exception
 {
     public DeckHasPassiveAlready()
     {
-        super("Deck has Passive Item Already!");
+        super("Deck has Passive Spell Already!");
     }
 }

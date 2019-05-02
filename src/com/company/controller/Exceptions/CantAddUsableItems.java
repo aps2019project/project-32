@@ -4,6 +4,6 @@ public class CantAddUsableItems extends Exception
 {
     public CantAddUsableItems()
     {
-        super("Cant Add More Than 3 Usable Item!");
+        super("Cant Add More Than 3 PassiveItem!");
     }
 }

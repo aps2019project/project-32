@@ -1,6 +1,6 @@
 package com.company.models.widget.cards.Warriors;
 
-import com.company.models.widget.items.Flag;
+import com.company.models.widget.Flag;
 
 import java.util.ArrayList;
 

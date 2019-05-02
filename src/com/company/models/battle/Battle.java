@@ -10,7 +10,6 @@ import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.spells.SpellKind;
 import com.company.models.widget.cards.spells.SpellType;
-import com.company.models.widget.items.Item;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -132,7 +131,7 @@ public abstract class Battle
 
                     Widget item = spellsAndCollectibleOnMap[j][i];
                     widgetsString = widgetsString.concat(String.format
-                            ("(Item) CardName : %s - Location (%d,%d)", item.getName(), i, j));
+                            ("(Collectible) CardName : %s - Location (%d,%d)", item.getName(), i, j));
                 }
 
             return widgetsString;
@@ -286,9 +285,9 @@ public abstract class Battle
 
     public void collect(Card intendedCard, Widget widget)
     {
-        if (widget instanceof Item)
+        if (widget instanceof Spell && ((Spell) widget).getSpellKind() == SpellKind.Collectible)
         {
-            intendedCard.getOwnerPlayer().getPlayerHand().getCollectedItems().add(((Item) widget));
+            intendedCard.getOwnerPlayer().getPlayerHand().getCollectedItems().add(((Spell) widget));
             widget.setOwnerPlayer(intendedCard.getOwnerPlayer());
         }
     }

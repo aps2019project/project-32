@@ -2,15 +2,14 @@ package com.company.models;
 
 import com.company.controller.Controller;
 import com.company.controller.Exceptions.*;
+import com.company.models.widget.Flag;
 import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
-import com.company.models.widget.cards.Usable;
 import com.company.models.widget.cards.Warriors.Hero;
 import com.company.models.widget.cards.Warriors.Minion;
 import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.Spell;
-import com.company.models.widget.items.Flag;
-import com.company.models.widget.items.Item;
+import com.company.models.widget.cards.spells.SpellKind;
 
 import java.io.Serializable;
 import java.security.SecureRandom;
@@ -146,7 +145,7 @@ public class Player implements Serializable
             int count = 0;
             for (Card card : cards)
             {
-                if (card instanceof Usable)
+                if (card instanceof Spell && ((Spell) card).getSpellKind() == SpellKind.Usable)
                     count++;
             }
             return count;
@@ -162,7 +161,7 @@ public class Player implements Serializable
 
         private String name;
         private Hero hero;
-        private Usable passiveItem;
+        private Spell passiveItem;
         private ArrayList<Card> cards = new ArrayList<>();
 
         public String toShowDeck()
@@ -185,20 +184,20 @@ public class Player implements Serializable
 
         public void addCardToDeck(Card card) throws DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready
         {
-            if (card instanceof Spell || card instanceof Minion)
+            if ((card instanceof Spell && ((Spell) card).getSpellKind() == SpellKind.spellCard) || card instanceof Minion)
                 if (cards.size() >= 20)
                     throw new DeckIsFull();
                 else if (cards.contains(card))
                     throw new CardExistInDeckAlready();
                 else
                     cards.add(card);
-            else if (card instanceof Usable)
+            else if (card instanceof Spell && ((Spell) card).getSpellKind() == SpellKind.Usable)
                 if (passiveItem != null)
                     throw new DeckHasPassiveAlready();
                 else if (passiveItem.equals(card))
                     throw new CardExistInDeckAlready();
                 else
-                    passiveItem = ((Usable) card);
+                    passiveItem = ((Spell) card);
             else if (card instanceof Hero)
                 if (hero != null)
                     throw new DeckHasHeroAlready();
@@ -246,12 +245,12 @@ public class Player implements Serializable
             this.hero = hero;
         }
 
-        public Usable getPassiveItem()
+        public Spell getPassiveItem()
         {
             return passiveItem;
         }
 
-        public void setPassiveItem(Usable passiveItem)
+        public void setPassiveItem(Spell passiveItem)
         {
             this.passiveItem = passiveItem;
         }
@@ -276,7 +275,7 @@ public class Player implements Serializable
     public class Hand
     {
         private ArrayList<Card> handCards = new ArrayList<>();
-        private ArrayList<Item> collectedItems; // new in battle and after game going null
+        private ArrayList<Spell> collectedItems; // new in battle and after game going null
         private Flag keepModeFlag;
         private Card nextCard;
         private SecureRandom randomMaker = new SecureRandom();
@@ -289,8 +288,8 @@ public class Player implements Serializable
         public int getFlagNumbersInCollectedItems()
         {
             int counter = 0;
-            for (Item collectedItem : collectedItems)
-                if (collectedItem instanceof Flag)
+            for (Spell collectedItem : collectedItems)
+                if (collectedItem.getSpellKind() == SpellKind.Flag)
                     counter++;
 
             return counter;
@@ -354,7 +353,7 @@ public class Player implements Serializable
         public String toShowCollectedItems()
         {
             String showCollectedItems = "";
-            for (Item collectedItem : collectedItems)
+            for (Spell collectedItem : collectedItems)
                 showCollectedItems = showCollectedItems.concat(collectedItem.toShow() + "\n");
 
             return showCollectedItems;
@@ -380,12 +379,12 @@ public class Player implements Serializable
             this.nextCard = nextCard;
         }
 
-        public ArrayList<Item> getCollectedItems()
+        public ArrayList<Spell> getCollectedItems()
         {
             return collectedItems;
         }
 
-        public void setCollectedItems(ArrayList<Item> collectedItems)
+        public void setCollectedItems(ArrayList<Spell> collectedItems)
         {
             this.collectedItems = collectedItems;
         }
@@ -433,11 +432,6 @@ public class Player implements Serializable
     public void addGameResultToBattleHistories(Player opponent, boolean hasWin, Date battleTime)
     {
         this.battleHistories.add(new BattleHistory(opponent, hasWin, battleTime));
-    }
-
-    public Item selectItem(int ID)
-    {
-        return null;
     }
 
     public void decreaseMana(int value)

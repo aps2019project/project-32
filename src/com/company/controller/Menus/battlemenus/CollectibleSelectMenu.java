@@ -31,7 +31,6 @@ public class CollectibleSelectMenu implements AbstractMenu
         }
     }
 
-
     @Override
     public String toShowMenu()
     {
