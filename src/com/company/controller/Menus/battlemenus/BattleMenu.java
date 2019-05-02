@@ -68,7 +68,7 @@ public class BattleMenu implements AbstractMenu
     @Override
     public String toShowMenu()
     {
-        return "1.Game Information 2.My Minions 3.OpponentMinions  "
+        return "1.Game Information 2.My Minions 3.OpponentMinions  ";
     }
 
     public void selectActions(int cardID) throws UnSelectable

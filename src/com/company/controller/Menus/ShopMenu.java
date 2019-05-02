@@ -277,6 +277,8 @@ public class ShopMenu implements AbstractMenu
         ((Minion) persianSword).setSpecialSpell(SpellKind.spellCard,0,0,0,0,1,1,0,0,SpellType.onEnemy,SpellType.onMinionOrHero);
         cards.add(persianSword);
 
+
+
     }
 
     public void add(Card card){

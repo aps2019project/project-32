@@ -44,12 +44,6 @@ public class GraveYardMenu implements AbstractMenu
     }
 
     @Override
-    public String help()
-    {
-        return null;
-    }
-
-    @Override
     public String toShowMenu()
     {
         return null;

@@ -1,6 +1,7 @@
 package com.company.models.widget.cards.Warriors;
 
 import com.company.controller.Menus.battlemenus.BattleMenu;
+import com.company.models.Position;
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.spells.SpellKind;
@@ -26,7 +27,6 @@ public class Warrior extends Card implements Movable, Attackable, Defendable {
         this.power = power;
         this.attackType = attackType;
         this.attackRadius = attackRadius;
-
     }
 
 
@@ -38,12 +38,27 @@ public class Warrior extends Card implements Movable, Attackable, Defendable {
 
     @Override
     public void attack(Warrior defender) {
+        Position attackerPosition = BattleMenu.getBattle().getBattleMap().getPosition(this);
+        Position defenderPosition = BattleMenu.getBattle().getBattleMap().getPosition(defender);
         defender.changeHealth(-this.getPower());
         if (this instanceof Minion && ((Minion)this).minionSpellType == MinionSpellType.OnAttack){
-            this.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),BattleMenu.getBattle().getBattleMap().getPosition(defender));
+            this.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),defenderPosition);
         }
-        if(defender instanceof Minion && ((Minion)this).minionSpellType == MinionSpellType.OnDefense){
-            defender.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),BattleMenu.getBattle().getBattleMap().getPosition(this));
+        else if(!defender.isDisarm() && defender instanceof Minion && ((Minion)this).minionSpellType == MinionSpellType.OnDefense){
+            defender.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),attackerPosition);
+        }
+        if (!defender.isDisarm() && defender.getAttackType() == AttackType.Melee){
+            if (attackerPosition.col - defenderPosition.col == 1 || attackerPosition.row-defenderPosition.row == 1){
+                this.changeHealth(-defender.getPower());
+            }
+        }
+        else if (!defender.isDisarm() && defender.getAttackType() == AttackType.Hybrid){
+            this.changeHealth(-defender.getPower());
+        }
+        else if (!defender.isDisarm() && defender.getAttackType() == AttackType.Ranged){
+            if (attackerPosition.col - defenderPosition.col != 1 && attackerPosition.row-defenderPosition.row != 1){
+                this.changeHealth(-defender.getPower());
+            }
         }
     }
 
@@ -145,6 +160,24 @@ public class Warrior extends Card implements Movable, Attackable, Defendable {
 
     public void setCanAttack(boolean canAttack) {
         this.canAttack = canAttack;
+    }
+
+    public boolean isStun(){
+        for (Spell spell : spellsOnWarrior) {
+            if (spell.getAffectStunTurnNumberRemain()>0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isDisarm(){
+        for (Spell spell : spellsOnWarrior) {
+            if (spell.getAffectDisarmTurnNumberRemain()>0){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setSpecialSpell(SpellKind spellKind,int manaCost,int coolDown, int affectPoisonTurnNumber, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes) {

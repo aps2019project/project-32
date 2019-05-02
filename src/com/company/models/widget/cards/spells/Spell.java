@@ -196,6 +196,12 @@ public class Spell extends Card {
 
     }
 
+    public void doEffectAction(){
+        
+
+
+    }
+
     public void inActiveBuffs(Battle.Map map,Position position){
         for (int i = position.row;i<position.row+this.getSpellRange();i++){
             for (int j = position.col;i<position.col+this.getSpellRange();j++){
@@ -291,4 +297,15 @@ public class Spell extends Card {
         this.changeHealthPoint = changeHealthPoint;
     }
 
+    public int getAffectChangeAbilityTurnNumberRemain() {
+        return affectChangeAbilityTurnNumberRemain;
+    }
+
+    public int getAffectStunTurnNumberRemain() {
+        return affectStunTurnNumberRemain;
+    }
+
+    public int getAffectDisarmTurnNumberRemain() {
+        return affectDisarmTurnNumberRemain;
+    }
 }

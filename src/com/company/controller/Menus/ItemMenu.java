@@ -16,10 +16,6 @@ public class ItemMenu implements AbstractMenu
 
         }else if(command.matches("use location \\d \\d")){
 
-        }else if(command.matches("show next card")){
-
-        }else if(command.matches("enter graveyard")){
-
         }
     }
 

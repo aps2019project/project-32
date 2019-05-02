@@ -393,10 +393,9 @@ public abstract class Battle
         //do exception cant collect
 
     }
-
-    private void attackActions(Warrior attacker, Warrior defender)
+    public void attackActions(Warrior attacker, Warrior defender)
     {
-        if (attacker.canAttack())
+        if (attacker.canAttack() && !attacker.isStun())
         {
             attacker.attack(defender);
             attacker.attackTiredAffect();
