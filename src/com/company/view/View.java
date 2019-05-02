@@ -12,4 +12,9 @@ public class View
     {
         return viewInstance;
     }
+
+    public void show(String string)
+    {
+        System.out.println(string);
+    }
 }

@@ -2,14 +2,14 @@ package com.company.controller.Menus.battlemenus;
 
 import com.company.controller.Exceptions.*;
 import com.company.controller.Menus.AbstractMenu;
-import com.company.models.widget.items.Collectible;
+import com.company.models.widget.cards.spells.Spell;
 
 public class CollectibleSelectMenu implements AbstractMenu
 {
-    private static com.company.controller.Menus.battlemenus.CollectibleSelectMenu collectibleSelectMenuInstance = new com.company.controller.Menus.battlemenus.CollectibleSelectMenu();
-    private Collectible currentCollectible;
+    private static CollectibleSelectMenu collectibleSelectMenuInstance = new CollectibleSelectMenu();
+    private Spell currentCollectible;
 
-    public static com.company.controller.Menus.battlemenus.CollectibleSelectMenu getInstance()
+    public static CollectibleSelectMenu getInstance()
     {
         return collectibleSelectMenuInstance;
     }
@@ -29,10 +29,6 @@ public class CollectibleSelectMenu implements AbstractMenu
         {
 
         }
-        else if (command.matches("Show NextCard"))
-        {
-
-        }
     }
 
 
@@ -42,12 +38,12 @@ public class CollectibleSelectMenu implements AbstractMenu
         return null;
     }
 
-    public Collectible getCurrentCollectible()
+    public Spell getCurrentCollectible()
     {
         return currentCollectible;
     }
 
-    public void setCurrentCollectible(Collectible currentCollectible)
+    public void setCurrentCollectible(Spell currentCollectible)
     {
         this.currentCollectible = currentCollectible;
     }

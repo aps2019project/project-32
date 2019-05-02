@@ -1,16 +1,15 @@
 package com.company.models.battle;
 
+import com.company.controller.Exceptions.*;
+import com.company.models.Player;
 import com.company.models.Position;
 import com.company.models.TimeHandler;
-import com.company.models.Buff;
-import com.company.models.Player;
 import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
-import com.company.models.widget.cards.Warriors.Hero;
 import com.company.models.widget.cards.Warriors.Warrior;
-import com.company.models.widget.cards.spells.SpecialSpellKind;
 import com.company.models.widget.cards.spells.Spell;
-import com.company.models.widget.items.Collectible;
+import com.company.models.widget.cards.spells.SpellKind;
+import com.company.models.widget.cards.spells.SpellType;
 import com.company.models.widget.items.Item;
 
 import java.security.SecureRandom;
@@ -33,7 +32,6 @@ public abstract class Battle
     private SecureRandom randomMaker = new SecureRandom();
 
 
-
     public class Map
     {
         Map()
@@ -44,72 +42,13 @@ public abstract class Battle
         protected Warrior[][] warriorsOnMap = new Warrior[5][9];
         protected Widget[][] spellsAndCollectibleOnMap = new Spell[5][9];
 
-
-        public Warrior[][] getWarriorsOnMap() {
+        public Warrior[][] getWarriorsOnMap()
+        {
             return warriorsOnMap;
         }
-
-        public Widget[][] getSpellsAndCollectibleOnMap() {
+        public Widget[][] getSpellsAndCollectibleOnMap()
+        {
             return spellsAndCollectibleOnMap;
-        }
-
-        private ArrayList<Buff> cellEffects = new ArrayList<>();
-
-        public class Poison extends Buff
-        {
-            Poison()
-            {
-                super();
-            }
-
-            @Override
-            public void doEffect(Position... positions)
-            {
-                Warrior cardInCellPosition = ((Warrior) warriorsOnMap[positions[0].row][positions[0].col].get(0));
-                if (cardInCellPosition != null)
-                {
-                    cardInCellPosition.decreaseHealth(1);
-                    checkDeadActions(cardInCellPosition);
-                }
-                else {}// send exception
-            }
-        }
-
-        public class Fiery extends Buff
-        {
-            Fiery()
-            {
-                super();
-            }
-
-            @Override
-            public void doEffect(Position... positions)
-            {
-                Widget cardInCellPosition = warriorsOnMap[positions[0].row][positions[0].col].get(0).cast;
-                if (cardInCellPosition instanceof Warrior)
-                {
-                    ((Warrior) cardInCellPosition).decreaseHealth(2);
-                    checkDeadActions(((Warrior) cardInCellPosition));
-                }
-            }
-        }
-
-        public class Holy extends Buff
-        {
-            public Holy()
-            {
-                super();
-            }
-
-            @Override
-            public void doEffect(Position... positions)
-            {
-                Widget cardInCellPosition = warriorsOnMap[positions[0].row][positions[0].col];
-                if (cardInCellPosition instanceof Warrior)
-                {
-
-                }
-            }
         }
 
         public Position getRandomPosition()
@@ -127,7 +66,7 @@ public abstract class Battle
 
         public void addCollectibleItemOnMapRandomise()
         {
-            ArrayList<Collectible> collectibles = new ArrayList<>(5);
+            ArrayList<Spell> collectibles = new ArrayList<>(5);
             // make and add 5 collectable item to collectibles
             ArrayList<Position> randomPositions = new ArrayList<>(5);
             for (int i = 0; i < 5; i++)
@@ -162,11 +101,11 @@ public abstract class Battle
             switch (randomNumber)
             {
                 case 0:
-                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Holy();
+                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff,"PoisonBuff",0,0,0,3,0,0,0,0,-1, SpellType.HealthPoint,SpellType.onMinionOrHero,SpellType.onEnemyOrFriend);
                 case 1:
-                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Fiery();
+                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff,"FieryBuff",0,0,0,3,0,0,0,0,-2, SpellType.HealthPoint,SpellType.onMinionOrHero,SpellType.onEnemyOrFriend);
                 case 2:
-                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Poison();
+                   // spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col];
             }
         }
 
@@ -186,23 +125,14 @@ public abstract class Battle
             for (int i = 0; i < 9; i++)
                 for (int j = 0; j < 5; j++)
                 {
-                    Widget widget = warriorsOnMap[j][i];
+                    Warrior widget = warriorsOnMap[j][i];
                     if (widget.getOwnerPlayer().equals(intendedPlayer))
-                    {
-                        if (widget instanceof Warrior)
-                        {
-                            Warrior warrior = ((Warrior) widget);
-                            widgetsString = widgetsString.concat(String.format
-                                    ("(Warrior) %s - Location (%d,%d)\n",
-                                            warrior.toShow(), i, j));
-                        }
-                        if (widget instanceof Item)
-                        {
-                            Item item = ((Item) widget);
-                            widgetsString = widgetsString.concat(String.format
-                                    ("(Item) CardName : %s - Location (%d,%d)", item.getName(), i, j));
-                        }
-                    }
+                        widgetsString = widgetsString.concat(String.format("(Warrior) %s - Location (%d,%d)\n",
+                                widget.toShow(), i, j));
+
+                    Widget item = spellsAndCollectibleOnMap[j][i];
+                    widgetsString = widgetsString.concat(String.format
+                            ("(Item) CardName : %s - Location (%d,%d)", item.getName(), i, j));
                 }
 
             return widgetsString;
@@ -212,9 +142,9 @@ public abstract class Battle
 
     public class TurnHandler
     {
-        protected Player playerHasTurn;
-        protected Turn turn;
-        protected int turnNumber;
+        Player playerHasTurn;
+        Turn turn;
+        int turnNumber;
 
         public void changeCoolDownRemaining()
         {
@@ -226,6 +156,7 @@ public abstract class Battle
 
         public void changeTurn()
         {
+            turnNumber++;
             if (turn == Turn.fristPlayerTurn)
             {
                 turn = Turn.secondPlayerTurn;
@@ -250,16 +181,14 @@ public abstract class Battle
         }
     }
 
-    public void beginningBattleActions()
+    public void beginningBattleActions() throws InvalidDeck
     {
         if (!checkBothPlayersDeckValidity())
-        {
-            //do exception
-        }
+            throw new InvalidDeck();
+
         firstPlayer.setCopiedMainDeck(firstPlayer.getMainDeck().getCards());
         secondPlayer.setCopiedMainDeck(secondPlayer.getMainDeck().getCards());
-        battleTurnHandler.turn = Turn.fristPlayerTurn;
-        battleTurnHandler.playerHasTurn = firstPlayer;
+        setTurnInBeginning();
         setHeroPositionInBeginning();
         setBothPlayersHandInBeginning();
     }
@@ -287,8 +216,11 @@ public abstract class Battle
         secondPlayer.getPlayerHand().makeRandomiseHand();
     }
 
-    protected void addBattleToBattleHistories(GameResault gameResault)
+    protected void addBattleToBattleHistories(GameResault gameResault) throws GameIsNotOver
     {
+        if (gameResault == GameResault.UnCertain)
+            throw new GameIsNotOver();
+
         if (gameResault == GameResault.FristPlayerWin)
         {
             firstPlayer.addGameResultToBattleHistories
@@ -305,105 +237,72 @@ public abstract class Battle
         }
     }
 
-    public void currentPlayerActions()
-    {
-
-    }
-
     public String toShowEndGameDetails()
     {
         return new String("a");
     }
 
-    public abstract void checkBattleResult();
+    public abstract void checkBattleResult() throws GameIsNotOver;
 
-    public void putSpellCardOnMap(Spell spell, Position position)
+    public void putSpellCardOnMap(Spell spell, Position position) throws NotEnoughMana
     {
         if (spell.getOwnerPlayer().getPlayerCurrentMana() >= spell.getManaCost())
-        {
-            spell.doEffectAction(battleMap, position);
-        }
-        else
-        {
-        }
-        // do exception no mana
+            throw new NotEnoughMana();
+
+        spell.doEffectAction(battleMap, position);
     }
 
-    public void doWarriorSpell(Warrior warrior, Position position)
+    public void doWarriorSpell(Warrior warrior, Position position) throws NotEnoughMana, CoolDownRemaining
     {
-        if (warrior.getOwnerPlayer().getPlayerCurrentMana() >= warrior.getSpecialSpell().getManaCost()
-                && warrior.getSpecialSpell().getCoolDownRemaining() == 0)
-        {
-            warrior.getSpecialSpell().doEffectAction(battleMap, position);
-            warrior.getOwnerPlayer().decreaseMana(warrior.getSpecialSpell().getManaCost());
-        }
-        else if (true) // if no mana
-        {
-        }
-        // do exception no mana
-        else if (true) // if in cooldown
-        {
-        }
-        // do exception no cooldown
+        if (warrior.getOwnerPlayer().getPlayerCurrentMana() < warrior.getSpecialSpell().getManaCost())
+            throw new NotEnoughMana();
+
+        else if (warrior.getSpecialSpell().getCoolDownRemaining() >= 0)
+            throw new CoolDownRemaining();
+
+        warrior.getSpecialSpell().doEffectAction(battleMap, position);
+        warrior.getOwnerPlayer().decreaseMana(warrior.getSpecialSpell().getManaCost());
     }
 
-    public void moveWarriorOptions(Warrior intendedWarrior, Position sourcePosition, Position destinationPosition)
+    public void moveWarriorOptions(Warrior intendedWarrior, Position sourcePosition, Position destinationPosition) throws WarriorIsTired, WarriorUnderStun
     {
-        if (intendedWarrior.canMove())
-        {
-            intendedWarrior.moveTiredAffect();
-            battleMap.warriorsOnMap[sourcePosition.row][sourcePosition.col] = null;
+        if (!intendedWarrior.canMove())
+            throw new WarriorIsTired();
 
-            Widget widget = battleMap.warriorsOnMap[destinationPosition.row][destinationPosition.col];
+        if (!intendedWarrior.isStun())
+            throw new WarriorUnderStun();
 
-            if (widget instanceof Item)
-            {
-                if (widget != null)
-                    collect(intendedWarrior, destinationPosition);
-                widget = intendedWarrior;
-            }
+        intendedWarrior.moveTiredAffect();
+        battleMap.warriorsOnMap[sourcePosition.row][sourcePosition.col] = null;
+        Widget widget = battleMap.spellsAndCollectibleOnMap[destinationPosition.row][destinationPosition.col];
 
-            if (widget instanceof Warrior)
-            {
-                if (!widget.getOwnerPlayer().equals(intendedWarrior.getOwnerPlayer()))
-                    attackActions(intendedWarrior, ((Warrior) widget));
-                else
-                {
-                    //dare be yar hamle mikone exception
-                }
-            }
-        }
-        else
-        {
-        }//do Exception its tired
+        if (widget instanceof Spell && ((Spell) widget).getSpellKind()==SpellKind.Collectible)
+            collect(intendedWarrior, widget);
+
+        battleMap.warriorsOnMap[destinationPosition.row][destinationPosition.col] = intendedWarrior;
+        battleMap.spellsAndCollectibleOnMap[destinationPosition.row][destinationPosition.col] = null;
+        battleMap.warriorsOnMap[destinationPosition.row][destinationPosition.col] = null;
     }
 
-    public void collect(Card intendedCard, Position destinationPosition)
+    public void collect(Card intendedCard, Widget widget)
     {
-        Widget widget = battleMap.warriorsOnMap[destinationPosition.row][destinationPosition.col];
-        if (widget != null && widget instanceof Collectible)
+        if (widget instanceof Item)
         {
-            intendedCard.getOwnerPlayer().getPlayerHand().getCollectedItems().add(((Collectible) widget));
+            intendedCard.getOwnerPlayer().getPlayerHand().getCollectedItems().add(((Item) widget));
             widget.setOwnerPlayer(intendedCard.getOwnerPlayer());
-            battleMap.warriorsOnMap[destinationPosition.row][destinationPosition.col] = null;
         }
-        else
-        {
-        }
-        //do exception cant collect
-
     }
-    public void attackActions(Warrior attacker, Warrior defender)
+
+    public void attackActions(Warrior attacker, Warrior defender) throws WarriorIsTired, WarriorUnderStun
     {
-        if (attacker.canAttack() && !attacker.isStun())
-        {
-            attacker.attack(defender);
-            attacker.attackTiredAffect();
-            checkDeadActions(attacker, defender);
-        }
-        else
-        {
-        } // doException
+        if (!attacker.canAttack())
+            throw new WarriorIsTired();
+        if (!attacker.isStun())
+            throw new WarriorUnderStun();
+
+        attacker.attack(defender);
+        attacker.attackTiredAffect();
+        checkDeadActions(attacker, defender);
     }
 
     public void checkDeadActions(Warrior... warriors)
@@ -421,39 +320,9 @@ public abstract class Battle
         return battleMode;
     }
 
-    public void setBattleMode(BattleMode battleMode)
-    {
-        this.battleMode = battleMode;
-    }
-
     public Map getBattleMap()
     {
         return battleMap;
-    }
-
-    public void setBattleMap(Map battleMap)
-    {
-        this.battleMap = battleMap;
-    }
-
-    public TurnHandler getBattleTurnHandler()
-    {
-        return battleTurnHandler;
-    }
-
-    public void setBattleTurnHandler(TurnHandler battleTurnHandler)
-    {
-        this.battleTurnHandler = battleTurnHandler;
-    }
-
-    public GameResault getGameResault()
-    {
-        return gameResault;
-    }
-
-    public void setGameResault(GameResault gameResault)
-    {
-        this.gameResault = gameResault;
     }
 
     public Player getFirstPlayer()
@@ -461,22 +330,15 @@ public abstract class Battle
         return firstPlayer;
     }
 
-    public void setFirstPlayer(Player firstPlayer)
-    {
-        this.firstPlayer = firstPlayer;
-    }
-
     public Player getSecondPlayer()
     {
         return secondPlayer;
     }
 
-    public void setSecondPlayer(Player secondPlayer)
+    public TurnHandler getBattleTurnHandler()
     {
-        this.secondPlayer = secondPlayer;
+        return battleTurnHandler;
     }
 
     public abstract String toShowGameInfo();
-
-
 }

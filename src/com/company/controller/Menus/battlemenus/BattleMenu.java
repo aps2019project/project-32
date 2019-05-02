@@ -1,14 +1,16 @@
 package com.company.controller.Menus.battlemenus;
 
 import com.company.controller.Controller;
-import com.company.controller.Exceptions.*;
+import com.company.controller.Exceptions.UnSelectable;
 import com.company.controller.Menus.AbstractMenu;
 import com.company.controller.Menus.MainMenu;
 import com.company.models.Position;
 import com.company.models.battle.Battle;
 import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Warriors.Warrior;
-import com.company.models.widget.items.Collectible;
+import com.company.models.widget.cards.spells.Spell;
+import com.company.models.widget.cards.spells.SpellKind;
+import com.company.view.View;
 
 public class BattleMenu implements AbstractMenu
 {
@@ -34,20 +36,20 @@ public class BattleMenu implements AbstractMenu
     public void selectOptionByCommand(String command) throws UnSelectable
     {
         if (command.matches("Game Info"))
-            battle.toShowGameInfo(); // send to view
+            View.getInstance().show(battle.toShowGameInfo());
 
         else if (command.matches("Show My Minions"))
             if (battle.getBattleTurnHandler().getPlayerHasTurn().equals(battle.getFirstPlayer()))
-                battle.getBattleMap().toShowMinionInMap(battle.getFirstPlayer()); // send to view
+                View.getInstance().show(battle.getBattleMap().toShowMinionInMap(battle.getFirstPlayer()));
             else
-                battle.getBattleMap().toShowMinionInMap(battle.getSecondPlayer());
+                View.getInstance().show(battle.getBattleMap().toShowMinionInMap(battle.getSecondPlayer()));
         else if (command.matches("Show Opponent Minions"))
             if (battle.getBattleTurnHandler().getPlayerHasTurn().equals(battle.getFirstPlayer()))
-                battle.getBattleMap().toShowMinionInMap(battle.getSecondPlayer());
+                View.getInstance().show(battle.getBattleMap().toShowMinionInMap(battle.getSecondPlayer()));
             else
-                battle.getBattleMap().toShowMinionInMap(battle.getFirstPlayer());
+                View.getInstance().show(battle.getBattleMap().toShowMinionInMap(battle.getFirstPlayer()));
         else if (command.matches("Show Card Info \\d+"))
-            toShowCardInfo(Integer.parseInt(command.split(" ")[3]));
+            View.getInstance().show(toShowCardInfo(Integer.parseInt(command.split(" ")[3])));
 
         else if (command.matches("Select \\d+"))
             selectActions(Integer.parseInt(command.split(" ")[1]));
@@ -62,13 +64,22 @@ public class BattleMenu implements AbstractMenu
             battle.getBattleTurnHandler().changeTurn();
 
         else if (command.matches("Show Collectable"))
-            battle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowCollectedItems(); // send to view
+            View.getInstance().show(battle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowCollectedItems());
+
+        else if (command.matches("Show Hand"))
+            View.getInstance().show(battle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand());
+
+        else if (command.matches("Insert \\w+ In \\d \\d"))
+        {
+
+        }
     }
 
     @Override
     public String toShowMenu()
     {
-        return "1.Game Information 2.My Minions 3.OpponentMinions  ";
+        return "1.Game Information 2.My Minions 3.Opponent Minions 4.Show Card Information 5.Select 6.Enter GraveYard" +
+                " 7.End Game 8.End Turn 9.Show Collectible 10.Show Hand 11.Insert Card";
     }
 
     public void selectActions(int cardID) throws UnSelectable
@@ -79,9 +90,9 @@ public class BattleMenu implements AbstractMenu
             WarriorSelectMenu.getInstance().setCurrentWarrior(((Warrior) widget));
             Controller.getInstance().changeCurrentMenuTo(WarriorSelectMenu.getInstance());
         }
-        else if (widget instanceof Collectible)
+        else if (widget instanceof Spell && ((Spell) widget).getSpellKind() == SpellKind.Collectible)
         {
-            CollectibleSelectMenu.getInstance().setCurrentCollectible(((Collectible) widget));
+            CollectibleSelectMenu.getInstance().setCurrentCollectible(((Spell) widget));
             Controller.getInstance().changeCurrentMenuTo(CollectibleSelectMenu.getInstance());
         }
         else
@@ -105,7 +116,8 @@ public class BattleMenu implements AbstractMenu
         return battle.toShowEndGameDetails();
     }
 
-    public static Battle getBattle() {
+    public static Battle getBattle()
+    {
         return battle;
     }
 }

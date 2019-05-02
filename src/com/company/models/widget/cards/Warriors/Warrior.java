@@ -8,9 +8,9 @@ import com.company.models.widget.cards.spells.SpellKind;
 import com.company.models.widget.cards.spells.SpellType;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
-public class Warrior extends Card implements Movable, Attackable, Defendable {
+public class Warrior extends Card implements Attackable
+{
     protected int health;
     protected int power;
     protected AttackType attackType;
@@ -21,197 +21,188 @@ public class Warrior extends Card implements Movable, Attackable, Defendable {
     protected ArrayList<Spell> spellsOnWarrior;
 
 
-    public Warrior(String name, int price, int health, int power, AttackType attackType, int attackRadius) {
+    public Warrior(String name, int price, int health, int power, AttackType attackType, int attackRadius)
+    {
         super(name, price);
         this.health = health;
         this.power = power;
         this.attackType = attackType;
         this.attackRadius = attackRadius;
+
     }
 
 
     @Override
-    public String toShow() {
+    public String toShow()
+    {
         return String.format("(Warrior) CardName : %s - CardID : %d - Health : %d - Power : %d\n",
                 this.getName(), this.getID(), this.getHealth(), this.getPower());
     }
 
     @Override
-    public void attack(Warrior defender) {
+    public void attack(Warrior defender)
+    {
         Position attackerPosition = BattleMenu.getBattle().getBattleMap().getPosition(this);
         Position defenderPosition = BattleMenu.getBattle().getBattleMap().getPosition(defender);
         defender.changeHealth(-this.getPower());
-        if (this instanceof Minion && ((Minion)this).minionSpellType == MinionSpellType.OnAttack){
-            this.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),defenderPosition);
+        if (this instanceof Minion && ((Minion) this).getMinionSpellType() == MinionSpellType.OnAttack)
+        {
+            this.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(), defenderPosition);
         }
-        else if(!defender.isDisarm() && defender instanceof Minion && ((Minion)this).minionSpellType == MinionSpellType.OnDefense){
-            if ( defender.getSpecialSpell().getSpellTypes().contains(SpellType.onEnemy))
-                defender.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),attackerPosition);
-            if ( defender.getSpecialSpell().getSpellTypes().contains(SpellType.onFriend))
-                defender.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),defenderPosition);
+        else if (!defender.isDisarm() && defender instanceof Minion && ((Minion) this).getMinionSpellType() == MinionSpellType.OnDefense)
+        {
+            if (defender.getSpecialSpell().getSpellTypes().contains(SpellType.onEnemy))
+                defender.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(), attackerPosition);
+            if (defender.getSpecialSpell().getSpellTypes().contains(SpellType.onFriend))
+                defender.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(), defenderPosition);
 
         }
-        if (!defender.isDisarm() && defender.getAttackType() == AttackType.Melee){
-            if (attackerPosition.col - defenderPosition.col == 1 || attackerPosition.row-defenderPosition.row == 1){
+        if (!defender.isDisarm() && defender.getAttackType() == AttackType.Melee)
+        {
+            if (attackerPosition.col - defenderPosition.col == 1 || attackerPosition.row - defenderPosition.row == 1)
+            {
                 this.changeHealth(-defender.getPower());
             }
         }
-        else if (!defender.isDisarm() && defender.getAttackType() == AttackType.Hybrid){
+        else if (!defender.isDisarm() && defender.getAttackType() == AttackType.Hybrid)
+        {
             this.changeHealth(-defender.getPower());
         }
-        else if (!defender.isDisarm() && defender.getAttackType() == AttackType.Ranged){
-            if (attackerPosition.col - defenderPosition.col != 1 && attackerPosition.row-defenderPosition.row != 1){
+        else if (!defender.isDisarm() && defender.getAttackType() == AttackType.Ranged)
+        {
+            if (attackerPosition.col - defenderPosition.col != 1 && attackerPosition.row - defenderPosition.row != 1)
+            {
                 this.changeHealth(-defender.getPower());
             }
         }
     }
 
-    public void addToSpellsOnWarrior(Spell spell){
+    public void addToSpellsOnWarrior(Spell spell)
+    {
         spellsOnWarrior.add(spell);
     }
 
-    @Override
-    public void defend(Card attacker) {
-
-    }
-
-    @Override
-    public void move() {
-
-    }
-
-    public void changeHealth(int value) {
+    public void changeHealth(int value)
+    {
         this.health += value;
     }
 
-    public void changePower(int value) {
+    public void changePower(int value)
+    {
         this.power += value;
     }
 
-    public boolean isDead() {
+    public boolean isDead()
+    {
         return this.health <= 0;
     }
 
 
-    public void moveTiredAffect() {
+    public void moveTiredAffect()
+    {
         canMove = false;
     }
 
-    public void attackTiredAffect() {
+    public void attackTiredAffect()
+    {
         canAttack = false;
     }
 
-    public boolean canAttack() {
+    public boolean canAttack()
+    {
         return canAttack;
     }
 
-    public boolean canMove() {
+    public boolean canMove()
+    {
         return canMove;
     }
 
 
-    public int getHealth() {
+    public int getHealth()
+    {
         return health;
     }
 
-    public void increaseHealth(int value) {
+    public void increaseHealth(int value)
+    {
         health += value;
     }
 
-    public void decreaseHealth(int value) {
+    public void decreaseHealth(int value)
+    {
         health -= value;
     }
 
-    public int getPower() {
+    public int getPower()
+    {
         return power;
     }
 
-    public void setPower(int power) {
+    public void setPower(int power)
+    {
         this.power = power;
     }
 
-    public AttackType getAttackType() {
+    public AttackType getAttackType()
+    {
         return attackType;
     }
 
-    public void setAttackType(AttackType attackType) {
+    public void setAttackType(AttackType attackType)
+    {
         this.attackType = attackType;
     }
 
-    public int getAttackRadius() {
+    public int getAttackRadius()
+    {
         return attackRadius;
     }
 
-    public void setAttackRadius(int attackRadius) {
+    public void setAttackRadius(int attackRadius)
+    {
         this.attackRadius = attackRadius;
     }
 
-    public Spell getSpecialSpell() {
+    public Spell getSpecialSpell()
+    {
         return specialSpell;
     }
 
-    public void setSpecialSpell(Spell specialSpell) {
-        this.specialSpell = specialSpell;
+    public void setSpecialSpell(SpellKind spellKind, int manaCost, int coolDown, int affectPoisonTurnNumber, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes)
+    {
+        if (spellKind == SpellKind.spellCard)
+            this.specialSpell = new Spell(SpellKind.spellCard, "", 0, manaCost, coolDown, affectPoisonTurnNumber, affectDisarmTurnNumber, affectStunTurnNumber, spellRange, changeAttackPoint, changeHealthPoint, spellTypes);
+        else if (spellKind == SpellKind.Buff)
+            this.specialSpell = new Spell(SpellKind.Buff, "", 0, manaCost, coolDown, affectPoisonTurnNumber, affectDisarmTurnNumber, affectStunTurnNumber, spellRange, changeAttackPoint, changeHealthPoint, spellTypes);
     }
 
-    public boolean isCanMove() {
-        return canMove;
+    public void removeNegativeBuffs()
+    {
+        spellsOnWarrior.removeIf(spell -> spell.getSpellKind() == SpellKind.Buff &&
+                (spell.getChangeHealthPoint() < 0 || spell.getChangeHealthPoint() < 0));
     }
 
-    public void setCanMove(boolean canMove) {
-        this.canMove = canMove;
+    public void removePositiveBuffs()
+    {
+        spellsOnWarrior.removeIf(spell -> spell.getSpellKind() == SpellKind.Buff &&
+                (spell.getChangeHealthPoint() > 0 || spell.getChangeHealthPoint() > 0));
     }
 
-    public boolean isCanAttack() {
-        return canAttack;
-    }
+    public boolean isDisarm()
+    {
+        for (Spell spell : this.spellsOnWarrior)
+            if (spell.getAffectDisarmTurnNumberRemain() > 0)
+                return true;
 
-    public void setCanAttack(boolean canAttack) {
-        this.canAttack = canAttack;
+        return false;
     }
 
     public boolean isStun(){
-        for (Spell spell : spellsOnWarrior) {
-            if (spell.getAffectStunTurnNumberRemain()>0){
+        for (Spell spell : this.spellsOnWarrior)
+            if(spell.getAffectStunTurnNumberRemain() > 0)
                 return true;
-            }
-        }
+
         return false;
-    }
-
-    public boolean isDisarm(){
-        for (Spell spell : spellsOnWarrior) {
-            if (spell.getAffectDisarmTurnNumberRemain()>0){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void setSpecialSpell(SpellKind spellKind,int manaCost,int coolDown, int affectPoisonTurnNumber, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes) {
-        if (spellKind == SpellKind.spellCard)
-            this.specialSpell = new Spell(SpellKind.spellCard,"", 0, manaCost, coolDown, affectPoisonTurnNumber, affectDisarmTurnNumber, affectStunTurnNumber, spellRange, changeAttackPoint, changeHealthPoint, spellTypes);
-        else if (spellKind == SpellKind.Buff)
-            this.specialSpell = new Spell(SpellKind.Buff,"", 0, manaCost, coolDown, affectPoisonTurnNumber, affectDisarmTurnNumber, affectStunTurnNumber, spellRange, changeAttackPoint, changeHealthPoint, spellTypes);
-
-    }
-
-    public void removeNegativeBuffs() {
-        Iterator<Spell> spellIterable = spellsOnWarrior.iterator();
-        while (spellIterable.hasNext()) {
-            Spell spell = spellIterable.next();
-            if (spell.getSpellKind()==SpellKind.Buff && (spell.getChangeHealthPoint() < 0 || spell.getChangeHealthPoint() < 0)) {
-                spellIterable.remove();
-            }
-        }
-    }
-    public void removePositiveBuffs() {
-        Iterator<Spell> spellIterable = spellsOnWarrior.iterator();
-        while (spellIterable.hasNext()) {
-            Spell spell = spellIterable.next();
-            if (spell.getSpellKind()==SpellKind.Buff && (spell.getChangeHealthPoint() > 0 || spell.getChangeHealthPoint() > 0)) {
-                spellIterable.remove();
-            }
-        }
     }
 }

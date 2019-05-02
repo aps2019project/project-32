@@ -1,5 +1,6 @@
 package com.company.models.battle;
 
+import com.company.controller.Exceptions.GameIsNotOver;
 import com.company.models.Player;
 
 public class CollectFlagBattle extends Battle
@@ -13,7 +14,7 @@ public class CollectFlagBattle extends Battle
     }
 
     @Override
-    public void checkBattleResult()
+    public void checkBattleResult() throws GameIsNotOver
     {
         if (firstPlayer.getPlayerHand().getFlagNumbersInCollectedItems() > flagNumbers / 2)
         {

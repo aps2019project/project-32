@@ -4,12 +4,11 @@ import com.company.controller.Controller;
 import com.company.controller.Exceptions.*;
 import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
+import com.company.models.widget.cards.Usable;
 import com.company.models.widget.cards.Warriors.Hero;
+import com.company.models.widget.cards.Warriors.Minion;
 import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.Spell;
-import com.company.models.widget.cards.Usable;
-import com.company.models.widget.cards.warriors.Hero;
-import com.company.models.widget.cards.warriors.Minion;
 import com.company.models.widget.items.Flag;
 import com.company.models.widget.items.Item;
 
@@ -80,10 +79,10 @@ public class Player implements Serializable
     {
         ArrayList<Card> cards = new ArrayList<>();
 
-        public ArrayList<Card> getCards() {
+        public ArrayList<Card> getCards()
+        {
             return cards;
         }
-
 
 
         public Card findCardInCollection(int cardID)
@@ -94,6 +93,7 @@ public class Player implements Serializable
 
             return null;
         }
+
         public Card findCardInCollection(String cardName)
         {
             for (Card card : cards)
@@ -103,13 +103,18 @@ public class Player implements Serializable
             return null;
         }
 
-        public void addTOCollection(Card card){
+        public void addTOCollection(Card card)
+        {
             getCards().add(card);
             card.setOwnerPlayer(Controller.getInstance().getCurrentPlayer());
         }
-        public void removeFromCollection(int cardID) throws CardNotFound {
-            for (Deck deck : getDecks()) {
-                if (deck.serchCard(cardID) != null){
+
+        public void removeFromCollection(int cardID) throws CardNotFound
+        {
+            for (Deck deck : getDecks())
+            {
+                if (deck.serchCard(cardID) != null)
+                {
                     deck.removeCardFromDeck(cardID);
                     break;
                 }
@@ -136,9 +141,11 @@ public class Player implements Serializable
             return collectionString;
         }
 
-        public int getNumberOfUsable(){
+        public int getNumberOfUsable()
+        {
             int count = 0;
-            for (Card card : cards) {
+            for (Card card : cards)
+            {
                 if (card instanceof Usable)
                     count++;
             }
@@ -212,14 +219,16 @@ public class Player implements Serializable
                 throw new CardNotFound();
 
         }
-        public Card serchCard(int cardID){
-            for (Card card : cards) {
+
+        public Card serchCard(int cardID)
+        {
+            for (Card card : cards)
+            {
                 if (card.getID() == cardID)
                     return card;
             }
             return null;
         }
-
 
 
         public boolean isValidDeck()
@@ -336,7 +345,7 @@ public class Player implements Serializable
             for (Card handCard : handCards)
                 handString = handString.concat(handCard.toShow());
 
-            handString = handString.concat("NextCard : \n");
+            handString = handString.concat("\nNext Card : \n");
             handString = handString.concat(nextCard.toShow());
 
             return handString;
@@ -460,10 +469,14 @@ public class Player implements Serializable
                 ("UserName : %s - Cash : %d - WinNumber : %d - LoseNumber : %d",
                         this.name, this.cash, this.winNumber, this.loseNumber);
     }
-    public void deCreaseCash(int value){
+
+    public void decreaseCash(int value)
+    {
         this.cash -= value;
     }
-    public void inCreaseCash(int value){
+
+    public void increaseCash(int value)
+    {
         this.cash += value;
     }
 

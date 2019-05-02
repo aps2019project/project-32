@@ -1,5 +1,6 @@
 package com.company.models.battle;
 
+import com.company.controller.Exceptions.GameIsNotOver;
 import com.company.models.Player;
 
 public class DeadBattle extends Battle
@@ -10,7 +11,7 @@ public class DeadBattle extends Battle
     }
 
     @Override
-    public void checkBattleResult()
+    public void checkBattleResult() throws GameIsNotOver
     {
         if (firstPlayer.getMainDeck().getHero().isDead())
         {

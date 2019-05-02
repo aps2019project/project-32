@@ -1,7 +1,4 @@
 package com.company.view;
-
-import com.company.controller.Controller;
-
 import java.util.Scanner;
 
 public class Request

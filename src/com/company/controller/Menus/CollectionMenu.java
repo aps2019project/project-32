@@ -4,6 +4,7 @@ import com.company.controller.Controller;
 import com.company.controller.Exceptions.*;
 import com.company.models.Player;
 import com.company.models.widget.cards.Card;
+import com.company.view.View;
 
 public class CollectionMenu implements AbstractMenu
 {
@@ -33,45 +34,51 @@ public class CollectionMenu implements AbstractMenu
     @Override
     public void selectOptionByCommand(String command) throws InvalidDeck, DeckNameAlreadyExist, CardNotFound, DeckNotFound, DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready
     {
-        if (command.matches("exit"))
+
+//        "1.Exit\n2.Show\n3.Search\n4.Save\n5.Create deck\n6.Delete Deck\n7.Add Card To Deck\n" +
+//                "8.Remove Card From Deck\n9.Validate Deck\n10.Select Deck\n11.Show All Decks\n12.Help\n"
+
+        if (command.matches("Exit"))
             Controller.getInstance().changeCurrentMenuTo(MainMenu.getInstance());
 
-        else if (command.matches("show"))
-            Controller.getInstance().getCurrentPlayer().getCollection().toShowCollection(); // sendto view
+        else if (command.matches("Show"))
+            View.getInstance().show(Controller.getInstance().getCurrentPlayer()
+                    .getCollection().toShowCollection());
 
-        else if (command.matches("search \\w+"))
-            Controller.getInstance().getCurrentPlayer().getCollection().toShowSearchResult(command.split(" ")[1]);
-            //send to view
-        else if (command.matches("create deck \\w+"))
+        else if (command.matches("Search \\w+"))
+            View.getInstance().show(Controller.getInstance().getCurrentPlayer()
+                    .getCollection().toShowSearchResult(command.split(" ")[1]));
+
+        else if (command.matches("Create Deck \\w+"))
             createDeck(command);
 
-        else if (command.matches("delete deck \\w+"))
+        else if (command.matches("Delete Deck \\w+"))
             Controller.getInstance().getCurrentPlayer().removeDeck(command.split(" ")[2]);
 
-        else if (command.matches("add \\d+ to deck \\w+"))
+        else if (command.matches("Add \\d+ To Deck \\w+"))
             addCard(command);
 
-        else if (command.matches("remove \\d+ from deck \\w+"))
+        else if (command.matches("Remove \\d+ From Deck \\w+"))
             removeCard(command);
 
-        else if (command.matches("validate deck \\w+"))
+        else if (command.matches("Validate Deck \\w+"))
             isValidDeck(command);
 
-        else if (command.matches("select deck \\w+"))
+        else if (command.matches("Select Deck \\w+"))
             selectDeckAsMainDeck(command.split(" ")[2]);
 
-        else if (command.matches("show all decks"))
-            Controller.getInstance().getCurrentPlayer().toShowAllDecks(); // send to view
+        else if (command.matches("Show All Decks"))
+            View.getInstance().show(Controller.getInstance().getCurrentPlayer().toShowAllDecks()); // send to view
 
-        else if (command.matches("show deck \\w+"))
+        else if (command.matches("Show Deck \\w+"))
         {
             Player.Deck intendedDeck = Controller.getInstance().getCurrentPlayer().findDeck(command.split(" ")[2]);
-            intendedDeck.toShowDeck(); // send to view
+            View.getInstance().show(intendedDeck.toShowDeck());
         }
-        else if (command.matches("help"))
-            collectionMenuInstance.help(); // send to view
+        else if (command.matches("Help"))
+            View.getInstance().show(collectionMenuInstance.toShowMenu());
 
-        else if (command.matches("save"))
+        else if (command.matches("Save"))
             collectionMenuInstance.save();
     }
 
@@ -80,8 +87,8 @@ public class CollectionMenu implements AbstractMenu
         String deckName = command.split(" ")[2];
         if (Controller.getInstance().getCurrentPlayer().findDeck(deckName) == null)
             Controller.getInstance().getCurrentPlayer().addNewDeck(deckName);
-        else
-            throw new DeckNameAlreadyExist();
+
+        throw new DeckNameAlreadyExist();
     }
 
     private void selectDeckAsMainDeck(String deckName) throws DeckNameAlreadyExist, InvalidDeck
@@ -89,10 +96,10 @@ public class CollectionMenu implements AbstractMenu
         Player.Deck intendedDeck = Controller.getInstance().getCurrentPlayer().findDeck(deckName);
         if (intendedDeck == null)
             throw new DeckNameAlreadyExist();
-        else if (!intendedDeck.isValidDeck())
+        if (!intendedDeck.isValidDeck())
             throw new InvalidDeck();
-        else
-            Controller.getInstance().getCurrentPlayer().setMainDeck(intendedDeck);
+
+        Controller.getInstance().getCurrentPlayer().setMainDeck(intendedDeck);
     }
 
 
@@ -106,10 +113,10 @@ public class CollectionMenu implements AbstractMenu
                 Controller.getInstance().getCurrentPlayer().findDeck(deckName);
         if (intendedCard == null)
             throw new CardNotFound();
-        else if (intendedDeck == null)
+        if (intendedDeck == null)
             throw new DeckNotFound();
-        else
-            intendedDeck.addCardToDeck(intendedCard);
+
+        intendedDeck.addCardToDeck(intendedCard);
     }
 
     private void removeCard(String command) throws CardNotFound
@@ -128,16 +135,10 @@ public class CollectionMenu implements AbstractMenu
     }
 
     @Override
-    public String help()
-    {
-        return "1.exit\n2.show\n3.search\n4.save\n5.create deck\n6.delete deck\n7.add card to deck\n" +
-                "8.remove card from deck\n9.validate deck\n10.select deck\n11.show all decks\n12.help\n";
-    }
-
-    @Override
     public String toShowMenu()
     {
-        return null;
+        return "1.Exit\n2.Show\n3.Search\n4.Save\n5.Create deck\n6.Delete Deck\n7.Add Card To Deck\n" +
+                "8.Remove Card From Deck\n9.Validate Deck\n10.Select Deck\n11.Show All Decks\n12.Help\n";
     }
 
     public void save()

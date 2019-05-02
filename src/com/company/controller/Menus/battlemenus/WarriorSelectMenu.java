@@ -1,9 +1,6 @@
 package com.company.controller.Menus.battlemenus;
 
-import com.company.controller.Exceptions.InvalidAttackException;
-import com.company.controller.Exceptions.InvalidTargetException;
-import com.company.controller.Exceptions.InvalidWarriorForAttack;
-import com.company.controller.Exceptions.OpponentMinionIsUnvalidForAttack;
+import com.company.controller.Exceptions.*;
 import com.company.controller.Menus.AbstractMenu;
 import com.company.models.Position;
 import com.company.models.widget.Widget;
@@ -11,24 +8,29 @@ import com.company.models.widget.cards.Warriors.Hero;
 import com.company.models.widget.cards.Warriors.Warrior;
 
 
-class WarriorSelectMenu implements AbstractMenu {
+class WarriorSelectMenu implements AbstractMenu
+{
     private static WarriorSelectMenu warriorSelectMenuInstance = new WarriorSelectMenu();
     private Warrior currentWarrior;
 
-    public static WarriorSelectMenu getInstance() {
+    public static WarriorSelectMenu getInstance()
+    {
         return warriorSelectMenuInstance;
     }
 
-    private WarriorSelectMenu() {
+    private WarriorSelectMenu()
+    {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return super.hashCode();
     }
 
     @Override
-    public void selectOptionByCommand(String command) throws InvalidTargetException, InvalidAttackException, OpponentMinionIsUnvalidForAttack, InvalidWarriorForAttack {
+    public void selectOptionByCommand(String command) throws InvalidTargetException, InvalidAttackException, OpponentMinionIsUnvalidForAttack, InvalidWarriorForAttack, WarriorUnderStun, WarriorIsTired, CoolDownRemaining, NotEnoughMana
+    {
         if (command.matches("Move to \\d \\d")) {
             moveCard(command);
         } else if (command.matches("Attack \\d \\d")) {
@@ -46,7 +48,8 @@ class WarriorSelectMenu implements AbstractMenu {
         }
     }
 
-    private void UseSpecialSpell(String command) throws InvalidTargetException {
+    private void UseSpecialSpell(String command) throws InvalidTargetException, CoolDownRemaining, NotEnoughMana
+    {
         int col = Integer.parseInt(command.split(" ")[2]);
         int row = Integer.parseInt(command.split(" ")[3]);
         if (col>=9 || row>=5){
@@ -57,11 +60,12 @@ class WarriorSelectMenu implements AbstractMenu {
 
     }
 
-    public void comboAttack(){
+    public void comboAttack(String command){
 
     }
 
-    public void moveCard(String command) throws InvalidTargetException {
+    public void moveCard(String command) throws InvalidTargetException, WarriorUnderStun, WarriorIsTired
+    {
         Position cardPosition = BattleMenu.getBattle().getBattleMap().getPosition(getCurrentWarrior());
         Widget[][] map = BattleMenu.getBattle().getBattleMap().getWarriorsOnMap();
         int col = Integer.parseInt(command.split(" ")[2]);
@@ -92,7 +96,8 @@ class WarriorSelectMenu implements AbstractMenu {
 
     }
 
-    public void attack(String command) throws InvalidAttackException, InvalidWarriorForAttack, OpponentMinionIsUnvalidForAttack {
+    public void attack(String command) throws InvalidAttackException, InvalidWarriorForAttack, OpponentMinionIsUnvalidForAttack, WarriorUnderStun, WarriorIsTired
+    {
         Position cardPosition = BattleMenu.getBattle().getBattleMap().getPosition(getCurrentWarrior());
         int col = Integer.parseInt(command.split(" ")[2]);
         int row = Integer.parseInt(command.split(" ")[3]);
@@ -112,15 +117,18 @@ class WarriorSelectMenu implements AbstractMenu {
 
 
     @Override
-    public String toShowMenu() {
+    public String toShowMenu()
+    {
         return null;
     }
 
-    public Warrior getCurrentWarrior() {
+    public Warrior getCurrentWarrior()
+    {
         return currentWarrior;
     }
 
-    public void setCurrentWarrior(Warrior currentWarrior) {
+    public void setCurrentWarrior(Warrior currentWarrior)
+    {
         this.currentWarrior = currentWarrior;
     }
 }

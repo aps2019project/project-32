@@ -1,19 +1,20 @@
 package com.company.controller;
 
-import com.company.controller.Menus.*;
-import com.company.controller.Menus.battlemenus.BattleMenu;
-import com.company.controller.Menus.battlemenus.GraveYardMenu;
+import com.company.controller.Menus.AbstractMenu;
+import com.company.controller.Menus.EntryMenu;
+import com.company.controller.Menus.ShopMenu;
 import com.company.models.Player;
 import com.company.view.Request;
-
-import java.util.ArrayList;
+import com.company.view.View;
 
 public class Controller
 {
     private Controller()
     {
     }
-    private static Controller controllerInstance;
+
+    private static Controller controllerInstance = new Controller();
+
     public static Controller getInstance()
     {
         return controllerInstance;
@@ -21,33 +22,27 @@ public class Controller
 
     private AbstractMenu currentMenu;
     private Player currentPlayer;
-    private ArrayList<AbstractMenu> menus = new ArrayList<>();
-
-    private void activeMenus()
-    {
-        menus.add(EntryMenu.getInstance());
-        menus.add(MainMenu.getInstance());
-        menus.add(BattleMenu.getInstance());
-        menus.add(CollectionMenu.getInstance());
-        menus.add(GraveYardMenu.getInstance());
-        menus.add(ShopMenu.getInstance());
-    }
 
     public void run()
     {
         currentMenu = EntryMenu.getInstance();
-        activeMenus();
+        initialiseActions();
         while (true)
         {
             String command = Request.getInstance().getNewCommand();
             try
             {
                 currentMenu.selectOptionByCommand(command);
-            }
-            catch (Exception e){
-                //catch all exception and send to view to show
+            } catch (Exception e)
+            {
+                View.getInstance().show(e.getMessage());
             }
         }
+    }
+
+    public void initialiseActions()
+    {
+        ((ShopMenu) ShopMenu.getInstance()).addCardToShop();
     }
 
     public AbstractMenu getCurrentMenu()
@@ -57,7 +52,7 @@ public class Controller
 
     public void changeCurrentMenuTo(AbstractMenu currentMenu)
     {
-        currentMenu.help(); //send this to view
+        View.getInstance().show(currentMenu.toShowMenu()); //send this to view
         this.currentMenu = currentMenu;
     }
 
@@ -69,15 +64,5 @@ public class Controller
     public void setCurrentPlayer(Player currentPlayer)
     {
         this.currentPlayer = currentPlayer;
-    }
-
-    public ArrayList<AbstractMenu> getMenus()
-    {
-        return menus;
-    }
-
-    public void setMenus(ArrayList<AbstractMenu> menus)
-    {
-        this.menus = menus;
     }
 }

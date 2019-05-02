@@ -20,13 +20,6 @@ public class ItemMenu implements AbstractMenu
     }
 
 
-
-    @Override
-    public String help()
-    {
-        return null;
-    }
-
     @Override
     public String toShowMenu()
     {
