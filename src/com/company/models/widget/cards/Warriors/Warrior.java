@@ -45,7 +45,11 @@ public class Warrior extends Card implements Movable, Attackable, Defendable {
             this.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),defenderPosition);
         }
         else if(!defender.isDisarm() && defender instanceof Minion && ((Minion)this).minionSpellType == MinionSpellType.OnDefense){
-            defender.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),attackerPosition);
+            if ( defender.getSpecialSpell().getSpellTypes().contains(SpellType.onEnemy))
+                defender.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),attackerPosition);
+            if ( defender.getSpecialSpell().getSpellTypes().contains(SpellType.onFriend))
+                defender.getSpecialSpell().doEffectAction(BattleMenu.getBattle().getBattleMap(),defenderPosition);
+
         }
         if (!defender.isDisarm() && defender.getAttackType() == AttackType.Melee){
             if (attackerPosition.col - defenderPosition.col == 1 || attackerPosition.row-defenderPosition.row == 1){
@@ -60,6 +64,10 @@ public class Warrior extends Card implements Movable, Attackable, Defendable {
                 this.changeHealth(-defender.getPower());
             }
         }
+    }
+
+    public void addToSpellsOnWarrior(Spell spell){
+        spellsOnWarrior.add(spell);
     }
 
     @Override

@@ -34,6 +34,7 @@ class WarriorSelectMenu implements AbstractMenu {
         } else if (command.matches("Attack \\d \\d")) {
             attack(command);
         } else if (command.matches("Attack Combo \\d+ (\\d+)+")) {
+            comboAttack(command);
 
         } else if (command.matches("Use Special Power \\d \\d")) {
             UseSpecialSpell(command);
@@ -53,6 +54,10 @@ class WarriorSelectMenu implements AbstractMenu {
         }
         if (currentWarrior instanceof Hero)
             BattleMenu.getBattle().doWarriorSpell(currentWarrior,new Position(row,col));
+
+    }
+
+    public void comboAttack(){
 
     }
 

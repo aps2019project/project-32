@@ -103,6 +103,7 @@ public class Spell extends Card {
                             if (getSpellTypes().contains(SpellType.HealthPoint)) {
                                 doHealthPoint(widget);
                             }
+                            ((Hero) widget).addToSpellsOnWarrior(new Spell(this,false));
                         } else {
                             // invalid attack
                         }
@@ -117,6 +118,7 @@ public class Spell extends Card {
                             if (getSpellTypes().contains(SpellType.HealthPoint)) {
                                 doHealthPoint(widget);
                             }
+                            ((Minion) widget).addToSpellsOnWarrior(new Spell(this,false));
                         } else {
                             //invalid attack
                         }
@@ -128,6 +130,7 @@ public class Spell extends Card {
                         if (getSpellTypes().contains(SpellType.HealthPoint)) {
                             doHealthPoint(widget);
                         }
+                        ((Warrior) widget).addToSpellsOnWarrior(new Spell(this,false));
                     }
                 }
             } else {
@@ -144,6 +147,7 @@ public class Spell extends Card {
                             if (getSpellTypes().contains(SpellType.HealthPoint)) {
                                 doHealthPoint(widget);
                             }
+                            ((Hero) widget).addToSpellsOnWarrior(new Spell(this,false));
                         } else {
                             // invalid attack
                         }
@@ -152,11 +156,14 @@ public class Spell extends Card {
                             if (getSpellTypes().contains(SpellType.onMinionNearHero)) {
 
                             }
-                            if (getSpellTypes().contains(SpellType.AttackPoint)) {
-                                doAttackPoint(widget);
-                            }
-                            if (getSpellTypes().contains(SpellType.HealthPoint)) {
-                                doHealthPoint(widget);
+                            else {
+                                if (getSpellTypes().contains(SpellType.HealthPoint)) {
+                                    doHealthPoint(widget);
+                                }
+                                if (getSpellTypes().contains(SpellType.AttackPoint)) {
+                                    doAttackPoint(widget);
+                                }
+                                ((Minion) widget).addToSpellsOnWarrior(new Spell(this, false));
                             }
                         } else {
                             //invalid attack
@@ -175,6 +182,7 @@ public class Spell extends Card {
                                     doAttackPoint(map.getWarriorsOnMap()[i][position.col]);
                             }
                         }
+                        ((Warrior) widget).addToSpellsOnWarrior(new Spell(this,false));
                     }
                 } else {
                     // invalid attack
@@ -196,21 +204,16 @@ public class Spell extends Card {
 
     }
 
-    public void doEffectAction(){
-        
-
-
-    }
 
     public void inActiveBuffs(Battle.Map map,Position position){
         for (int i = position.row;i<position.row+this.getSpellRange();i++){
-            for (int j = position.col;i<position.col+this.getSpellRange();j++){
+            for (int j = position.col;i<position.col+this.getSpellRange();j++) {
                 Warrior warrior = map.getWarriorsOnMap()[i][j];
-                if (warrior instanceof Warrior){
-                    if (warrior.getOwnerPlayer() == this.getOwnerPlayer()){
+                {
+                    if (warrior.getOwnerPlayer() == this.getOwnerPlayer()) {
                         warrior.removeNegativeBuffs();
                     }
-                    if (warrior.getOwnerPlayer() != this.getOwnerPlayer()){
+                    if (warrior.getOwnerPlayer() != this.getOwnerPlayer()) {
                         warrior.removePositiveBuffs();
                     }
                 }

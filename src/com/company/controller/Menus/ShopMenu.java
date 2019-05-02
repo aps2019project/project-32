@@ -273,10 +273,54 @@ public class ShopMenu implements AbstractMenu
         Card persianSpeared = new Minion("PersianSpeared",1,3,5,500,AttackType.Hybrid,3,null);
         cards.add(persianSpeared);
 
-        Card persianSword = new Minion("PersianSword",2,4,6,400,AttackType.Melee,1,MinionSpellType.Passive);
+        Card persianSword = new Minion("PersianSword",2,4,6,400,AttackType.Melee,1,MinionSpellType.OnAttack);
         ((Minion) persianSword).setSpecialSpell(SpellKind.spellCard,0,0,0,0,1,1,0,0,SpellType.onEnemy,SpellType.onMinionOrHero);
         cards.add(persianSword);
 
+        Card eraj = new Minion("Eraj",4,20,6,500,AttackType.Ranged,3,null);
+        cards.add(eraj);
+
+        Card bigGiant = new Minion("BigGiant",9,8,30,600,AttackType.Hybrid,2,null);
+        cards.add(bigGiant);
+
+        Card fireDragon = new Minion("FireDragon",5,5,9,250,AttackType.Ranged,4,null);
+        cards.add(fireDragon);
+
+        Card hogRider = new Minion("HogRider",4,8,16,300,AttackType.Melee,1,null);
+        cards.add(hogRider);
+
+        Card stoneGiant = new Minion("StoneGiant",9,12,12,300,AttackType.Ranged,7,null);
+        cards.add(stoneGiant);
+
+        Card blackGiant = new Minion("BlackGiant",9,10,14,300,AttackType.Hybrid,7,null);
+        cards.add(blackGiant);
+
+        Card turanSwampy = new Minion("TuranSwampy",2,10,3,600,AttackType.Melee,1,null);
+        cards.add(turanSwampy);
+
+        Card turanSpear = new Minion("TuranSpear",1,4,4,600,AttackType.Hybrid,3,null);
+        cards.add(turanSpear);
+
+        Card turanStoneThrower = new Minion("TuranStoneThrower",1,2,4,600,AttackType.Ranged,7,null);
+        cards.add(turanStoneThrower);
+
+        Card turanArcher = new Minion("TuranArcher",1,4,3,500,AttackType.Hybrid,5,null);
+        cards.add(turanArcher);
+
+        Card persianHorseRider = new Minion("PersianHorseRider",4,6,10,200,AttackType.Melee,1,null);
+        cards.add(persianHorseRider);
+
+        Card turanSpy = new Minion("TurnSpy",4,6,6,700,AttackType.Melee,1,MinionSpellType.OnAttack);
+        ((Minion) turanSpear).setSpecialSpell(SpellKind.spellCard,0,0,4,1,0,1,0,-1,SpellType.onEnemy,SpellType.onMinionOrHero,SpellType.HealthPoint);
+        cards.add(turanSpy);
+
+        Card eagle = new Minion("Eagle",2,1,2,200,AttackType.Ranged,3,MinionSpellType.Passive);
+        ((Minion) eagle).setSpecialSpell(SpellKind.Buff,0,0,0,0,0,1,0,10,SpellType.onFriend,SpellType.onMinionOrHero,SpellType.HealthPoint);
+        cards.add(eagle);
+
+        Card poisonSnake = new Minion("PoisonSnake",4,6,5,300,AttackType.Ranged,4,MinionSpellType.OnAttack);
+        ((Minion) poisonSnake).setSpecialSpell(SpellKind.spellCard,0,0,3,0,0,1,0,-1,SpellType.onEnemy,SpellType.onMinionOrHero,SpellType.HealthPoint);
+        cards.add(poisonSnake);
 
 
     }
