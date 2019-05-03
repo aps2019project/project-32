@@ -10,6 +10,7 @@ import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.spells.SpellKind;
 import com.company.models.widget.cards.spells.SpellType;
+import com.company.models.widget.cards.spells.effects.Effectable;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public abstract class Battle
     protected GameResault gameResault = GameResault.UnCertain;
     protected Player firstPlayer;
     protected Player secondPlayer;
+    private SecureRandom randomMaker = new SecureRandom();
 
 
     public class Map
@@ -38,16 +40,28 @@ public abstract class Battle
         }
 
         protected Warrior[][] warriorsOnMap = new Warrior[5][9];
-        protected Widget[][] spellsAndCollectibleOnMap = new Spell[5][9];
+        protected Spell[][] spellsAndCollectibleOnMap = new Spell[5][9];
 
         public Warrior[][] getWarriorsOnMap()
         {
             return warriorsOnMap;
         }
-
-        public Widget[][] getSpellsAndCollectibleOnMap()
+        public Spell[][] getSpellsAndCollectibleOnMap()
         {
             return spellsAndCollectibleOnMap;
+        }
+
+        public Position getRandomPosition()
+        {
+            int row;
+            int col;
+            while (true)
+            {
+                row = randomMaker.nextInt(5);
+                col = randomMaker.nextInt(9);
+                if (warriorsOnMap[row][col] == null)
+                    return new Position(row, col);
+            }
         }
 
         public void addCollectibleItemOnMapRandomise()
@@ -56,7 +70,7 @@ public abstract class Battle
             // make and add 5 collectable item to collectibles
             ArrayList<Position> randomPositions = new ArrayList<>(5);
             for (int i = 0; i < 5; i++)
-                randomPositions.add(Position.getRandomPosition());
+                randomPositions.add(getRandomPosition());
 
             // add to warriorsOnMap 5 collectibles
         }
@@ -81,17 +95,17 @@ public abstract class Battle
 
         public void addBuffRandomise()
         {
-            Position randomPosition = Position.getRandomPosition();
-            int randomNumber = new SecureRandom().nextInt() % 3;
+            Position randomPosition = getRandomPosition();
+            int randomNumber = randomMaker.nextInt() % 3;
 
             switch (randomNumber)
             {
                 case 0:
-                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff, "PoisonBuff", 0, 0, 0, 3, 0, 0, 0, 0, -1, SpellType.HealthPoint, SpellType.onMinionOrHero, SpellType.onEnemyOrFriend);
+                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff,"PoisonBuff",0,0,0,3,0,0,0,0,-1, SpellType.HealthPoint,SpellType.onMinionOrHero,SpellType.onEnemyOrFriend);
                 case 1:
-                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff, "FieryBuff", 0, 0, 0, 3, 0, 0, 0, 0, -2, SpellType.HealthPoint, SpellType.onMinionOrHero, SpellType.onEnemyOrFriend);
+                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff,"FieryBuff",0,0,0,3,0,0,0,0,-2, SpellType.HealthPoint,SpellType.onMinionOrHero,SpellType.onEnemyOrFriend);
                 case 2:
-                    // spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col];
+                   // spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col];
             }
         }
 
@@ -124,21 +138,6 @@ public abstract class Battle
             return widgetsString;
         }
 
-        public void insertCard(Card card, Position position) throws InvalidPosition
-        {
-            if (card instanceof Spell)
-            {
-                ((Spell) card).doEffectAction(battleMap, position);
-            }
-            else if (card instanceof Warrior)
-            {
-                if (battleMap.warriorsOnMap[position.row][position.col] != null)
-                    throw new InvalidPosition();
-
-                battleMap.warriorsOnMap[position.row][position.col] = ((Warrior) card);
-
-            }
-        }
     }
 
     public class TurnHandler
@@ -146,9 +145,6 @@ public abstract class Battle
         Player playerHasTurn;
         Turn turn;
         int turnNumber;
-
-        int firstPlayerHasFlagTurnNumber = 0;
-        int secondPlayerHasFlagTurnNumber = 0; //Just For KeepFlag Battles
 
         public void changeCoolDownRemaining()
         {
@@ -174,15 +170,6 @@ public abstract class Battle
                 playerHasTurn = firstPlayer;
                 firstPlayer.setPlayerManaSpace(firstPlayer.getPlayerManaSpace() + 1);
                 firstPlayer.setPlayerCurrentMana(firstPlayer.getPlayerManaSpace());
-            }
-
-            if (Battle.this instanceof KeepFlagBattle)
-            {
-                if (firstPlayer.getPlayerHand().getFlagNumbersInCollectedItems() > 0)
-                    firstPlayerHasFlagTurnNumber++;
-
-                else if (secondPlayer.getPlayerHand().getFlagNumbersInCollectedItems() > 0)
-                    secondPlayerHasFlagTurnNumber++;
             }
 
             changeCoolDownRemaining();
@@ -229,10 +216,10 @@ public abstract class Battle
         secondPlayer.getPlayerHand().makeRandomiseHand();
     }
 
-    protected void addBattleToBattleHistories(GameResault gameResault)
+    protected void addBattleToBattleHistories(GameResault gameResault) throws GameIsNotOver
     {
-//        if (gameResault == GameResault.UnCertain)
-//            throw new GameIsNotOver();
+        if (gameResault == GameResault.UnCertain)
+            throw new GameIsNotOver();
 
         if (gameResault == GameResault.FristPlayerWin)
         {
@@ -277,23 +264,6 @@ public abstract class Battle
         warrior.getOwnerPlayer().decreaseMana(warrior.getSpecialSpell().getManaCost());
     }
 
-    public void winActions(Player player, GameResault gr)
-    {
-        gameResault = gr;
-        player.setCash(player.getCash() + 1000);
-        addBattleToBattleHistories(gr);
-        player.setWinNumber(player.getWinNumber() + 1);
-        getOtherPlayer(player).setLoseNumber(getOtherPlayer(player).getLoseNumber() + 1);
-    }
-
-    public Player getOtherPlayer(Player player)
-    {
-        if (player.equals(firstPlayer))
-            return secondPlayer;
-
-        return firstPlayer;
-    }
-
     public void moveWarriorOptions(Warrior intendedWarrior, Position sourcePosition, Position destinationPosition) throws WarriorIsTired, WarriorUnderStun
     {
         if (!intendedWarrior.canMove())
@@ -306,7 +276,7 @@ public abstract class Battle
         battleMap.warriorsOnMap[sourcePosition.row][sourcePosition.col] = null;
         Widget widget = battleMap.spellsAndCollectibleOnMap[destinationPosition.row][destinationPosition.col];
 
-        if (widget instanceof Spell && ((Spell) widget).getSpellKind() == SpellKind.Collectible)
+        if (widget instanceof Spell && ((Spell) widget).getSpellKind()==SpellKind.Collectible)
             collect(intendedWarrior, widget);
 
         battleMap.warriorsOnMap[destinationPosition.row][destinationPosition.col] = intendedWarrior;
@@ -371,9 +341,4 @@ public abstract class Battle
     }
 
     public abstract String toShowGameInfo();
-
-    public static Player createAIPlayer()
-    {
-        return new Player("AI", "AI");
-    }
 }

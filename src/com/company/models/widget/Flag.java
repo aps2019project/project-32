@@ -1,17 +1,15 @@
 package com.company.models.widget;
 
-import com.company.models.widget.cards.spells.Spell;
-import com.company.models.widget.cards.spells.SpellKind;
+import com.company.models.widget.cards.Warriors.Warrior;
+import com.company.models.widget.cards.spells.effects.Effectable;
 
-public class Flag extends Spell
-{
-    public Flag()
-    {
-        super(SpellKind.Flag,"flag",0,0,0,0,0,0,0,0,0);
+public class Flag extends Effectable {
+    protected Flag() {
+        super(1000);
     }
+
     @Override
-    public String toShow()
-    {
-        return null;
+    public void doEffect(Warrior warrior) {
+        //
     }
 }

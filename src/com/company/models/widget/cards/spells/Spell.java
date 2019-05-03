@@ -7,292 +7,159 @@ import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.Warriors.Hero;
 import com.company.models.widget.cards.Warriors.Minion;
 import com.company.models.widget.cards.Warriors.Warrior;
+import com.company.models.widget.cards.spells.effects.Effectable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class Spell extends Card
-{
+public class Spell extends Card {
     protected int manaCost;
     protected int coolDown;
-    protected int affectChangeAbilityTurnNumber;
-    protected int affectStunTurnNumber;
-    protected int affectDisarmTurnNumber;
-    protected int affectChangeAbilityTurnNumberRemain;
-    protected int affectStunTurnNumberRemain;
-    protected int affectDisarmTurnNumberRemain;
     protected int coolDownRemaining;
-    protected int affectTurnNumberRemaining;
 
     private int spellRange;
-    private int changeAttackPoint;
-    private int changeHealthPoint;
     private ArrayList<SpellType> spellTypes = new ArrayList<>();
     private SpellKind spellKind;
+    private SpellActiveTime spellActiveTime;
+    private SpellTarget spellTarget;
+    private ArrayList<Effectable> effects;
 
-
-    public Spell(SpellKind spellKind, String name, int price, int manaCost, int coolDown, int affectChangeAbilityTurnNumber, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes)
-    {
+    public Spell(SpellTarget spellTarget, SpellActiveTime spellActiveTime, SpellKind spellKind, String name, int price, int manaCost, int coolDown, int spellRange, Effectable... effectables) {
         super(name, price);
-        this.spellKind = spellKind;
-        addSpellTypes(spellTypes);
+        Collections.addAll(effects, effectables);
+        this.spellTarget = spellTarget;
+        this.spellActiveTime = spellActiveTime;
         this.manaCost = manaCost;
         this.coolDown = coolDown;
-        this.coolDownRemaining = coolDown;
-        this.affectChangeAbilityTurnNumber = affectChangeAbilityTurnNumber;
-        this.affectDisarmTurnNumber = affectDisarmTurnNumber;
-        this.affectStunTurnNumber = affectStunTurnNumber;
-        this.affectTurnNumberRemaining = 0;
         this.spellRange = spellRange;
-        this.changeAttackPoint = changeAttackPoint;
-        this.changeHealthPoint = changeHealthPoint;
+        this.spellKind = spellKind;
     }
 
-    public Spell(Spell spell, boolean inShopCopy)
-    {
-        this(spell.getSpellKind(), spell.name, spell.price, spell.manaCost, spell.coolDown, spell.affectChangeAbilityTurnNumber, spell.affectDisarmTurnNumber, spell.affectStunTurnNumber, spell.spellRange, spell.changeAttackPoint, spell.changeHealthPoint, (SpellType) null);
-        this.setSpellTypes(spell.getSpellTypes());
-        if (!inShopCopy)
-        {
-            this.setAffectChangeAbilityTurnNumberRemain(this.affectChangeAbilityTurnNumber);
-            this.setAffectDisarmTurnNumberRemain(this.affectDisarmTurnNumber);
-            this.setAffectStunTurnNumberRemain(this.affectStunTurnNumber);
+    public Spell(Spell spell) {
+
+        this(spell.spellTarget, spell.spellActiveTime, spell.spellKind, spell.name, spell.price, spell.manaCost, spell.coolDown, spell.spellRange, null);
+        ArrayList<Effectable> copiedEffects = new ArrayList<>();
+        for (Effectable effect : spell.effects) {
+            copiedEffects.add(effect.clone());
         }
+        this.effects = copiedEffects;
+        this.spellTypes = spell.spellTypes;
     }
 
-
-    public SpellKind getSpellKind()
-    {
-        return spellKind;
-    }
-
-    private void addSpellTypes(SpellType... spellTypes)
-    {
-        for (SpellType spellType : spellTypes)
-        {
+    public void addSpellTypes(SpellType... spellTypes) {
+        for (SpellType spellType : spellTypes) {
             this.getSpellTypes().add(spellType);
         }
     }
 
-    public ArrayList<SpellType> getSpellTypes()
-    {
+    public ArrayList<SpellType> getSpellTypes() {
         return spellTypes;
     }
 
-
-    public void setAffectChangeAbilityTurnNumberRemain(int affectChangeAbilityTurnNumberRemain)
-    {
-        this.affectChangeAbilityTurnNumberRemain = affectChangeAbilityTurnNumberRemain;
-    }
-
-    public void setAffectStunTurnNumberRemain(int affectStunTurnNumberRemain)
-    {
-        this.affectStunTurnNumberRemain = affectStunTurnNumberRemain;
-    }
-
-    public void setAffectDisarmTurnNumberRemain(int affectDisarmTurnNumberRemain)
-    {
-        this.affectDisarmTurnNumberRemain = affectDisarmTurnNumberRemain;
-    }
-
     @Override
-    public String toShow()
-    {
-        if (this.spellKind != SpellKind.Collectible)
-            return String.format("(Spell) - Name : %s – MP : %d - CoolDown : %d - Sell Cost : %d" + " - " +
-                            "Buy Cost : %d \n", this.name, this.manaCost, this.coolDown, this.price / 2, this.price);
-        else
-            return String.format("(Collectible) - Name : %s", this.name);
+    public String toShow() {
+        return String.format
+                ("(Spell) - Name : %s – MP : %d - CoolDown : %d - Sell Cost : %d - Buy Cost : %d \n", this.name, this.manaCost, this.coolDown, this.price / 2, this.price);
     }
 
-    public void doEffectAction(Battle.Map map, Position position)
-    {
-        Widget widget = map.getWarriorsOnMap()[position.row][position.col];
-        if (getSpellTypes().contains(SpellType.onFriend))
-        {
-            if (widget != null)
-            {
-                if (widget.getOwnerPlayer() == this.getOwnerPlayer())
-                {
+    public void initialSpell(Battle.Map map, Position position) {
+        Warrior warrior = map.getWarriorsOnMap()[position.row][position.col];
+        if (spellTarget == SpellTarget.CellEffect) {
 
-                    if (getSpellTypes().contains(SpellType.onHero))
-                    {
-                        if (widget instanceof Hero)
-                        {
+            if (getSpellTypes().contains(SpellType.aruondAffect)) {
 
-                            if (getSpellTypes().contains(SpellType.AttackPoint))
-                            {
-                                doAttackPoint(widget);
-                            }
-                            if (getSpellTypes().contains(SpellType.HealthPoint))
-                            {
-                                doHealthPoint(widget);
-                            }
-                            ((Hero) widget).addToSpellsOnWarrior(new Spell(this, false));
-                        }
-                        else
-                        {
-                            // invalid attack
-                        }
-                    }
-                    else if (getSpellTypes().contains(SpellType.onMinion))
-                    {
-                        if (widget instanceof Minion)
-                        {
-                            if (getSpellTypes().contains(SpellType.healHeroByMinion))
-                            {
-                                doHealHeroByMinion(widget);
-                            }
-                            if (getSpellTypes().contains(SpellType.AttackPoint))
-                            {
-                                doAttackPoint(widget);
-                            }
-                            if (getSpellTypes().contains(SpellType.HealthPoint))
-                            {
-                                doHealthPoint(widget);
-                            }
-                            ((Minion) widget).addToSpellsOnWarrior(new Spell(this, false));
-                        }
-                        else
-                        {
-                            //invalid attack
-                        }
-                    }
-                    else if (getSpellTypes().contains(SpellType.onMinionOrHero))
-                    {
 
-                        if (getSpellTypes().contains(SpellType.AttackPoint))
-                        {
-                            doAttackPoint(widget);
-                        }
-                        if (getSpellTypes().contains(SpellType.HealthPoint))
-                        {
-                            doHealthPoint(widget);
-                        }
-                        ((Warrior) widget).addToSpellsOnWarrior(new Spell(this, false));
-                    }
-                }
-            }
-            else
-            {
-                // invalid attack
+            } else {
+                addEffectsToMap(map,position);
             }
 
-        }
-        else if (getSpellTypes().contains(SpellType.onEnemy))
-        {
-            if (widget != null)
-            {
-                if (widget.getOwnerPlayer() != this.getOwnerPlayer())
-                {
+        } else if (spellTarget == SpellTarget.OnWarrior) {
+            if (warrior != null) {
 
-                    if (getSpellTypes().contains(SpellType.onHero))
-                    {
-                        if (widget instanceof Hero)
-                        {
-
-                            if (getSpellTypes().contains(SpellType.HealthPoint))
-                            {
-                                doHealthPoint(widget);
-                            }
-                            ((Hero) widget).addToSpellsOnWarrior(new Spell(this, false));
-                        }
-                        else
-                        {
-                            // invalid attack
-                        }
+                if (getSpellTypes().contains(SpellType.onFriend)) {
+                    if (warrior.getOwnerPlayer() == this.getOwnerPlayer()) {
+                        checkWarriorTarget(warrior);
+                        doEffectOnArea(map,position);
                     }
-                    else if (getSpellTypes().contains(SpellType.onMinion))
-                    {
-                        if (widget instanceof Minion)
-                        {
-                            if (getSpellTypes().contains(SpellType.onMinionNearHero))
-                            {
 
-                            }
-                            else
-                            {
-                                if (getSpellTypes().contains(SpellType.HealthPoint))
-                                {
-                                    doHealthPoint(widget);
-                                }
-                                if (getSpellTypes().contains(SpellType.AttackPoint))
-                                {
-                                    doAttackPoint(widget);
-                                }
-                                ((Minion) widget).addToSpellsOnWarrior(new Spell(this, false));
-                            }
-                        }
-                        else
-                        {
-                            //invalid attack
-                        }
+                    else
+                    //invalid attack
+                } else if (getSpellTypes().contains(SpellType.onEnemy)) {
+                    if (warrior.getOwnerPlayer() != this.getOwnerPlayer()) {
+                        checkWarriorTarget(warrior);
+                        doEffectOnArea(map,position);
+                    }
 
-                    }
-                    else if (getSpellTypes().contains(SpellType.onMinionOrHero))
-                    {
-                        if (getSpellTypes().contains(SpellType.HealthPoint))
-                        {
-                            doHealHeroByMinion(widget);
-                        }
-                        if (getSpellTypes().contains(SpellType.AttackPoint))
-                        {
-                            doAttackPoint(widget);
-                        }
-                        if (getSpellTypes().contains(SpellType.onEnemiesInCol))
-                        {
-                            for (int i = 0; i < 5; i++)
-                            {
-                                if (map.getWarriorsOnMap()[i][position.col] instanceof Warrior && map.getWarriorsOnMap()[i][position.col].getOwnerPlayer() != this.getOwnerPlayer())
-                                    doAttackPoint(map.getWarriorsOnMap()[i][position.col]);
-                            }
-                        }
-                        ((Warrior) widget).addToSpellsOnWarrior(new Spell(this, false));
-                    }
+                    else
+                    //invalid attack
+                } else if (getSpellTypes().contains(SpellType.onEnemyOrFriend)) {
+                    checkWarriorTarget(warrior);
+                    doEffectOnArea(map,position);
                 }
-                else
-                {
-                    // invalid attack
-                }
-            }
-            else
-            {
+            } else {
                 // invalid attack
             }
         }
-        else if (getSpellTypes().contains(SpellType.onEnemyOrFriend))
-        {
 
-
-        }
-        else if (getSpellTypes().contains(SpellType.allEnemy))
-        {
-
-        }
-        else if (getSpellTypes().contains(SpellType.cellEffect))
-        {
-            if (getSpellTypes().contains(SpellType.inactiveBuffs))
-            {
-                inActiveBuffs(map, position);
-            }
-        }
 
     }
 
+    private void addEffectsToMap(Battle.Map map, Position position) {
+        for (int i = 0; i < spellRange; i++) {
+            for (int j = 0; j < spellRange; j++) {
+                Position newPosition = new Position(position.row + i, position.col + j);
+                map.getSpellsAndCollectibleOnMap()[newPosition.row][newPosition.col] = new Spell(this);
+            }
+        }
+    }
 
-    public void inActiveBuffs(Battle.Map map, Position position)
-    {
-        for (int i = position.row; i < position.row + this.getSpellRange(); i++)
-        {
-            for (int j = position.col; i < position.col + this.getSpellRange(); j++)
-            {
+    private void addToWarrior(Warrior warrior) {
+        for (Effectable effect : this.effects) {
+            warrior.getEffectsOnWarrior().add(effect.clone());
+        }
+    }
+
+    private void checkWarriorTarget(Warrior warrior) {
+        if (getSpellTypes().contains(SpellType.onMinion)) {
+            if (!(warrior instanceof Minion)) {
+            }
+            // invalid attack
+        } else if (getSpellTypes().contains(SpellType.onHero)) {
+            if (!(warrior instanceof Hero)) {
+            }
+            //invalid attack
+        }
+    }
+
+    public void doEffectOnArea(Battle.Map map,Position positionInserted) {
+        if (this.spellTypes.contains(SpellType.onCol)) {
+
+            // doForFirst
+        } else if (this.spellTypes.contains(SpellType.onRow)) {
+
+
+        } else if (this.spellTypes.contains(SpellType.onTarget)) {
+
+            doEffectForFirst(map.getWarriorsOnMap()[positionInserted.row][positionInserted.col]);
+        }
+    }
+
+    public void doEffectForFirst(Warrior warrior) {
+        for (Effectable effect : this.effects) {
+            effect.doEffect(warrior);
+        }
+        addToWarrior(warrior);
+    }
+
+    public void inActiveBuffs(Battle.Map map, Position position) {
+        for (int i = position.row; i < position.row + this.getSpellRange(); i++) {
+            for (int j = position.col; i < position.col + this.getSpellRange(); j++) {
                 Warrior warrior = map.getWarriorsOnMap()[i][j];
                 {
-                    if (warrior.getOwnerPlayer() == this.getOwnerPlayer())
-                    {
+                    if (warrior.getOwnerPlayer() == this.getOwnerPlayer()) {
                         warrior.removeNegativeBuffs();
                     }
-                    if (warrior.getOwnerPlayer() != this.getOwnerPlayer())
-                    {
+                    if (warrior.getOwnerPlayer() != this.getOwnerPlayer()) {
                         warrior.removePositiveBuffs();
                     }
                 }
@@ -300,114 +167,72 @@ public class Spell extends Card
         }
     }
 
-    private void doHealHeroByMinion(Widget widget)
-    {
+    private void doHealHeroByMinion(Widget widget) {
+
         //TODO
     }
 
-    private void doHealthPoint(Widget widget)
-    {
+    private void doHealthPoint(Widget widget) {
 
         ((Warrior) widget).changeHealth(this.getChangeHealthPoint());
     }
 
-    private void doAttackPoint(Widget widget)
-    {
+    private void doAttackPoint(Widget widget) {
 
         ((Warrior) widget).changeHealth(this.getChangeAttackPoint());
 
     }
 
 
-    public int getManaCost()
-    {
+    public int getManaCost() {
         return manaCost;
     }
 
-    public int getCoolDown()
-    {
+    public int getCoolDown() {
         return coolDown;
     }
 
-    public int getCoolDownRemaining()
-    {
+    public int getCoolDownRemaining() {
         return coolDownRemaining;
     }
 
-    public void setCoolDownRemaining(int coolDownRemaining)
-    {
+    public void setCoolDownRemaining(int coolDownRemaining) {
         this.coolDownRemaining = coolDownRemaining;
     }
 
-    public void decreaseCoolDownRemaining()
-    {
+    public void decreaseCoolDownRemaining() {
         if (coolDownRemaining >= 1)
             coolDownRemaining -= 1;
     }
 
-    public void setManaCost(int manaCost)
-    {
+    public void setManaCost(int manaCost) {
         this.manaCost = manaCost;
     }
 
-
-    public int getAffectTurnNumberRemaining()
-    {
-        return affectTurnNumberRemaining;
-    }
-
-    public void setAffectTurnNumberRemaining(int affectTurnNumberRemaining)
-    {
-        this.affectTurnNumberRemaining = affectTurnNumberRemaining;
-    }
-
-    public void setSpellTypes(ArrayList<SpellType> spellTypes)
-    {
+    public void setSpellTypes(ArrayList<SpellType> spellTypes) {
         this.spellTypes = spellTypes;
     }
 
-    public int getSpellRange()
-    {
+    public int getSpellRange() {
         return spellRange;
     }
 
-    public void setSpellRange(int spellRange)
-    {
+    public void setSpellRange(int spellRange) {
         this.spellRange = spellRange;
     }
-
-    public int getChangeAttackPoint()
-    {
-        return changeAttackPoint;
+    public SpellActiveTime getSpellActiveTime() {
+        return spellActiveTime;
     }
 
-    public void setChangeAttackPoint(int changeAttackPoint)
-    {
-        this.changeAttackPoint = changeAttackPoint;
+    public SpellKind getSpellKind() {
+        return spellKind;
     }
 
-    public int getChangeHealthPoint()
-    {
-        return changeHealthPoint;
+    public ArrayList<Effectable> getEffects() {
+        return effects;
     }
 
-    public void setChangeHealthPoint(int changeHealthPoint)
-    {
-        this.changeHealthPoint = changeHealthPoint;
-    }
-
-    public int getAffectChangeAbilityTurnNumberRemain()
-    {
-        return affectChangeAbilityTurnNumberRemain;
-    }
-
-    public int getAffectStunTurnNumberRemain()
-    {
-        return affectStunTurnNumberRemain;
-    }
-
-    public int getAffectDisarmTurnNumberRemain()
-    {
-        return affectDisarmTurnNumberRemain;
+    public void setEffects(ArrayList<Effectable> effects) {
+        this.effects = effects;
     }
 }

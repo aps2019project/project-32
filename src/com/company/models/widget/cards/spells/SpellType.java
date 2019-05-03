@@ -2,6 +2,5 @@ package com.company.models.widget.cards.spells;
 
 public enum SpellType
 {
-    AttackPoint, HealthPoint, Stun, Disarm ,Dispel, allEnemy, onHero, onEnemy, onFriend, onMinion, cellEffect, inactiveBuffs, aruondAffect, onEnemyOrFriend, onEnemiesInCol, healHeroByMinion, onMinionNearHero, onMinionOrHero
-
+    allEnemy, onHero, onEnemy, onFriend, onMinion, inactiveBuffs, aruondAffect, onEnemyOrFriend, onCol,onRow,onTarget, healHeroByMinion, onMinionNearHero, onMinionOrHero
 }
