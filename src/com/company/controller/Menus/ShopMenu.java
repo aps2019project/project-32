@@ -22,7 +22,9 @@ public class ShopMenu implements AbstractMenu
     private ShopMenu()
     {
     }
+
     private static ShopMenu shopMenuInstance = new ShopMenu();
+
     public static AbstractMenu getInstance()
     {
         return shopMenuInstance;
@@ -153,62 +155,60 @@ public class ShopMenu implements AbstractMenu
 
     public void addCardToShop()
     {
-
-
-        Card totalDisarm = new Spell(SpellActiveTime.OnRespawn,SpellKind.spellCard, "TotalDisarm", 1000, 0, 0, 0, 1000, 0, 0, 0, 0, SpellType.Disarm, SpellType.onEnemy, SpellType.onMinionOrHero);
+        Card totalDisarm = new Spell(SpellActiveTime.OnRespawn, SpellKind.spellCard, "TotalDisarm", 1000, 0, 0, 0, 1000, 0, 0, 0, 0, SpellType.Disarm, SpellType.onEnemy, SpellType.onMinionOrHero);
         shopCards.add(totalDisarm);
 
-        Card areaSpell = new Spell(SpellActiveTime.OnRespawn,SpellKind.spellCard, "AreaSpell", 1500, 2, 0, 0, 0, 0, 2, 0, 0, SpellType.inactiveBuffs, SpellType.cellEffect);
+        Card areaSpell = new Spell(SpellActiveTime.OnRespawn, SpellKind.spellCard, "AreaSpell", 1500, 2, 0, 0, 0, 0, 2, 0, 0, SpellType.inactiveBuffs, SpellType.cellEffect);
         shopCards.add(areaSpell);
 
-        Card emPower = new Spell(SpellActiveTime.OnRespawn,SpellKind.spellCard, "Empower", 250, 1, 0, 0, 0, 0, 0, 2, 0, SpellType.onFriend, SpellType.AttackPoint, SpellType.onMinionOrHero);
+        Card emPower = new Spell(SpellActiveTime.OnRespawn, SpellKind.spellCard, "Empower", 250, 1, 0, 0, 0, 0, 0, 2, 0, SpellType.onFriend, SpellType.AttackPoint, SpellType.onMinionOrHero);
         shopCards.add(emPower);
 
-        Card fireBall = new Spell(SpellActiveTime.OnRespawn,SpellKind.spellCard, "FireBall", 400, 1, 0, 0, 0, 0, 0, 0, -4, SpellType.onEnemy, SpellType.HealthPoint, SpellType.onMinionOrHero);
+        Card fireBall = new Spell(SpellActiveTime.OnRespawn, SpellKind.spellCard, "FireBall", 400, 1, 0, 0, 0, 0, 0, 0, -4, SpellType.onEnemy, SpellType.HealthPoint, SpellType.onMinionOrHero);
         shopCards.add(fireBall);
 
-        Card godStrength = new Spell(SpellActiveTime.OnRespawn,SpellKind.spellCard, "GodStrength", 450, 2, 0, 0, 0, 0, 0, 4, 0, SpellType.onFriend, SpellType.onHero, SpellType.AttackPoint);
+        Card godStrength = new Spell(SpellActiveTime.OnRespawn, SpellKind.spellCard, "GodStrength", 450, 2, 0, 0, 0, 0, 0, 4, 0, SpellType.onFriend, SpellType.onHero, SpellType.AttackPoint);
         shopCards.add(godStrength);
 
-        Card hellFire = new Spell(SpellActiveTime.OnRespawn,SpellKind.Buff, "HellFire", 600, 3, 0, 2, 0, 0, 2, 0, -2, SpellType.cellEffect, SpellType.HealthPoint);
+        Card hellFire = new Spell(SpellActiveTime.OnRespawn, SpellKind.Buff, "HellFire", 600, 3, 0, 2, 0, 0, 2, 0, -2, SpellType.cellEffect, SpellType.HealthPoint);
         shopCards.add(hellFire);
 
 
-        Card lightingBolt = new Spell(SpellActiveTime.OnMap,SpellKind.spellCard, "LightingBolt", 1250, 2, 0, 0, 0, 0, 0, 0, -8, SpellType.onEnemy, SpellType.onHero, SpellType.HealthPoint);
+        Card lightingBolt = new Spell(SpellActiveTime.OnMap, SpellKind.spellCard, "LightingBolt", 1250, 2, 0, 0, 0, 0, 0, 0, -8, SpellType.onEnemy, SpellType.onHero, SpellType.HealthPoint);
         shopCards.add(lightingBolt);
 
-        Card poisonLake = new Spell(SpellActiveTime.OnMap,SpellKind.spellCard, "PoisonLake", 900, 5, 0, 1, 0, 0, 3, 0, -1, SpellType.cellEffect, SpellType.HealthPoint);
+        Card poisonLake = new Spell(SpellActiveTime.OnMap, SpellKind.spellCard, "PoisonLake", 900, 5, 0, 1, 0, 0, 3, 0, -1, SpellType.cellEffect, SpellType.HealthPoint);
         shopCards.add(poisonLake);
 
-        Card madness = new Spell(SpellActiveTime.OnMap,SpellKind.spellCard, "Madness", 650, 0, 0, 4, 3, 0, 0, 4, 0, SpellType.onFriend, SpellType.Disarm, SpellType.AttackPoint, SpellType.onMinionOrHero);
+        Card madness = new Spell(SpellActiveTime.OnMap, SpellKind.spellCard, "Madness", 650, 0, 0, 4, 3, 0, 0, 4, 0, SpellType.onFriend, SpellType.Disarm, SpellType.AttackPoint, SpellType.onMinionOrHero);
         shopCards.add(madness);
 
-        Card allDisarm = new Spell(SpellActiveTime.OnMap,SpellKind.spellCard, "AllDisarm", 2000, 9, 0, 0, 1, 0, 0, 0, 0, SpellType.allEnemy, SpellType.Disarm);
+        Card allDisarm = new Spell(SpellActiveTime.OnMap, SpellKind.spellCard, "AllDisarm", 2000, 9, 0, 0, 1, 0, 0, 0, 0, SpellType.allEnemy, SpellType.Disarm);
         shopCards.add(allDisarm);
 
-        Card allPoison = new Spell(SpellActiveTime.OnMap,SpellKind.spellCard, "AllPoison", 1500, 8, 0, 4, 0, 0, 0, 0, -1, SpellType.allEnemy, SpellType.HealthPoint);
+        Card allPoison = new Spell(SpellActiveTime.OnMap, SpellKind.spellCard, "AllPoison", 1500, 8, 0, 4, 0, 0, 0, 0, -1, SpellType.allEnemy, SpellType.HealthPoint);
         shopCards.add(allPoison);
 
         //Card dispel = new Spell("Dispel",2100,0,0,0,0,0,0,0,0,SpellType.onEnemyOrFriend,SpellType.inactiveBuffs);
         //add(dispel);
 
-        Spell healthWithProfit = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn,"HealthWithProfit",2250,0,0,0,new HolyEffect(+2,3),new ChangeHealthEffect(-6,1));
-        healthWithProfit.addSpellTypes(SpellType.onFriend,SpellType.onMinionOrHero);
+        Spell healthWithProfit = new Spell(SpellTarget.OnWarrior, SpellActiveTime.OnRespawn, "HealthWithProfit", 2250, 0, 0, 0, new HolyEffect(+2, 3), new ChangeHealthEffect(-6, 1));
+        healthWithProfit.addSpellTypes(SpellType.onFriend, SpellType.onMinionOrHero);
         //Card ghazaBokhorJoonBegiri = new Spell() *buff*
 
         //Card allPower = new Spell() *buff*
 
-        Card allAttack = new Spell(SpellActiveTime.OnMap,SpellKind.spellCard, "AllAttack", 1500, 4, 0, 0, 0, 0, 0, 0, -6, SpellType.onCol, SpellType.onEnemy, SpellType.HealthPoint, SpellType.onMinionOrHero);
+        Card allAttack = new Spell(SpellActiveTime.OnMap, SpellKind.spellCard, "AllAttack", 1500, 4, 0, 0, 0, 0, 0, 0, -6, SpellType.onCol, SpellType.onEnemy, SpellType.HealthPoint, SpellType.onMinionOrHero);
         shopCards.add(allAttack);
 
         //Card weakening = new Spell() *buff*
-        Card sacrifice = new Spell(SpellActiveTime.OnMap,SpellKind.spellCard, "Sacrifice", 1600, 3, 0, 0, 0, 0, 0, 0, 0, SpellType.healHeroByMinion, SpellType.onFriend, SpellType.onMinion);
+        Card sacrifice = new Spell(SpellActiveTime.OnMap, SpellKind.spellCard, "Sacrifice", 1600, 3, 0, 0, 0, 0, 0, 0, 0, SpellType.healHeroByMinion, SpellType.onFriend, SpellType.onMinion);
         shopCards.add(sacrifice);
 
-        Card kingsGard = new Spell(SpellActiveTime.OnMap,SpellKind.spellCard, "KingsGard", 1750, 3, 0, 0, 0, 0, 0, 0, -1000, SpellType.onMinionNearHero, SpellType.onEnemy, SpellType.HealthPoint);
+        Card kingsGard = new Spell(SpellActiveTime.OnMap, SpellKind.spellCard, "KingsGard", 1750, 3, 0, 0, 0, 0, 0, 0, -1000, SpellType.onMinionNearHero, SpellType.onEnemy, SpellType.HealthPoint);
         shopCards.add(kingsGard);
 
-        Card shock = new Spell(SpellActiveTime.OnMap,SpellKind.spellCard, "Shock", 1200, 1, 0, 0, 0, 2, 0, 0, 0, SpellType.onEnemy, SpellType.Stun, SpellType.onMinionOrHero);
+        Card shock = new Spell(SpellActiveTime.OnMap, SpellKind.spellCard, "Shock", 1200, 1, 0, 0, 0, 2, 0, 0, 0, SpellType.onEnemy, SpellType.Stun, SpellType.onMinionOrHero);
         shopCards.add(shock);
 
         Hero rakhsh = new Hero("rakhsh", 4, 50, 8000, AttackType.Melee, 1);
@@ -277,6 +277,27 @@ public class ShopMenu implements AbstractMenu
         Minion poisonSnake = new Minion("PoisonSnake", 4, 6, 5, 300, AttackType.Ranged, 4, MinionSpellType.OnAttack);
         poisonSnake.setSpecialSpell(SpellKind.spellCard, 0, 0, 3, 0, 0, 1, 0, -1, SpellType.onEnemy, SpellType.onMinionOrHero, SpellType.HealthPoint);
         shopCards.add(poisonSnake);
+
+
+        Hero divSepid = new Hero("DiveSepid", 4, 50, 8000, AttackType.Melee, 1, );
+        shopCards.add(divSepid);
+
+        Hero siMorgh = new Hero("Simorgh", 4, 50, 9000, AttackType.Melee, 1, );
+        shopCards.add(siMorgh);
+
+        Hero ejdeha7Sar = new Hero("Ejdeha7Sar", 4, 50, 8000, AttackType.Melee, 1, );
+        shopCards.add(ejdeha7Sar);
+
+        Hero rakhsh = new Hero("Rakhsh",4,50,8000,AttackType.Melee,1, );
+        shopCards.add(rakhsh);
+
+        Hero zahhak = new Hero("Zahhak",2,50,10000,AttackType.Melee,1, );
+        shopCards.add(zahhak);
+
+        Hero kaveh = new Hero("Kaveh",4,50,8000,AttackType.Melee,1, );
+        shopCards.add(kaveh);
+
+        Hero arash = new Hero("Arash",2,30,10000,AttackType.Melee,);
 
     }
 }

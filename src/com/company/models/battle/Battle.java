@@ -10,7 +10,6 @@ import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.spells.SpellKind;
 import com.company.models.widget.cards.spells.SpellType;
-import com.company.models.widget.cards.spells.effects.Effectable;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -244,12 +243,12 @@ public abstract class Battle
 
     public abstract void checkBattleResult() throws GameIsNotOver;
 
-    public void putSpellCardOnMap(Spell spell, Position position) throws NotEnoughMana
+    public void putSpellCardOnMap(Spell spell, Position position) throws NotEnoughMana, InvalidAttack
     {
         if (spell.getOwnerPlayer().getPlayerCurrentMana() >= spell.getManaCost())
             throw new NotEnoughMana();
 
-        spell.doEffectAction(battleMap, position);
+        spell.initialSpell(battleMap, position);
     }
 
     public void doWarriorSpell(Warrior warrior, Position position) throws NotEnoughMana, CoolDownRemaining
@@ -260,23 +259,21 @@ public abstract class Battle
         else if (warrior.getSpecialSpell().getCoolDownRemaining() >= 0)
             throw new CoolDownRemaining();
 
-        warrior.getSpecialSpell().doEffectAction(battleMap, position);
+        //TODO
+        //warrior.getSpecialSpell().doEffectAction(battleMap, position);
         warrior.getOwnerPlayer().decreaseMana(warrior.getSpecialSpell().getManaCost());
     }
 
-    public void moveWarriorOptions(Warrior intendedWarrior, Position sourcePosition, Position destinationPosition) throws WarriorIsTired, WarriorUnderStun
+    public void moveWarriorOptions(Warrior intendedWarrior, Position sourcePosition, Position destinationPosition) throws CantMove
     {
         if (!intendedWarrior.canMove())
-            throw new WarriorIsTired();
-
-        if (!intendedWarrior.isStun())
-            throw new WarriorUnderStun();
+            throw new CantMove();
 
         intendedWarrior.moveTiredAffect();
         battleMap.warriorsOnMap[sourcePosition.row][sourcePosition.col] = null;
-        Widget widget = battleMap.spellsAndCollectibleOnMap[destinationPosition.row][destinationPosition.col];
+        Spell widget = battleMap.spellsAndCollectibleOnMap[destinationPosition.row][destinationPosition.col];
 
-        if (widget instanceof Spell && ((Spell) widget).getSpellKind()==SpellKind.Collectible)
+        if (widget != null && widget.getSpellKind()==SpellKind.Collectible)
             collect(intendedWarrior, widget);
 
         battleMap.warriorsOnMap[destinationPosition.row][destinationPosition.col] = intendedWarrior;
@@ -293,12 +290,10 @@ public abstract class Battle
         }
     }
 
-    public void attackActions(Warrior attacker, Warrior defender) throws WarriorIsTired, WarriorUnderStun
+    public void attackActions(Warrior attacker, Warrior defender) throws CantAttack
     {
         if (!attacker.canAttack())
-            throw new WarriorIsTired();
-        if (!attacker.isStun())
-            throw new WarriorUnderStun();
+            throw new CantAttack();
 
         attacker.attack(defender);
         attacker.attackTiredAffect();

@@ -3,7 +3,6 @@ package com.company.models.widget.cards.spells;
 import com.company.controller.Exceptions.InvalidAttack;
 import com.company.models.Position;
 import com.company.models.battle.Battle;
-import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.Warriors.Hero;
 import com.company.models.widget.cards.Warriors.Minion;
@@ -40,7 +39,6 @@ public class Spell extends Card
 
     public Spell(Spell spell)
     {
-
         this(spell.spellTarget, spell.spellActiveTime, spell.spellKind, spell.name, spell.price, spell.manaCost, spell.coolDown, spell.spellRange, (Effectable) null);
         ArrayList<Effectable> copiedEffects = new ArrayList<>();
         for (Effectable effect : spell.effects)
@@ -68,55 +66,23 @@ public class Spell extends Card
                 ("(Spell) - Name : %s – MP : %d - CoolDown : %d - Sell Cost : %d - Buy Cost : %d \n", this.name, this.manaCost, this.coolDown, this.price / 2, this.price);
     }
 
-    public void initialSpell(Battle.Map map, Position position)
+    public void initialSpell(Battle.Map map, Position position) throws InvalidAttack
     {
         Warrior warrior = map.getWarriorsOnMap()[position.row][position.col];
         if (spellTarget == SpellTarget.CellEffect)
         {
-            if (getSpellTypes().contains(SpellType.aruondAffect))
-            {
-
-            }
-            else
-            {
-                addEffectsToMap(map, position);
-            }
-
+            doEffectOnArea(map, position);
+            addEffectsToMap(map, position);
         }
-        else if (spellTarget == SpellTarget.OnWarrior)
+        else if (spellTarget == SpellTarget.OnWarrior && warrior != null)
         {
-            if (warrior != null)
-            {
-                if (getSpellTypes().contains(SpellType.onFriend))
-                {
-                    if (warrior.getOwnerPlayer() == this.getOwnerPlayer())
-                    {
-                        checkWarriorTarget(warrior);
-                        doEffectOnArea(map, position);
-                    }
-                    else
-                    //invalid attack
-                }
-                else if (getSpellTypes().contains(SpellType.onEnemy))
-                {
-                    if (warrior.getOwnerPlayer() != this.getOwnerPlayer())
-                    {
-                        checkWarriorTarget(warrior);
-                        doEffectOnArea(map, position);
-                    }
-                    else
-                    //invalid attack
-                }
-                else if (getSpellTypes().contains(SpellType.onEnemyOrFriend))
-                {
-                    checkWarriorTarget(warrior);
-                    doEffectOnArea(map, position);
-                }
-            }
-            else
-            {
-                // invalid attack
-            }
+            checkWarriorTarget(warrior);
+            doEffectOnArea(map, position);
+            addToWarrior(warrior);
+        }
+        else
+        {
+            // invalid attack
         }
     }
 
@@ -147,45 +113,47 @@ public class Spell extends Card
                 throw new InvalidAttack();
     }
 
-    public void doEffectOnArea(Battle.Map map, Position positionInserted)
+    private void doEffectOnArea(Battle.Map map, Position positionInserted)
     {
+
         if (this.spellTypes.contains(SpellType.onCol))
         {
+
         }
         else if (this.spellTypes.contains(SpellType.onRow))
         {
             for (int i = 0; i < 9; i++)
-                if ()
+            {
+                Warrior warriorOnThisPosition = map.getWarriorsOnMap()[positionInserted.row][i];
+                if (warriorOnThisPosition != null)
+                    doEffectForFirst(warriorOnThisPosition);
+            }
         }
         else if (this.spellTypes.contains(SpellType.onTarget))
+        {
             doEffectForFirst(map.getWarriorsOnMap()[positionInserted.row][positionInserted.col]);
+        }
+        else if (this.spellTypes.contains(SpellType.onSquare))
+        {
+//            this.ownerPlayer.equals()
+
+        }
+        else if (this.spellTypes.contains(SpellType.onAround))
+        {
+
+
+        }
     }
 
-    public void doEffectForFirst(Warrior warrior)
+    private void doEffectForFirst(Warrior warrior)
     {
         for (Effectable effect : this.effects)
-            effect.doEffect(warrior);
+            if (this.spellTypes.contains(SpellType.onFriend) && this.ownerPlayer.equals(warrior.getOwnerPlayer()))
+                effect.doEffect(warrior, SpellType.onFriend);
+        if (this.spellTypes.contains(SpellType.onEnemy) && !this.ownerPlayer.equals(warrior.getOwnerPlayer()))
+            effect.doEffect(warrior, SpellType.onEnemy);
 
-        addToWarrior(warrior);
-    }
-
-    public void inActiveBuffs(Battle.Map map, Position position)
-    {
-        for (int i = position.row; i < position.row + this.getSpellRange(); i++)
-            for (int j = position.col; i < position.col + this.getSpellRange(); j++)
-            {
-                Warrior warrior = map.getWarriorsOnMap()[i][j];
-                {
-                    if (warrior.getOwnerPlayer() == this.getOwnerPlayer())
-                    {
-                        warrior.removeNegativeBuffs();
-                    }
-                    if (warrior.getOwnerPlayer() != this.getOwnerPlayer())
-                    {
-                        warrior.removePositiveBuffs();
-                    }
-                }
-            }
+        effects.removeIf(effectable -> effectable.getTurnRemaining() == 0);
     }
 
     public int getManaCost()
@@ -201,6 +169,11 @@ public class Spell extends Card
     public int getCoolDownRemaining()
     {
         return coolDownRemaining;
+    }
+
+    public void decreaseCoolDownRemaining()
+    {
+        coolDownRemaining--;
     }
 
     public void setCoolDownRemaining(int coolDownRemaining)
