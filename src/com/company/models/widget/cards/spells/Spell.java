@@ -154,6 +154,7 @@ public class Spell extends Card
             effect.doEffect(warrior, SpellType.onEnemy);
 
         effects.removeIf(effectable -> effectable.getTurnRemaining() == 0);
+
     }
 
     public int getManaCost()

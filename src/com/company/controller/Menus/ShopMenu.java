@@ -288,16 +288,25 @@ public class ShopMenu implements AbstractMenu
         Hero ejdeha7Sar = new Hero("Ejdeha7Sar", 4, 50, 8000, AttackType.Melee, 1, );
         shopCards.add(ejdeha7Sar);
 
-        Hero rakhsh = new Hero("Rakhsh",4,50,8000,AttackType.Melee,1, );
+        Hero rakhsh = new Hero("Rakhsh", 4, 50, 8000, AttackType.Melee, 1, );
         shopCards.add(rakhsh);
 
-        Hero zahhak = new Hero("Zahhak",2,50,10000,AttackType.Melee,1, );
+        Hero zahhak = new Hero("Zahhak", 2, 50, 10000, AttackType.Melee, 1, );
         shopCards.add(zahhak);
 
-        Hero kaveh = new Hero("Kaveh",4,50,8000,AttackType.Melee,1, );
+        Hero kaveh = new Hero("Kaveh", 4, 50, 8000, AttackType.Melee, 1, );
         shopCards.add(kaveh);
 
-        Hero arash = new Hero("Arash",2,30,10000,AttackType.Melee,);
+        Hero arash = new Hero("Arash", 2, 30, 10000, AttackType.Ranged, 6, );
+        shopCards.add(arash);
 
+        Hero afsaneh = new Hero("Afsane", 3, 40, 11000, AttackType.Ranged, 3, );
+        shopCards.add(afsaneh);
+
+        Hero esfandiar = new Hero("Esfandiar", 3, 35, 12000,AttackType.Hybrid,3,  );
+        shopCards.add(esfandiar);
+
+        Hero rostam = new Hero("Rostam",7,55,8000,AttackType.Hybrid,4, );
+        shopCards.add(rostam);
     }
 }
