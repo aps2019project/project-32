@@ -27,4 +27,9 @@ public class ChangeHealthEffect extends Effectable
     {
         return new ChangeHealthEffect(this.changeHealthPoint, this.turnNumber, this.buffType);
     }
+
+    public int getChangeHealthPoint()
+    {
+        return changeHealthPoint;
+    }
 }

@@ -350,15 +350,15 @@ public class ShopMenu implements AbstractMenu
         shopCards.add(fireDragon);
 
         // spell!
-        Minion lion = new Minion("Lion",2,8,1,600,AttackType.Melee,1,,false);
+        //Minion lion = new Minion("Lion",2,8,1,600,AttackType.Melee,1,,false);
 
-        Card eraj = new Minion("Eraj", 4, 20, 6, 500, AttackType.Ranged, 3, null);
-        shopCards.add(eraj);
+        // minion Giant Snake
+        Spell gorazSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnDefend,SpellKind.spellCard,"gorazSpell",0,0,0,0,new DeBufDisarm(1,BuffType.Positive));
+        gorazSpell.addSpellTypes(SpellType.onTarget,SpellType.onMinionOrHero,SpellType.onFriend);
+        Minion goraz = new Minion("goraz",6,14,10,500,AttackType.Melee,1,gorazSpell,false);
+        shopCards.add(goraz);
 
 
-
-        Card bigGiant = new Minion("BigGiant", 9, 8, 30, 600, AttackType.Hybrid, 2, null);
-        shopCards.add(bigGiant);
 
 
         Minion poisonSnake = new Minion("PoisonSnake", 4, 6, 5, 300, AttackType.Ranged, 4, MinionSpellType.OnAttack);

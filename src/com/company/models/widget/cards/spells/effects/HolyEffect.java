@@ -13,8 +13,9 @@ public class HolyEffect extends Effectable {
     }
 
     @Override
-    public void doEffect(Warrior warrior, SpellType spellType) {
-
+    public void doEffect(Warrior warrior, SpellType spellType)
+    {
+        warrior.setHealth(warrior.getHealth()+healthPointIncreaseAfterAttack);
     }
 
     @Override
