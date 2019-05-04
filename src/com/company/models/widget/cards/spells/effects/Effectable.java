@@ -19,6 +19,7 @@ public abstract class Effectable
 
     public abstract void doEffect(Warrior warrior, SpellType spellType);
 
+
     public int getTurnRemaining()
     {
         return turnRemaining;

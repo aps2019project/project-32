@@ -16,19 +16,30 @@ import java.util.ArrayList;
 
 public abstract class Battle
 {
-    public Battle(Player firstPlayer, Player secondPlayer)
+    protected Battle(Player firstPlayer, Player secondPlayer, int winnerPrize)
     {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
+        this.winnerPrize = winnerPrize;
     }
+
+    protected static Battle currentBattle;
+
+    public static Battle getInstance()
+    {
+        return currentBattle;
+    }
+
+    public abstract void makeBattle(Player firstPlayer, Player secondPlayer, int winnerPrize);
 
     protected BattleMode battleMode;
     protected Map battleMap = new Map();
-    protected TurnHandler battleTurnHandler = new TurnHandler();
+    protected TurnHandler turnHandler = new TurnHandler();
     protected GameResault gameResault = GameResault.UnCertain;
     protected Player firstPlayer;
     protected Player secondPlayer;
     private SecureRandom randomMaker = new SecureRandom();
+    protected int winnerPrize;
 
 
     public class Map
@@ -45,6 +56,7 @@ public abstract class Battle
         {
             return warriorsOnMap;
         }
+
         public Spell[][] getSpellsAndCollectibleOnMap()
         {
             return spellsAndCollectibleOnMap;
@@ -100,11 +112,11 @@ public abstract class Battle
             switch (randomNumber)
             {
                 case 0:
-                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff,"PoisonBuff",0,0,0,3,0,0,0,0,-1, SpellType.HealthPoint,SpellType.onMinionOrHero,SpellType.onEnemyOrFriend);
+//                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff, "PoisonBuff", 0, 0, 0, 3, 0, 0, 0, 0, -1, SpellType.HealthPoint, SpellType.onMinionOrHero, SpellType.onEnemyOrFriend);
                 case 1:
-                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff,"FieryBuff",0,0,0,3,0,0,0,0,-2, SpellType.HealthPoint,SpellType.onMinionOrHero,SpellType.onEnemyOrFriend);
+//                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff, "FieryBuff", 0, 0, 0, 3, 0, 0, 0, 0, -2, SpellType.HealthPoint, SpellType.onMinionOrHero, SpellType.onEnemyOrFriend);
                 case 2:
-                   // spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col];
+//                     spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col];
             }
         }
 
@@ -136,16 +148,22 @@ public abstract class Battle
 
             return widgetsString;
         }
-
     }
 
     public class TurnHandler
     {
         Player playerHasTurn;
-        Turn turn;
         int turnNumber;
 
-        public void changeCoolDownRemaining()
+        public Player getPlayerInRest()
+        {
+            if (playerHasTurn.equals(firstPlayer))
+                return secondPlayer;
+            else
+                return firstPlayer;
+        }
+
+        private void changeCoolDownRemaining()
         {
             for (Widget[] widgets : battleMap.warriorsOnMap)
                 for (Widget widget : widgets)
@@ -156,21 +174,18 @@ public abstract class Battle
         public void changeTurn()
         {
             turnNumber++;
-            if (turn == Turn.fristPlayerTurn)
+            if (playerHasTurn.equals(firstPlayer))
             {
-                turn = Turn.secondPlayerTurn;
                 playerHasTurn = secondPlayer;
                 secondPlayer.setPlayerManaSpace(secondPlayer.getPlayerManaSpace() + 1);
                 secondPlayer.setPlayerCurrentMana(secondPlayer.getPlayerManaSpace());
             }
             else
             {
-                turn = Turn.fristPlayerTurn;
                 playerHasTurn = firstPlayer;
                 firstPlayer.setPlayerManaSpace(firstPlayer.getPlayerManaSpace() + 1);
                 firstPlayer.setPlayerCurrentMana(firstPlayer.getPlayerManaSpace());
             }
-
             changeCoolDownRemaining();
         }
 
@@ -180,27 +195,21 @@ public abstract class Battle
         }
     }
 
-    public void beginningBattleActions() throws InvalidDeck
+    public void initialiseBattle(BattleMode battleMode) throws InvalidDeck
     {
-        if (!checkBothPlayersDeckValidity())
-            throw new InvalidDeck();
+        checkBothPlayersDeckValidity();
 
         firstPlayer.setCopiedMainDeck(firstPlayer.getMainDeck().getCards());
         secondPlayer.setCopiedMainDeck(secondPlayer.getMainDeck().getCards());
-        setTurnInBeginning();
+        turnHandler.playerHasTurn = firstPlayer;
         setHeroPositionInBeginning();
         setBothPlayersHandInBeginning();
     }
 
-    private boolean checkBothPlayersDeckValidity()
+    private void checkBothPlayersDeckValidity() throws InvalidDeck
     {
-        return firstPlayer.getMainDeck().isValidDeck() && secondPlayer.getMainDeck().isValidDeck();
-    }
-
-    private void setTurnInBeginning()
-    {
-        battleTurnHandler.turn = Turn.fristPlayerTurn;
-        battleTurnHandler.playerHasTurn = firstPlayer;
+        if (!(firstPlayer.getMainDeck().isValidDeck() && secondPlayer.getMainDeck().isValidDeck()))
+            throw new InvalidDeck();
     }
 
     private void setHeroPositionInBeginning()
@@ -223,16 +232,16 @@ public abstract class Battle
         if (gameResault == GameResault.FristPlayerWin)
         {
             firstPlayer.addGameResultToBattleHistories
-                    (secondPlayer, true, TimeHandler.getInstance().getCurrentDate());
+                    (secondPlayer, true, TimeHandler.getInstance().getTime());
             secondPlayer.addGameResultToBattleHistories
-                    (firstPlayer, false, TimeHandler.getInstance().getCurrentDate());
+                    (firstPlayer, false, TimeHandler.getInstance().getTime());
         }
         else if (gameResault == GameResault.SecondPlayerWin)
         {
             secondPlayer.addGameResultToBattleHistories
-                    (firstPlayer, true, TimeHandler.getInstance().getCurrentDate());
+                    (firstPlayer, true, TimeHandler.getInstance().getTime());
             firstPlayer.addGameResultToBattleHistories
-                    (secondPlayer, false, TimeHandler.getInstance().getCurrentDate());
+                    (secondPlayer, false, TimeHandler.getInstance().getTime());
         }
     }
 
@@ -264,6 +273,22 @@ public abstract class Battle
         warrior.getOwnerPlayer().decreaseMana(warrior.getSpecialSpell().getManaCost());
     }
 
+    public void winActions(Player player)
+    {
+        player.increaseCash(winnerPrize);
+        player.increaseWinNumber();
+        getOtherPlayer(player).decreaseWinNumber();
+        player.addGameResultToBattleHistories(getOtherPlayer(player), true, TimeHandler.getInstance().getTime());
+    }
+
+    public Player getOtherPlayer(Player player)
+    {
+        if (player.equals(firstPlayer))
+            return secondPlayer;
+        else
+            return firstPlayer;
+    }
+
     public void moveWarriorOptions(Warrior intendedWarrior, Position sourcePosition, Position destinationPosition) throws CantMove
     {
         if (!intendedWarrior.canMove())
@@ -273,7 +298,7 @@ public abstract class Battle
         battleMap.warriorsOnMap[sourcePosition.row][sourcePosition.col] = null;
         Spell widget = battleMap.spellsAndCollectibleOnMap[destinationPosition.row][destinationPosition.col];
 
-        if (widget != null && widget.getSpellKind()==SpellKind.Collectible)
+        if (widget != null && widget.getSpellKind() == SpellKind.Collectible)
             collect(intendedWarrior, widget);
 
         battleMap.warriorsOnMap[destinationPosition.row][destinationPosition.col] = intendedWarrior;
@@ -310,6 +335,22 @@ public abstract class Battle
             }
     }
 
+    public Warrior getRandomWarrior(Player player, SpellType spellType)
+    {
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 5; j++)
+            {
+                Warrior warrior = battleMap.warriorsOnMap[j][i];
+                if ((spellType == SpellType.onFriend) && warrior.getOwnerPlayer().equals(player))
+                    return warrior;
+
+                if ((spellType == SpellType.onEnemy) && !warrior.getOwnerPlayer().equals(player))
+                    return warrior;
+            }
+
+        return null;
+    }
+
     public BattleMode getBattleMode()
     {
         return battleMode;
@@ -330,10 +371,11 @@ public abstract class Battle
         return secondPlayer;
     }
 
-    public TurnHandler getBattleTurnHandler()
+    public TurnHandler getTurnHandler()
     {
-        return battleTurnHandler;
+        return turnHandler;
     }
 
     public abstract String toShowGameInfo();
+
 }

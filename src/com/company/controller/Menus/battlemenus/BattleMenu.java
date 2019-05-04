@@ -18,30 +18,26 @@ public class BattleMenu implements AbstractMenu
     protected BattleMenu()
     {
     }
-
     private static BattleMenu battleMenuInstance = new BattleMenu();
-
     public static BattleMenu getInstance()
     {
         return battleMenuInstance;
     }
 
     @Override
-    public void selectOptionByCommand(String command) throws UnSelectable, BattleHasNotInitialise, CardNotFound, InvalidPosition, InvalidTargetException, InvalidAttackException, OpponentMinionIsUnvalidForAttack, InvalidWarriorForAttack, WarriorUnderStun, WarriorIsTired, CoolDownRemaining, NotEnoughMana
+    public void selectOptionByCommand(String command) throws UnSelectable, CardNotFound, InvalidPosition, InvalidTargetException, InvalidAttackException, OpponentMinionIsUnvalidForAttack, InvalidWarriorForAttack, CoolDownRemaining, NotEnoughMana
     {
         if (command.matches("Game Information"))
             View.getInstance().show(currentBattle.toShowGameInfo());
 
         else if (command.matches("Show My Minions"))
-            if (currentBattle.getBattleTurnHandler().getPlayerHasTurn().equals(currentBattle.getFirstPlayer()))
-                View.getInstance().show(currentBattle.getBattleMap().toShowMinionInMap(currentBattle.getFirstPlayer()));
-            else
-                View.getInstance().show(currentBattle.getBattleMap().toShowMinionInMap(currentBattle.getSecondPlayer()));
+            View.getInstance().show(currentBattle.getBattleMap().toShowMinionInMap
+                    (currentBattle.getTurnHandler().getPlayerHasTurn()));
+
         else if (command.matches("Show Opponent Minions"))
-            if (currentBattle.getBattleTurnHandler().getPlayerHasTurn().equals(currentBattle.getFirstPlayer()))
-                View.getInstance().show(currentBattle.getBattleMap().toShowMinionInMap(currentBattle.getSecondPlayer()));
-            else
-                View.getInstance().show(currentBattle.getBattleMap().toShowMinionInMap(currentBattle.getFirstPlayer()));
+            View.getInstance().show(currentBattle.getBattleMap().toShowMinionInMap
+                    (currentBattle.getTurnHandler().getPlayerInRest()));
+
         else if (command.matches("Show Card Info \\d+"))
             View.getInstance().show(toShowCardInfo(Integer.parseInt(command.split(" ")[3])));
 
@@ -55,13 +51,13 @@ public class BattleMenu implements AbstractMenu
             Controller.getInstance().changeCurrentMenuTo(MainMenu.getInstance());
 
         else if (command.matches("End Turn"))
-            currentBattle.getBattleTurnHandler().changeTurn();
+            currentBattle.getTurnHandler().changeTurn();
 
         else if (command.matches("Show Collectables"))
-            View.getInstance().show(currentBattle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowCollectedItems());
+            View.getInstance().show(currentBattle.getTurnHandler().getPlayerHasTurn().getPlayerHand().toShowCollectedItems());
 
         else if (command.matches("Show Hand"))
-            View.getInstance().show(currentBattle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand());
+            View.getInstance().show(currentBattle.getTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand());
 
         else if (command.matches("Insert \\w+ in \\d \\d"))
             insertCard(command);
@@ -96,7 +92,7 @@ public class BattleMenu implements AbstractMenu
 
     public String toShowHand()
     {
-        return currentBattle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand(); //send to view
+        return currentBattle.getTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand(); //send to view
     }
 
     public String toShowEndGameInfo()
@@ -120,7 +116,7 @@ public class BattleMenu implements AbstractMenu
         int row = Integer.parseInt(command.split(" ")[4]);
         int col = Integer.parseInt(command.split(" ")[3]);
         Position position = new Position(row, col);
-        Card intendedCard = currentBattle.getBattleTurnHandler().getPlayerHasTurn().getPlayerHand().getCardByName(cardName);
+        Card intendedCard = currentBattle.getTurnHandler().getPlayerHasTurn().getPlayerHand().getCardByName(cardName);
 
         if (intendedCard == null)
             throw new CardNotFound();

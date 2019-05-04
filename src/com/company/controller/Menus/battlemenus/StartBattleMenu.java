@@ -12,39 +12,28 @@ public class StartBattleMenu implements AbstractMenu
     {
         return startBattleMenuInstance;
     }
-    private StartBattleMenu(){}
+    private StartBattleMenu()
+    {
+    }
 
     @Override
     public void selectOptionByCommand(String command) throws WrongPassword, UserNameDidntExist, WeekPassword, UserNameAlreadyExist, InvalidDeck, DeckNameAlreadyExist, CardNotFound, DeckNotFound, DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready, UnSelectable, NotEnoughCash, CantAddUsableItems, InvalidTargetException, InvalidAttackException, OpponentMinionIsUnvalidForAttack, InvalidWarriorForAttack, WarriorUnderStun, WarriorIsTired, CoolDownRemaining, NotEnoughMana, BattleHasNotInitialise
     {
-        if (command.matches("New Game (AI) \\w+"))
+        if (command.matches("Story Mode"))
+            Controller.getInstance().changeCurrentMenuTo(StoryModeMenu.getInstance());
+
+        else if (command.matches("Custom Game"))
+            Controller.getInstance().changeCurrentMenuTo(StoryModeMenu.getInstance());
+
+        else if(command.matches("Multy Player"))
         {
-            newGameWithAI(command);
-            Controller.getInstance().changeCurrentMenuTo(BattleMenu.getInstance());
+
         }
     }
 
     @Override
     public String toShowMenu()
     {
-        return "1.New Game AI <BattleMode>2.New Game Player <Player>";
-    }
-
-    public void newGameWithAI(String command)
-    {
-        String battleModeInformation = command.split(" ")[4];
-        BattleMode battleMode = BattleMode.valueOf(battleModeInformation);
-        switch (battleMode)
-        {
-            case hasFlag:
-                BattleMenu.getInstance().setCurrentBattle
-                        (new KeepFlagBattle(Controller.getInstance().getCurrentPlayer(), Battle.createAIPlayer()));
-            case moreFlag:
-                BattleMenu.getInstance().setCurrentBattle
-                        (new CollectFlagBattle(Controller.getInstance().getCurrentPlayer(), Battle.createAIPlayer()));
-            case deadMatch:
-                BattleMenu.getInstance().setCurrentBattle
-                        (new DeadBattle(Controller.getInstance().getCurrentPlayer(), Battle.createAIPlayer()));
-        }
+        return "1.Story Mode\n2.Custom Game\n3.NetWork Game";
     }
 }

@@ -34,10 +34,6 @@ public class CollectionMenu implements AbstractMenu
     @Override
     public void selectOptionByCommand(String command) throws InvalidDeck, DeckNameAlreadyExist, CardNotFound, DeckNotFound, DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready
     {
-
-//        "1.Exit\n2.Show\n3.Search\n4.Save\n5.Create deck\n6.Delete Deck\n7.Add Card To Deck\n" +
-//                "8.Remove Card From Deck\n9.Validate Deck\n10.Select Deck\n11.Show All Decks\n12.Help\n"
-
         if (command.matches("Exit"))
             Controller.getInstance().changeCurrentMenuTo(MainMenu.getInstance());
 

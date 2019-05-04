@@ -8,23 +8,27 @@ public class CollectFlagBattle extends Battle
 {
     private int flagNumbers;
 
-    public CollectFlagBattle(Player firstPlayer, Player secondPlayer)
+    public CollectFlagBattle(Player firstPlayer, Player secondPlayer, int winnerPrize, int flagNumbers)
     {
-        super(firstPlayer, secondPlayer);
-        this.flagNumbers = 7;
+        super(firstPlayer, secondPlayer, winnerPrize);
+        this.flagNumbers = flagNumbers;
         addFlagsToMap();
+    }
+
+    @Override
+    public void makeBattle(Player firstPlayer, Player secondPlayer, int winnerPrize)
+    {
+        currentBattle = new CollectFlagBattle(firstPlayer, secondPlayer, winnerPrize, flagNumbers);
     }
 
     @Override
     public void checkBattleResult()
     {
         if (firstPlayer.getPlayerHand().getFlagNumbersInCollectedItems() > flagNumbers / 2)
-           winActions(firstPlayer,GameResault.FristPlayerWin);
+            winActions(firstPlayer);
 
         if (secondPlayer.getPlayerHand().getFlagNumbersInCollectedItems() > flagNumbers / 2)
-            winActions(secondPlayer,GameResault.SecondPlayerWin);
-
-        gameResault = GameResault.UnCertain;
+            winActions(secondPlayer);
     }
 
     @Override
@@ -37,7 +41,7 @@ public class CollectFlagBattle extends Battle
     {
         for (int i = 0; i < flagNumbers; i++)
         {
-            Position randomPosition = Position.getRandomPosition();
+            Position randomPosition = Position.getRandomFreePosition();
             battleMap.getSpellsAndCollectibleOnMap()[randomPosition.row][randomPosition.col] = new Flag();
         }
     }

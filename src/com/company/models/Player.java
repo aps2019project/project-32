@@ -13,7 +13,6 @@ import com.company.models.widget.cards.spells.SpellKind;
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Player implements Serializable
 {
@@ -24,6 +23,16 @@ public class Player implements Serializable
         cash = 15000;
         winNumber = 0;
         loseNumber = 0;
+    }
+
+    public Player()
+    {
+        this.name = "AI";
+        this.passWord = "AI";
+        this.cash = 0;
+        this.winNumber = 0;
+        this.loseNumber = 0;
+        this.collection = null;
     }
 
     private static ArrayList<Player> players = new ArrayList<>();
@@ -153,9 +162,14 @@ public class Player implements Serializable
 
     public class Deck
     {
-        private Deck(String name)
+        public Deck(String name)
         {
             this.name = name;
+        }
+
+        public Deck(Hero hero, ArrayList<Spell> spells, ArrayList<Minion> minions, Spell passiveItem)
+        {
+
         }
 
         private String name;
@@ -221,10 +235,9 @@ public class Player implements Serializable
         public Card serchCard(int cardID)
         {
             for (Card card : cards)
-            {
                 if (card.getID() == cardID)
                     return card;
-            }
+
             return null;
         }
 
@@ -405,9 +418,23 @@ public class Player implements Serializable
             return graveYard;
         }
 
-        public void setGraveYard(ArrayList<Card> graveYard)
+        public String toShowGraveYardCards()
         {
-            this.graveYard = graveYard;
+            String graveYardString = "";
+            for (Card card : graveYard)
+                graveYardString = graveYardString.concat(card.toShow());
+
+            return graveYardString;
+        }
+
+        public String toShowCard(int ID)
+        {
+            String cardString = "";
+            for (Card card : graveYard)
+                if (card.getID() == ID)
+                    cardString = card.toShow();
+
+            return cardString;
         }
     }
 
@@ -415,9 +442,9 @@ public class Player implements Serializable
     {
         Player opponent;
         boolean hasWin;
-        Date battleTime;
+        long battleTime;
 
-        private BattleHistory(Player opponent, boolean thisPlayerHasWin, Date battleTime)
+        private BattleHistory(Player opponent, boolean thisPlayerHasWin, long battleTime)
         {
             this.opponent = opponent;
             this.hasWin = thisPlayerHasWin;
@@ -425,7 +452,7 @@ public class Player implements Serializable
         }
     }
 
-    public void addGameResultToBattleHistories(Player opponent, boolean hasWin, Date battleTime)
+    public void addGameResultToBattleHistories(Player opponent, boolean hasWin, long battleTime)
     {
         this.battleHistories.add(new BattleHistory(opponent, hasWin, battleTime));
     }
@@ -470,6 +497,16 @@ public class Player implements Serializable
         this.cash += value;
     }
 
+    public void increaseWinNumber()
+    {
+        winNumber++;
+    }
+
+    public void decreaseWinNumber()
+    {
+        winNumber--;
+    }
+
     public void save()
     {
 
@@ -480,6 +517,7 @@ public class Player implements Serializable
 
 
     }
+
 
     @Override
     public boolean equals(Object obj)

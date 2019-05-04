@@ -14,9 +14,8 @@ public class Position
 
     private static SecureRandom randomMaker = new SecureRandom();
 
-    public static Position getRandomPosition()
+    public static Position getRandomFreePosition()
     {
-
         int row;
         int col;
         while (true)

@@ -361,9 +361,6 @@ public class ShopMenu implements AbstractMenu
         shopCards.add(bigGiant);
 
 
-
-
-
         Minion poisonSnake = new Minion("PoisonSnake", 4, 6, 5, 300, AttackType.Ranged, 4, MinionSpellType.OnAttack);
         poisonSnake.setSpecialSpell(SpellKind.spellCard, 0, 0, 3, 0, 0, 1, 0, -1, SpellType.onEnemy, SpellType.onMinionOrHero, SpellType.HealthPoint);
         shopCards.add(poisonSnake);

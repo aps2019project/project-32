@@ -18,8 +18,9 @@ public class TimeHandler
         currentDate = new Date();
     }
 
-    public Date getCurrentDate()
+    public long getTime()
     {
-        return currentDate;
+        return currentDate.getTime();
     }
+
 }

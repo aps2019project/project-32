@@ -4,19 +4,25 @@ import com.company.models.Player;
 
 public class DeadBattle extends Battle
 {
-    public DeadBattle(Player firstPlayer, Player secondPlayer)
+    public DeadBattle(Player firstPlayer, Player secondPlayer, int winnerPrize)
     {
-        super(firstPlayer, secondPlayer);
+        super(firstPlayer, secondPlayer, winnerPrize);
+    }
+
+    @Override
+    public void makeBattle(Player firstPlayer, Player secondPlayer, int winnerPrize)
+    {
+        currentBattle = new DeadBattle(firstPlayer,secondPlayer,winnerPrize);
     }
 
     @Override
     public void checkBattleResult()
     {
         if (firstPlayer.getMainDeck().getHero().isDead())
-            winActions(firstPlayer, GameResault.FristPlayerWin);
+            winActions(firstPlayer);
 
         if (secondPlayer.getMainDeck().getHero().isDead())
-            winActions(secondPlayer, GameResault.SecondPlayerWin);
+            winActions(secondPlayer);
 
         gameResault = GameResault.UnCertain;
     }
