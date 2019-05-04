@@ -5,7 +5,7 @@ import com.company.models.widget.cards.spells.SpellType;
 
 public class DeBuff extends Effectable
 {
-    protected DeBuff(int turnNumber, BuffType buffType)
+    public DeBuff(int turnNumber, BuffType buffType)
     {
         super(turnNumber, buffType);
     }
@@ -13,6 +13,7 @@ public class DeBuff extends Effectable
     @Override
     public void doEffect(Warrior warrior, SpellType spellType)
     {
+        this.turnRemaining--;
         if (spellType == SpellType.onEnemy)
             warrior.getEffectsOnWarrior().removeIf(effectable -> effectable.buffType == BuffType.Positive);
 
