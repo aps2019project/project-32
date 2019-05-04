@@ -5,16 +5,17 @@ import com.company.models.widget.cards.spells.SpellType;
 
 public abstract class Effectable
 {
-
+    protected final SpellType spellType;
     protected final int turnNumber;
-    protected int turnRemaining;
     protected final BuffType buffType;
+    protected int turnRemaining;
 
-    public Effectable(int turnNumber, BuffType buffType)
+    public Effectable(int turnNumber, BuffType buffType, SpellType spellType)
     {
         this.turnNumber = turnNumber;
         turnRemaining = turnNumber;
         this.buffType = buffType;
+        this.spellType = spellType;
     }
 
     public abstract void doEffect(Warrior warrior, SpellType spellType);

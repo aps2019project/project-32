@@ -13,7 +13,7 @@ public class DeBufPoison extends Effectable
     @Override
     public void doEffect(Warrior warrior, SpellType spellType) {
         this.turnRemaining--;
-        warrior.getEffectsOnWarrior().removeIf(effectable -> (effectable instanceof ChangeHealthEffect) && ((ChangeHealthEffect) effectable).getChangeHealthPoint()==-1);
+        warrior.getEffectsOnWarrior().removeIf(effective -> (effective instanceof ChangeHealthEffect) && ((ChangeHealthEffect) effective).getChangeHealthPoint()==-1);
     }
 
     @Override
