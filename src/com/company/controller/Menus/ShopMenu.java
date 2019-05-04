@@ -280,56 +280,89 @@ public class ShopMenu implements AbstractMenu
         Hero rostam = new Hero("Rostam",7,55,8000,AttackType.Hybrid,4,null );
         shopCards.add(rostam);
 
-        Card persianArcher = new Minion("PersianArcher", 2, 4, 6, 300, AttackType.Ranged, 7, null);
+        Minion persianArcher = new Minion("PersianArcher", 2, 4, 6, 300, AttackType.Ranged, 7, null);
         shopCards.add(persianArcher);
 
-        Card persianSpeared = new Minion("PersianSpeared", 1, 3, 5, 500, AttackType.Hybrid, 3, null);
+        Spell persianSwordSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnAttack,SpellKind.spellCard,"persinaSwordSpell",0,0,0,0,new StunEffect(1,BuffType.Negative));
+        persianSwordSpell.addSpellTypes(SpellType.onMinionOrHero,SpellType.onEnemy,SpellType.onTarget);
+        Minion persianSword = new Minion("PersianSword", 2, 4, 6, 400, AttackType.Melee, 1,persianSwordSpell,false);
+        shopCards.add(persianSword);
+
+        Minion persianSpeared = new Minion("PersianSpeared", 1, 3, 5, 500, AttackType.Hybrid, 3, null,false);
         shopCards.add(persianSpeared);
 
-        Minion persianSword = new Minion("PersianSword", 2, 4, 6, 400, AttackType.Melee, 1, MinionSpellType.OnAttack);
-        persianSword.setSpecialSpell(SpellKind.spellCard, 0, 0, 0, 0, 1, 1, 0, 0, SpellType.onEnemy, SpellType.onMinionOrHero);
-        shopCards.add(persianSword);
+        Minion persianHorseRider = new Minion("PersianHorseRider", 4, 6, 10, 200, AttackType.Melee, 1, null,false);
+        shopCards.add(persianHorseRider);
+
+        // spell!
+        Minion persianHero = new Minion("PersianHero",9,6,24,600,AttackType.Melee,1,null,false);
+        shopCards.add(persianHero);
+
+        Minion persianGard = new Minion("PersianGard",7,4,12,800,AttackType.Melee,1,null,true);
+        shopCards.add(persianGard);
+
+        Minion turanArcher = new Minion("TuranArcher", 1, 4, 3, 500, AttackType.Hybrid, 5, null,false);
+        shopCards.add(turanArcher);
+
+        Minion turanStoneThrower = new Minion("TuranStoneThrower", 1, 2, 4, 600, AttackType.Ranged, 7, null,false);
+        shopCards.add(turanStoneThrower);
+
+        Minion turanSpear = new Minion("TuranSpear", 1, 4, 4, 600, AttackType.Hybrid, 3, null,false);
+        shopCards.add(turanSpear);
+
+        Spell turanSpySpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnAttack,SpellKind.spellCard,"turnaSpySpell",0,0,0,0,new DisarmEffect(1,BuffType.Negative),new ChangeHealthEffect(-4,4,BuffType.Negative));
+        turanSpySpell.addSpellTypes(SpellType.onTarget,SpellType.onEnemy,SpellType.onMinionOrHero);
+        Minion turanSpy = new Minion("TurnSpy", 4, 6, 6, 700, AttackType.Melee, 1,turanSpySpell,false);
+        shopCards.add(turanSpy);
+
+        Minion turanSwampy = new Minion("TuranSwampy", 2, 10, 3, 600, AttackType.Melee, 1, null,false);
+        shopCards.add(turanSwampy);
+
+        Minion turanPrince = new Minion("TuranPrince",6,10,6,800,AttackType.Melee,1,null,true);
+        shopCards.add(turanPrince);
+
+        Minion blackGiant = new Minion("BlackGiant", 9, 10, 14, 300, AttackType.Hybrid, 7, null,false);
+        shopCards.add(blackGiant);
+
+        Minion stoneGiant = new Minion("StoneGiant", 9, 12, 12, 300, AttackType.Ranged, 7, null,false);
+        shopCards.add(stoneGiant);
+
+        Spell eagleSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.Passive,SpellKind.spellCard,"eagleSpell", 0, 0, 0, 0,new ChangeHealthEffect(10,1,BuffType.Positive));
+        eagleSpell.addSpellTypes(SpellType.onFriend,SpellType.onMinionOrHero,SpellType.onTarget);
+        Minion eagle = new Minion("Eagle", 2, 1, 2, 200, AttackType.Ranged, 3,eagleSpell,false);
+        shopCards.add(eagle);
+
+        Minion hogRider = new Minion("HogRider", 4, 8, 16, 300, AttackType.Melee, 1, null,false);
+        shopCards.add(hogRider);
+
+
+        Spell oneEyeGiantSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnDeath,SpellKind.spellCard,"oneEyeGiantSpell",0,0,0,0,new ChangeHealthEffect(2,1,BuffType.Negative));
+        oneEyeGiantSpell.addSpellTypes(SpellType.onTarget,SpellType.onMinion,SpellType.minionAround,SpellType.onEnemy);
+        Minion oneEyeGiant = new Minion("OneEyeGiant",7,11,12,500,AttackType.Hybrid,3,oneEyeGiantSpell,false);
+        shopCards.add(oneEyeGiant); // dar mogheii ke mimirad position haye atraf dade shavad
+
+        Spell poisonSnakeSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnAttack,SpellKind.spellCard,"poisonSnakeSpell",0,0,0,0,new ChangeHealthEffect(-1,3,BuffType.Negative));
+        poisonSnakeSpell.addSpellTypes(SpellType.onEnemy,SpellType.onMinionOrHero,SpellType.onTarget);
+        Minion poisonSnake = new Minion("poisonSnake",4,6,5,0,AttackType.Ranged,4,poisonSnakeSpell,false);
+        shopCards.add(poisonSnake);
+
+        Minion fireDragon = new Minion("FireDragon", 5, 5, 9, 250, AttackType.Ranged, 4, null,false);
+        shopCards.add(fireDragon);
+
+        // spell!
+        Minion lion = new Minion("Lion",2,8,1,600,AttackType.Melee,1,,false);
 
         Card eraj = new Minion("Eraj", 4, 20, 6, 500, AttackType.Ranged, 3, null);
         shopCards.add(eraj);
 
+
+
         Card bigGiant = new Minion("BigGiant", 9, 8, 30, 600, AttackType.Hybrid, 2, null);
         shopCards.add(bigGiant);
 
-        Card fireDragon = new Minion("FireDragon", 5, 5, 9, 250, AttackType.Ranged, 4, null);
-        shopCards.add(fireDragon);
 
-        Card hogRider = new Minion("HogRider", 4, 8, 16, 300, AttackType.Melee, 1, null);
-        shopCards.add(hogRider);
 
-        Card stoneGiant = new Minion("StoneGiant", 9, 12, 12, 300, AttackType.Ranged, 7, null);
-        shopCards.add(stoneGiant);
 
-        Card blackGiant = new Minion("BlackGiant", 9, 10, 14, 300, AttackType.Hybrid, 7, null);
-        shopCards.add(blackGiant);
-
-        Card turanSwampy = new Minion("TuranSwampy", 2, 10, 3, 600, AttackType.Melee, 1, null);
-        shopCards.add(turanSwampy);
-
-        Minion turanSpear = new Minion("TuranSpear", 1, 4, 4, 600, AttackType.Hybrid, 3, null);
-        shopCards.add(turanSpear);
-
-        Card turanStoneThrower = new Minion("TuranStoneThrower", 1, 2, 4, 600, AttackType.Ranged, 7, null);
-        shopCards.add(turanStoneThrower);
-
-        Card turanArcher = new Minion("TuranArcher", 1, 4, 3, 500, AttackType.Hybrid, 5, null);
-        shopCards.add(turanArcher);
-
-        Card persianHorseRider = new Minion("PersianHorseRider", 4, 6, 10, 200, AttackType.Melee, 1, null);
-        shopCards.add(persianHorseRider);
-
-        Card turanSpy = new Minion("TurnSpy", 4, 6, 6, 700, AttackType.Melee, 1, MinionSpellType.OnAttack);
-        turanSpear.setSpecialSpell(SpellKind.spellCard, 0, 0, 4, 1, 0, 1, 0, -1, SpellType.onEnemy, SpellType.onMinionOrHero, SpellType.HealthPoint);
-        shopCards.add(turanSpy);
-
-        Minion eagle = new Minion("Eagle", 2, 1, 2, 200, AttackType.Ranged, 3, MinionSpellType.Passive);
-        eagle.setSpecialSpell(SpellKind.Buff, 0, 0, 0, 0, 0, 1, 0, 10, SpellType.onFriend, SpellType.onMinionOrHero, SpellType.HealthPoint);
-        shopCards.add(eagle);
 
         Minion poisonSnake = new Minion("PoisonSnake", 4, 6, 5, 300, AttackType.Ranged, 4, MinionSpellType.OnAttack);
         poisonSnake.setSpecialSpell(SpellKind.spellCard, 0, 0, 3, 0, 0, 1, 0, -1, SpellType.onEnemy, SpellType.onMinionOrHero, SpellType.HealthPoint);

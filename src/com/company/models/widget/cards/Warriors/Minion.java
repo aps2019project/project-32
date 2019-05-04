@@ -2,22 +2,23 @@ package com.company.models.widget.cards.Warriors;
 
 
 import com.company.models.widget.cards.Card;
+import com.company.models.widget.cards.spells.Spell;
 
 public class Minion extends Warrior
 {
     private int manaCost;
-    private MinionSpellType minionSpellType;
+    private boolean canCombo;
 
-    public Minion(String name, int manaCost, int power, int health, int price, AttackType attackType, int attackRange, MinionSpellType minionSpellType)
+    public Minion(String name, int manaCost, int power, int health, int price, AttackType attackType, int attackRange, Spell spell,boolean canCombo)
     {
-        super(name, price, health, power, attackType, attackRange);
+        super(name, price, health, power, attackType, attackRange,spell);
         this.manaCost = manaCost;
-        this.minionSpellType = minionSpellType;
+        this.canCombo = canCombo;
     }
 
     public Minion(Minion minion)
     {
-        this(minion.name, minion.manaCost, minion.power, minion.health, minion.price, minion.attackType, minion.attackRadius, minion.minionSpellType);
+        this(minion.name, minion.manaCost, minion.power, minion.health, minion.price, minion.attackType,minion.attackRadius, minion.specialSpell,minion.canCombo);
     }
 
 
@@ -32,15 +33,7 @@ public class Minion extends Warrior
 
     }
 
-    public MinionSpellType getMinionSpellType()
-    {
-        return minionSpellType;
-    }
 
-    public void setMinionSpellType(MinionSpellType minionSpellType)
-    {
-        this.minionSpellType = minionSpellType;
-    }
 
     public int getManaCost()
     {
