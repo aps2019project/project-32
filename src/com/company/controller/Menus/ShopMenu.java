@@ -366,4 +366,32 @@ public class ShopMenu implements AbstractMenu
         shopCards.add(poisonSnake);
 
     }
+    public void addCollectibles(){
+        Spell nooshDaroo = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"NooshDaroo",0,0,0,0,new ChangeAttackPoint(2,1,BuffType.Positive));
+        nooshDaroo.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
+
+        Spell tireDoShakh = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"tireDoShakh",0,0,0,0,new ChangeHealthEffect(6,1,BuffType.Positive));
+        tireDoShakh.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
+
+        Spell oksir = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"oksir",0,0,0,0,new ChangeHealthEffect(3,1,BuffType.Positive),new ChangeAttackPoint(3,1,BuffType.Positive));
+        oksir.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
+
+        Spell invulnerable = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"invulnerable",0,0,0,0,new HolyEffect(10,2,BuffType.Positive));
+        invulnerable.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
+
+        Spell randomDamage = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"randomDamage",0,0,0,0,new ChangeAttackPoint(2,1,BuffType.Positive));
+        randomDamage.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
+
+        Spell Bladesofagility = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"Bladesofagility",0,0,0,0,new ChangeAttackPoint(6,1,BuffType.Positive));
+        Bladesofagility.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
+
+        Spell ChineseSword = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"ChineseSword",0,0,0,0,new ChangeAttackPoint(5,1,BuffType.Positive));
+        ChineseSword.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
+
+        Spell mana = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"mana",0,0,0,0,new ChangeMana(3,1,BuffType.Positive));
+        mana.addSpellTypes(SpellType.onFriend,SpellType.changeMana);
+
+
+
+    }
 }

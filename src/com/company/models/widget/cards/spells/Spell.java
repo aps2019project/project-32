@@ -8,6 +8,7 @@ import com.company.models.widget.cards.Warriors.Hero;
 import com.company.models.widget.cards.Warriors.Minion;
 import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.effects.Effectable;
+import com.company.models.widget.cards.spells.effects.HolyEffect;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,6 +86,43 @@ public class Spell extends Card
         }
     }
 
+    public void initialSpell()
+    {
+        if (spellKind == SpellKind.Usable)
+        {
+
+        } else if (spellKind == SpellKind.Collectible)
+        {
+            checkKindOfCollectible();
+        }
+    }
+
+    private void checkKindOfCollectible(){
+        if (spellTypes.contains(SpellType.randomWarrior))
+        {
+            checkEnemyOrFriend();
+        }
+        else if (spellTypes.contains(SpellType.changeMana)){
+            effects.get(0).doEffect(Battle.getInstance().getRandomWarrior(this.ownerPlayer,SpellType.onFriend),null);
+        }
+    }
+
+    private void checkEnemyOrFriend(){
+        if (spellTypes.contains(SpellType.onFriend)){
+            doEffectOnRandomWarrior(SpellType.onFriend);
+        }
+        else if (spellTypes.contains(SpellType.onEnemy)){
+            doEffectOnRandomWarrior(SpellType.onEnemy);
+        }
+    }
+
+    private void doEffectOnRandomWarrior(SpellType spellType){
+        Warrior warrior = Battle.getInstance().getRandomWarrior(this.ownerPlayer,spellType);
+        doEffectForFirst(warrior);
+        addToWarrior(warrior);
+
+    }
+
     private void addEffectsToMap(Battle.Map map, Position position)
     {
         for (int i = 0; i < spellRange; i++)
@@ -149,8 +187,6 @@ public class Spell extends Card
         {
 
 
-
-
         } else if (this.spellTypes.contains(SpellType.allWarrior))
         {
             for (int i = 0; i < 5; i++)
@@ -173,7 +209,7 @@ public class Spell extends Card
                         heroCol = j;
                         break;
                     }
-            if (Math.pow((positionInserted.col - heroCol), 2) + Math.pow((positionInserted.row - heroRow), 2) <=2 )
+            if (Math.pow((positionInserted.col - heroCol), 2) + Math.pow((positionInserted.row - heroRow), 2) <= 2)
             {
                 doEffectForFirst(map.getWarriorsOnMap()[positionInserted.row][positionInserted.col]);
             }
@@ -185,10 +221,13 @@ public class Spell extends Card
     {
         for (Effectable effect : this.effects)
         {
-            if (this.spellTypes.contains(SpellType.onFriend) && this.ownerPlayer.equals(warrior.getOwnerPlayer()))
-                effect.doEffect(warrior, SpellType.onFriend);
-            if (this.spellTypes.contains(SpellType.onEnemy) && !this.ownerPlayer.equals(warrior.getOwnerPlayer()))
-                effect.doEffect(warrior, SpellType.onEnemy);
+            if (!(effect instanceof HolyEffect))
+            {
+                if (this.spellTypes.contains(SpellType.onFriend) && this.ownerPlayer.equals(warrior.getOwnerPlayer()))
+                    effect.doEffect(warrior, SpellType.onFriend);
+                if (this.spellTypes.contains(SpellType.onEnemy) && !this.ownerPlayer.equals(warrior.getOwnerPlayer()))
+                    effect.doEffect(warrior, SpellType.onEnemy);
+            }
         }
 
         effects.removeIf(effectable -> effectable.getTurnRemaining() == 0);

@@ -518,6 +518,11 @@ public class Player implements Serializable
 
     }
 
+    public void changeMana(int manaChange)
+    {
+        playerCurrentMana += manaChange;
+    }
+
 
     @Override
     public boolean equals(Object obj)
