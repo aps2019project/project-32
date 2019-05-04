@@ -15,6 +15,7 @@ import com.company.models.widget.cards.spells.effects.*;
 import com.company.view.View;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ShopMenu implements AbstractMenu
 {
@@ -364,6 +365,9 @@ public class ShopMenu implements AbstractMenu
         Minion poisonSnake = new Minion("PoisonSnake", 4, 6, 5, 300, AttackType.Ranged, 4, MinionSpellType.OnAttack);
         poisonSnake.setSpecialSpell(SpellKind.spellCard, 0, 0, 3, 0, 0, 1, 0, -1, SpellType.onEnemy, SpellType.onMinionOrHero, SpellType.HealthPoint);
         shopCards.add(poisonSnake);
+
+        Random random = new Random();
+        random.
 
     }
 }
