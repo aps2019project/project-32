@@ -322,6 +322,11 @@ public class Player implements Serializable
             }
         }
 
+        public String getRandomCardNameFromHand(){
+            int random = randomMaker.nextInt()%5;
+            return handCards.get(random).getName();
+        }
+
         private void setNextCardInHand()
         {
             int randomNumber;
@@ -500,6 +505,10 @@ public class Player implements Serializable
     public void increaseWinNumber()
     {
         winNumber++;
+    }
+
+    public void increasLoseNumber(){
+        loseNumber++;
     }
 
     public void decreaseWinNumber()
@@ -681,5 +690,7 @@ public class Player implements Serializable
     {
         return collection;
     }
+
+
 }
 

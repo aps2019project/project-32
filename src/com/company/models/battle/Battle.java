@@ -1,6 +1,7 @@
 package com.company.models.battle;
 
 import com.company.controller.Exceptions.*;
+import com.company.models.AIPlayer;
 import com.company.models.Player;
 import com.company.models.Position;
 import com.company.models.TimeHandler;
@@ -94,12 +95,12 @@ public abstract class Battle
                         card = null;
         }
 
-        public Widget selectCard(int cardID)
+        public Warrior selectCard(int cardID)
         {
-            for (Widget[] widgets : warriorsOnMap)
-                for (Widget widget : widgets)
-                    if (widget.getID() == cardID)
-                        return widget;
+            for (Warrior[] warriors : warriorsOnMap)
+                for (Warrior warrior  : warriors)
+                    if (warrior != null && warrior.getID() == cardID)
+                        return warrior;
 
             return null;
         }
@@ -148,6 +149,20 @@ public abstract class Battle
 
             return widgetsString;
         }
+
+        public void insertCard(Card intendedCard, Position position) throws InvalidPosition
+        {
+            if (intendedCard instanceof Spell){
+                // do effect
+            }
+            else if (intendedCard instanceof Warrior)
+            {
+                if (warriorsOnMap[position.row][position.col] == null)
+                    warriorsOnMap[position.row][position.col] = (Warrior) intendedCard;
+                else
+                    throw new InvalidPosition();
+            }
+        }
     }
 
     public class TurnHandler
@@ -187,6 +202,9 @@ public abstract class Battle
                 firstPlayer.setPlayerCurrentMana(firstPlayer.getPlayerManaSpace());
             }
             changeCoolDownRemaining();
+            if (playerHasTurn == AIPlayer.getAIPlayer()){
+                AIPlayer.getInstance().doOrder();
+            }
         }
 
         public Player getPlayerHasTurn()
@@ -277,7 +295,7 @@ public abstract class Battle
     {
         player.increaseCash(winnerPrize);
         player.increaseWinNumber();
-        getOtherPlayer(player).decreaseWinNumber();
+        getOtherPlayer(player).increasLoseNumber();
         player.addGameResultToBattleHistories(getOtherPlayer(player), true, TimeHandler.getInstance().getTime());
     }
 

@@ -60,7 +60,7 @@ public class ShopMenu implements AbstractMenu
             View.getInstance().show(showCards());
     }
 
-    private String buy(String command) throws CardNotFound, NotEnoughCash, CantAddUsableItems
+    public String buy(String command) throws CardNotFound, NotEnoughCash, CantAddUsableItems
     {
         String cardName = command.split(" ")[1];
         Card card = searchCard(cardName);
