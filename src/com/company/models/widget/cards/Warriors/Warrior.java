@@ -52,6 +52,7 @@ public class Warrior extends Card implements Attackable
         Position attackerPosition = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getPosition(this);
         Position defenderPosition = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getPosition(defender);
 
+
         if (spell.getActiveTime() == ActiveTime.onAttack)
         {
             switch (spell.getFoe())
