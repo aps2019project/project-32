@@ -1,10 +1,9 @@
 package com.company.models.widget.cards.Warriors;
 
 import com.company.models.widget.cards.Card;
+import com.company.models.widget.cards.spells.ActiveTime;
 import com.company.models.widget.cards.spells.Spell;
-import com.company.models.widget.cards.spells.SpellActiveTime;
-import com.company.models.widget.cards.spells.SpellKind;
-import com.company.models.widget.cards.spells.SpellType;
+import com.company.models.widget.cards.spells.Type;
 import com.company.models.widget.cards.spells.effects.Effectable;
 
 import java.util.ArrayList;
@@ -15,7 +14,10 @@ public class Warrior extends Card implements Attackable
     protected int power;
     protected AttackType attackType;
     protected int attackRadius;
+
     protected Spell specialSpell;
+    protected Spell usableSpell;
+
     protected boolean canMove;
     protected boolean canAttack;
     protected ArrayList<Effectable> effectsOnWarrior;
@@ -44,15 +46,15 @@ public class Warrior extends Card implements Attackable
 //        Position attackerPosition = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getPosition(this);
 //        Position defenderPosition = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getPosition(defender);
 //        defender.changeHealth(-this.getPower());
-//        if (this instanceof Minion && ((Minion) this).getMinionSpellType() == MinionSpellType.OnAttack)
+//        if (this instanceof Minion && ((Minion) this).getMinionSpellType() == MinionSpellType.onAttack)
 //        {
 //            this.getSpecialSpell().doEffectAction(BattleMenu.getInstance().getCurrentBattle().getBattleMap(), defenderPosition);
 //        }
 //        else if (!defender.isDisarm() && defender instanceof Minion && ((Minion) this).getMinionSpellType() == MinionSpellType.OnDefense)
 //        {
-//            if (defender.getSpecialSpell().getSpellTypes().contains(SpellType.onEnemy))
+//            if (defender.getSpecialSpell().getSpellTypes().contains(SpellType.enemy))
 //                defender.getSpecialSpell().doEffectAction(BattleMenu.getInstance().getCurrentBattle().getBattleMap(), attackerPosition);
-//            if (defender.getSpecialSpell().getSpellTypes().contains(SpellType.onFriend))
+//            if (defender.getSpecialSpell().getSpellTypes().contains(SpellType.friend))
 //                defender.getSpecialSpell().doEffectAction(BattleMenu.getInstance().getCurrentBattle().getBattleMap(), defenderPosition);
 //
 //        }
@@ -141,7 +143,7 @@ public class Warrior extends Card implements Attackable
         return specialSpell;
     }
 
-    public void setSpecialSpell(SpellActiveTime spellActiveTime, SpellKind spellKind, int manaCost, int coolDown, int affectPoisonTurnNumber, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes)
+    public void setSpecialSpell(ActiveTime activeTime, Type type, int manaCost, int coolDown, int affectPoisonTurnNumber, int affectDisarmTurnNumber, int affectStunTurnNumber, int spellRange, int changeAttackPoint, int changeHealthPoint, SpellType... spellTypes)
     {
         //TODO
     }
@@ -159,7 +161,7 @@ public class Warrior extends Card implements Attackable
     public void doEffect()
     {
         for (Effectable effectable : this.getEffectsOnWarrior())
-            effectable.doEffect(this,null);
+            effectable.doEffect(this);
 
         effectsOnWarrior.removeIf(effectable -> effectable.getTurnRemaining() == 0);
     }
@@ -187,5 +189,15 @@ public class Warrior extends Card implements Attackable
     public void setHealth(int health)
     {
         this.health = health;
+    }
+
+    public void setSpecialSpell(Spell specialSpell)
+    {
+        this.specialSpell = specialSpell;
+    }
+
+    public void setHandUsableSpell(Spell handUsableSpell)
+    {
+        this.handUsableSpell = handUsableSpell;
     }
 }

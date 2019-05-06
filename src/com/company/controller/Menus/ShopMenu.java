@@ -5,11 +5,9 @@ import com.company.controller.Exceptions.CantAddUsableItems;
 import com.company.controller.Exceptions.CardNotFound;
 import com.company.controller.Exceptions.NotEnoughCash;
 import com.company.models.Player;
+import com.company.models.battle.Battle;
 import com.company.models.widget.cards.Card;
-import com.company.models.widget.cards.Warriors.AttackType;
-import com.company.models.widget.cards.Warriors.Hero;
-import com.company.models.widget.cards.Warriors.Minion;
-import com.company.models.widget.cards.Warriors.MinionSpellType;
+import com.company.models.widget.cards.Warriors.*;
 import com.company.models.widget.cards.spells.*;
 import com.company.models.widget.cards.spells.effects.*;
 import com.company.view.View;
@@ -60,30 +58,34 @@ public class ShopMenu implements AbstractMenu
             View.getInstance().show(showCards());
     }
 
-    private String buy(String command) throws CardNotFound, NotEnoughCash, CantAddUsableItems
+    private String buy(String command) throws CardNotFound, NotEnoughCash, CantAddUsableItems, CloneNotSupportedException
     {
         String cardName = command.split(" ")[1];
         Card card = searchCard(cardName);
         if (card == null)
             throw new CardNotFound();
 
-        Player player = Controller.getInstance().getCurrentPlayer();
-        if (card.getPrice() > player.getCash())
+        Player currentPlayerInShop = Controller.getInstance().getCurrentPlayer();
+        if (card.getPrice() > currentPlayerInShop.getCash())
             throw new NotEnoughCash();
 
-        if (player.getCollection().getNumberOfUsable() == 3)
+        if (currentPlayerInShop.getCollection().getNumberOfUsable() == 3)
             throw new CantAddUsableItems();
 
-        Card theCard;
+        Object theCard = null;
         if (card instanceof Spell)
-            theCard = new Spell((Spell) card);
-        else if (card instanceof Minion)
-            theCard = new Minion((Minion) card);
-        else
-            theCard = new Hero((Hero) card);
+            theCard = ((Spell) card).clone();
 
-        player.getCollection().addTOCollection(theCard);
-        player.decreaseCash(theCard.getPrice());
+        else if (card instanceof Minion)
+            theCard = ((Minion) card).clone();
+        else if (card instanceof Hero)
+            theCard = ((Hero) card).clone();
+        else if(card instanceof Passive)
+            theCard = ((Passive) card).clone();
+
+        ((Card) theCard).setOwnerPlayer(currentPlayerInShop);
+        currentPlayerInShop.getCollection().getCards().add(((Card) theCard));
+        currentPlayerInShop.decreaseCash(((Card) theCard).getPrice());
 
         return "Successful Buy!";
     }
@@ -153,249 +155,393 @@ public class ShopMenu implements AbstractMenu
         return "Successful sell!";
     }
 
-    public void addCardToShop()
+    public void initialiseShop()
     {
-        Spell totalDisarm = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn, SpellKind.spellCard, "TotalDisarm", 1000, 0, 0, 0,new DisarmEffect(1000, BuffType.Negative));
-        totalDisarm.addSpellTypes(SpellType.onEnemy,SpellType.onTarget,SpellType.onMinionOrHero);
+        Spell totalDisarm = new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "TotalDisarm", 1000, 0, 0, 10,
+                new Disarm(1000, PON.Negative, ActiveTime.onInsert));
         shopCards.add(totalDisarm);
-
-        Spell areaSpell = new Spell(SpellTarget.CellEffect,SpellActiveTime.OnRespawn, SpellKind.spellCard, "AreaSpell", 1500, 2, 0, 0,new DeBuff(1,BuffType.Positive));
-        areaSpell.addSpellTypes(SpellType.onEnemy,SpellType.onFriend,SpellType.onMinionOrHero);
-        shopCards.add(areaSpell);
-
-        Spell emPower = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn, SpellKind.spellCard, "Empower", 250, 1, 0, 0,new ChangeAttackPoint(2,1,BuffType.Positive));
-        emPower.addSpellTypes(SpellType.onMinionOrHero,SpellType.onFriend,SpellType.onTarget);
-        shopCards.add(emPower);
-
-        Spell fireBall = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn, SpellKind.spellCard, "FireBall", 400, 1, 0, 0,new ChangeHealthEffect(-4,1,BuffType.Negative));
-        fireBall.addSpellTypes(SpellType.onTarget,SpellType.onEnemy,SpellType.onMinionOrHero);
+        //
+        Spell removeBadDispel = new Spell(Area.onSquare, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "RemoveBadAreaDispel", 750, 1, 0, 10,
+                new DeBuff(1, PON.Positive, ActiveTime.perTurn, BuffType.deBuffNegatives));
+        shopCards.add(removeBadDispel);
+        //
+        Spell removeGoodDispel = new Spell(Area.onSquare, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "RemoveGoodAreaSpell", 750, 1, 0, 10,
+                new DeBuff(1, PON.Negative, ActiveTime.perTurn, BuffType.deBuffPositives));
+        shopCards.add(removeGoodDispel);
+        //
+        Spell empower = new Spell(Area.onOneTarget, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "Empower", 250, 1, 0, 10,
+                new AttackPoint(+2, 1, PON.Positive, ActiveTime.perTurn));
+        shopCards.add(empower);
+        //
+        Spell fireBall = new Spell(Area.onOneTarget, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "FireBall", 400, 1, 0, 10,
+                new HealthPoint(-4, 1, PON.Negative, ActiveTime.perTurn));
         shopCards.add(fireBall);
-
-        Spell godStrength = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn, SpellKind.spellCard, "GodStrength", 450, 2, 0, 0,new ChangeAttackPoint(4,1,BuffType.Negative));
-        godStrength.addSpellTypes(SpellType.onFriend,SpellType.onTarget,SpellType.onHero);
+        //
+        Spell godStrength = new Spell(Area.onOneTarget, FOE.friend, TargetType.onHero, ActiveTime.onInsert, Type.NormalSpell, "GodStrength", 450, 2, 0, 10,
+                new AttackPoint(+4, 1, PON.Positive, ActiveTime.perTurn));
         shopCards.add(godStrength);
-
-        Spell hellFire = new Spell(SpellTarget.CellEffect,SpellActiveTime.OnRespawn, SpellKind.Buff, "HellFire", 600, 3, 0, 2,new ChangeHealthEffect(-2,2,BuffType.Negative));
-        hellFire.addSpellTypes(SpellType.onSquare,SpellType.onEnemy,SpellType.onFriend);
+        //
+        Spell hellFire = new Spell(Area.onSquare, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "HellFire", 600, 3, 0, 2,
+                new HealthPoint(-2, 2, PON.Negative, ActiveTime.perTurn));
         shopCards.add(hellFire);
-
-
-        Spell lightingBolt = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn, SpellKind.spellCard, "LightingBolt", 1250, 2, 0, 0,new ChangeHealthEffect(-8,1,BuffType.Negative));
-        lightingBolt.addSpellTypes(SpellType.onTarget,SpellType.onEnemy,SpellType.onHero);
+        //
+        Spell lightingBolt = new Spell(Area.onOneTarget, FOE.enemy, TargetType.onHero, ActiveTime.onInsert, Type.NormalSpell, "LightingBolt", 1250, 2, 0, 10,
+                new HealthPoint(-8, 1, PON.Negative, ActiveTime.perTurn));
         shopCards.add(lightingBolt);
-
-        Spell poisonLake = new Spell(SpellTarget.CellEffect,SpellActiveTime.OnRespawn, SpellKind.spellCard, "PoisonLake", 900, 5, 0, 1,new ChangeHealthEffect(-1,1,BuffType.Negative));
-        poisonLake.addSpellTypes(SpellType.onSquare,SpellType.onEnemy,SpellType.onFriend);
+        //
+        Spell poisonLake = new Spell(Area.onSquare, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "PoisonLake", 900, 5, 0, 10,
+                new HealthPoint(-1, 1, PON.Negative, ActiveTime.perTurn));
         shopCards.add(poisonLake);
-
-
-        Spell madness = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn, SpellKind.spellCard, "Madness", 650, 0, 0, 0,new ChangeAttackPoint(4,3,BuffType.Positive),new DisarmEffect(3,BuffType.Negative));
-        madness.addSpellTypes(SpellType.onFriend,SpellType.onMinionOrHero,SpellType.onTarget);
+        //
+        Spell madness = new Spell(Area.onOneTarget, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "Madness", 650, 0, 0, 10,
+                new AttackPoint(+4, 3, PON.Positive, ActiveTime.perTurn),
+                new Disarm(4, PON.Negative, ActiveTime.perTurn));
         shopCards.add(madness);
-
-        Spell allDisarm = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn, SpellKind.spellCard, "AllDisarm", 2000, 9, 0, 0,new DisarmEffect(1,BuffType.Negative));
-        allDisarm.addSpellTypes(SpellType.allWarrior,SpellType.onMinionOrHero,SpellType.onEnemy);
+        //
+        Spell allDisarm = new Spell(Area.allWarrior, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "AllDisarm", 2000, 9, 0, 10,
+                new Disarm(2, PON.Negative, ActiveTime.perTurn));
         shopCards.add(allDisarm);
-
-        Spell allPoison = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn, SpellKind.spellCard, "AllPoison", 1500, 8, 0, 4,new ChangeHealthEffect(-1,4,BuffType.Negative));
-        allPoison.addSpellTypes(SpellType.allWarrior,SpellType.onMinionOrHero,SpellType.onEnemy);
+        //
+        Spell allPoison = new Spell(Area.allWarrior, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "AllPoison", 1500, 8, 0, 10,
+                new HealthPoint(-1, 4, PON.Negative, ActiveTime.perTurn));
         shopCards.add(allPoison);
-
-        Spell dispel = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn,SpellKind.spellCard,"Dispel",2100,0,0,0,new DeBuff(1,BuffType.Positive));
-        dispel.addSpellTypes(SpellType.onEnemy,SpellType.onFriend,SpellType.onMinionOrHero);
-        shopCards.add(dispel);
-
-        Spell healthWithProfit = new Spell(SpellTarget.OnWarrior, SpellActiveTime.OnRespawn, SpellKind.spellCard,"HealthWithProfit", 2250, 0, 0, 0,new HolyEffect(1,3,BuffType.Positive),new ChangeHealthEffect(-6,1,BuffType.Negative));
-        healthWithProfit.addSpellTypes(SpellType.onMinionOrHero,SpellType.onFriend,SpellType.onTarget);
+        //
+        Spell removeBadOneDispel = new Spell(Area.onOneTarget, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "RemoveBadOneDispel", 2100, 0, 0, 10,
+                new DeBuff(1, PON.Positive, ActiveTime.perTurn, BuffType.deBuffNegatives));
+        shopCards.add(removeBadOneDispel);
+        //
+        Spell removeGoodOneDispel = new Spell(Area.onSquare, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "RemoveGoodOneDispel", 750, 1, 0, 10,
+                new DeBuff(1, PON.Negative, ActiveTime.perTurn, BuffType.deBuffPositives));
+        shopCards.add(removeGoodDispel);
+        //
+        Spell healthWithProfit = new Spell(Area.onOneTarget, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "HealthWithProfit", 2250, 0, 0, 10,
+                new HealthPoint(-6, 1, PON.Negative, ActiveTime.perTurn),
+                new AttackPoint(+2, 3, PON.Positive, ActiveTime.onDefend));
         shopCards.add(healthWithProfit);
-
-        Spell allPower = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn,SpellKind.spellCard,"AllPower",2000,4,0,0,new ChangeAttackPoint(2,2,BuffType.Positive));
-        allPower.addSpellTypes(SpellType.allWarrior,SpellType.onFriend,SpellType.onMinionOrHero,SpellType.onTarget);
+        //
+        Spell powerUp = new Spell(Area.onOneTarget, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "PowerUp", 2500, 2, 0, 10,
+                new AttackPoint(+6, 1, PON.Positive, ActiveTime.perTurn));
+        shopCards.add(powerUp);
+        //
+        Spell allPower = new Spell(Area.allWarrior, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "AllPower", 2000, 4, 0, 10,
+                new AttackPoint(+2, 1, PON.Positive, ActiveTime.perTurn));
         shopCards.add(allPower);
-
-        Spell allAttack = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn, SpellKind.spellCard, "AllAttack", 1500, 4, 0, 0,new ChangeHealthEffect(-6,1,BuffType.Negative));
-        allAttack.addSpellTypes(SpellType.onTarget,SpellType.onMinionOrHero,SpellType.onEnemy,SpellType.onCol);
+        //
+        Spell allAttack = new Spell(Area.onCol, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "AllAttack", 1500, 4, 0, 10,
+                new HealthPoint(-6, 1, PON.Negative, ActiveTime.perTurn));
         shopCards.add(allAttack);
-
-        Spell weakening = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn,SpellKind.spellCard,"Weakening",1000,1,0,0,new ChangeAttackPoint(-4,1,BuffType.Negative));
-        weakening.addSpellTypes(SpellType.onTarget,SpellType.onEnemy,SpellType.onMinion);
+        //
+        Spell weakening = new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinion, ActiveTime.onInsert, Type.NormalSpell, "Weakening", 1000, 1, 0, 10,
+                new AttackPoint(-4, 1, PON.Negative, ActiveTime.perTurn);
         shopCards.add(weakening);
-
-//        Card sacrifice = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnMap, SpellKind.spellCard, "Sacrifice", 1600, 3, 0, 0, 0, 0, 0, 0, 0, SpellType.healHeroByMinion, SpellType.onFriend, SpellType.onMinion);
-//        shopCards.add(sacrifice);
-
-        Spell kingsGard = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn, SpellKind.spellCard, "KingsGard", 1750, 3, 0, 0,new ChangeHealthEffect(-1000,1,BuffType.Negative));
-        kingsGard.addSpellTypes(SpellType.NearHero,SpellType.onEnemy,SpellType.onTarget,SpellType.onMinion);
-        shopCards.add(kingsGard);
-
-        Spell shock = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnRespawn, SpellKind.spellCard, "Shock", 1200, 1, 0, 0,new StunEffect(2,BuffType.Negative));
-        shock.addSpellTypes(SpellType.onEnemy,SpellType.onTarget,SpellType.onMinionOrHero);
+        //
+        Spell sacrifice = new Spell(Area.onOneTarget, FOE.friend, TargetType.onMinion, ActiveTime.onInsert, Type.NormalSpell, "Sacrifice", 1600, 2, 0, 10,
+                new HealthPoint(-6, 1, PON.Negative, ActiveTime.perTurn),
+                new AttackPoint(+8, 1, PON.Positive, ActiveTime.perTurn));
+        shopCards.add(sacrifice);
+        //
+        Spell kingsGuard = new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinion, ActiveTime.onClick, Type.NormalSpell, "KingGuard", 1750, 9, 0, 10,
+                new HealthPoint(-100, 1, PON.Negative, ActiveTime.perTurn));
+        shopCards.add(kingsGuard);
+        //
+        Spell shock = new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onInsert, Type.NormalSpell, "Shock", 1200, 1, 0, 100,
+                new Stun(2, PON.Negative, ActiveTime.perTurn));
         shopCards.add(shock);
+        //
 
-        Spell divSepidSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Buff,"DivSepidSpell",0,1,2,0,new ChangeAttackPoint(4,1000,BuffType.Positive));
-        divSepidSpell.addSpellTypes(SpellType.onHero,SpellType.onFriend,SpellType.onTarget);
-        Hero divSepid = new Hero("DiveSepid", 4, 50, 8000, AttackType.Melee, 1,divSepidSpell );
-        shopCards.add(divSepid);
+        //Minions
 
-        Spell simorghSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.spellCard,"SimorghSpell",0,5,8,0,new StunEffect(1,BuffType.Negative));
-        simorghSpell.addSpellTypes(SpellType.onEnemy,SpellType.onTarget,SpellType.allWarrior,SpellType.onMinionOrHero);
-        Hero siMorgh = new Hero("Simorgh", 4, 50, 9000, AttackType.Melee, 1,simorghSpell );
-        shopCards.add(siMorgh);
+        Minion kamandareFars = new Minion("KamandareFars", 2, 4, 6, 300, AttackType.Ranged, 7,
+                null);
+        shopCards.add(kamandareFars);
+        //
+        Minion shamshirZaneFars = new Minion("ShamshireZaneFars", 2, 4, 6, 400, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack, Type.SpecialSpell, "SP", 400, 0, 0, 1,
+                        new Stun(1, PON.Negative, ActiveTime.perTurn)));
+        shopCards.add(shamshirZaneFars);
+        //
+        Minion neyzeDareFars = new Minion("NeyzeDareFars", 1, 3, 5, 500, AttackType.Hybrid, 3,
+                null);
+        shopCards.add(neyzeDareFars);
+        //
+        Minion asbSavareFars = new Minion("AsbSavareFars", 4, 6, 10, 200, AttackType.Melee, 1,
+                null);
+        shopCards.add(asbSavareFars);
+        //
+        Minion pahlavaneFars = new Minion("PahlavaneFars", 9, 6, 24, 600, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack, Type.SpecialSpell, "SP", 0, 0, 0, 1,
+                        new HealthPoint(Battle.getInstance().getTurnHandler().getTurnNumber() / 2, 1, PON.Negative, ActiveTime.perTurn)));
+        shopCards.add(pahlavaneFars);
+        //
+        Minion sepahSalar = new Minion("SepahSalarFars", 7, 4, 12, 800, AttackType.Melee, 1,
+                null);
+        shopCards.add(sepahSalar);
+        //
+        Minion kamandareToorani = new Minion("KamandareToorani", 1, 4, 3, 500, AttackType.Ranged, 5,
+                null);
+        shopCards.add(kamandareToorani);
+        //
+        Minion gholabeToorani = new Minion("GholabSangdareToorani", 1, 2, 4, 600, AttackType.Ranged, 7,
+                null);
+        shopCards.add(gholabeToorani);
+        //
+        Minion neyzedareToorani = new Minion("NeyzeDareToorani", 1, 4, 4, 600, AttackType.Hybrid, 3,
+                null);
+        shopCards.add(neyzedareToorani);
+        //
+        Minion jasoseToorani = new Minion("JasooseToorani", 4, 6, 6, 700, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack, Type.SpecialSpell, "SP", 0, 0, 0, 1,
+                        new Disarm(1, PON.Negative, ActiveTime.perTurn), new HealthPoint(-1, 4, PON.Negative, ActiveTime.perTurn)));
+        shopCards.add(jasoseToorani);
+        //
+        Minion gorzDareToorani = new Minion("GorzDareToorani", 2, 10, 3, 450, AttackType.Melee, 1,
+                null);
+        shopCards.add(gorzDareToorani);
+        //
+        Minion ghooleTakCheshm = new Minion("GhooleTakCheshm", 7, 12, 11, 0, AttackType.Hybrid, 3,
+                new Spell(Area.onAround, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onDeath, Type.SpecialSpell, "SP", 0, 0, 0, 1,
+                        new HealthPoint(-2, 1, PON.Negative, ActiveTime.perTurn)));
+        shopCards.add(ghooleTakCheshm);
+        //
+        Minion mareSammi = new Minion("MareSammi", 4, 6, 5, 300, AttackType.Ranged, 4,
+                new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack, Type.SpecialSpell, "SP", 0, 0, 0, 0,
+                        new HealthPoint(-1, 3, PON.Negative, ActiveTime.perTurn)));
+        shopCards.add(mareSammi);
+        //
+        Minion ejdehayeAtashAndaz = new Minion("EjdedhaeAtashAndaz", 5, 5, 9, 250, AttackType.Ranged, 4,
+                null);
+        shopCards.add(ejdehayeAtashAndaz);
+        //
+        Minion shireDarandeh = new Minion("ShireDarandeh", 2, 8, 1, 600, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack, Type.SpecialSpell, "SP", 0, 0, 0, 1,
+                        new DeBuff(1, PON.Negative, ActiveTime.perTurn, BuffType.deBuffHoly)));
+        shopCards.add(shireDarandeh);
+        //
+        Minion gorazeVahshi = new Minion("GorazeVahshi", 6, 14, 10, 500, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.friend, TargetType.onMinion, ActiveTime.onDefend, Type.SpecialSpell, "SP", 500, 0, 0, 10,
+                        new DeBuff(2, PON.Positive, ActiveTime.perTurn, BuffType.deBuffDisarm)));
+        shopCards.add(gorazeVahshi);
+        //
+        Minion piran = new Minion("Piran", 8, 12, 8, 400, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.friend, TargetType.onMinion, ActiveTime.onDefend, Type.SpecialSpell, "SP", 400, 0, 0, 1,
+                        new DeBuff(1, PON.Positive, ActiveTime.perTurn, BuffType.deBuffPoison)));
+        shopCards.add(piran);
+        //
+        Minion giv = new Minion("Giv", 4, 7, 5, 450, AttackType.Ranged, 5,
+                new Spell(Area.onOneTarget, FOE.friend, TargetType.onMinion, ActiveTime.onDefend, Type.SpecialSpell, "SP", 0, 0, 0, 10,
+                        new DeBuff(1, PON.Positive, ActiveTime.perTurn, BuffType.deBuffNegatives)));
+        shopCards.add(giv);
+        //
+        Minion bahman = new Minion("Bahman", 8, 16, 9, 450, AttackType.Melee, 1,
+                new Spell(Area.randomWarrior, FOE.enemy, TargetType.onMinion, ActiveTime.onInsert, Type.SpecialSpell, "SP", 0, 0, 0, 10,
+                        new HealthPoint(-16, 1, PON.Negative, ActiveTime.perTurn)));
+        shopCards.add(bahman);
+        //
+        Minion seyed = new Minion("Seyyed", 7, 8, 14, 400, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onDefend, Type.SpecialSpell, "SP", 0, 0, 0, 10,
+                        new Stun(2, PON.Negative, ActiveTime.perTurn)));
+        //kasi behesh attack bede stun mishe
+        shopCards.add(seyed);
+        //
+        Minion ashkBoos = new Minion("AshkBoos", 7, 8, 14, 400, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onDefend, Type.SpecialSpell, "SP", 0, 0, 0, 1,
+                        new HealthPoint(-2, 1, PON.Negative, ActiveTime.perTurn)));
+        shopCards.add(ashkBoos);
 
+        //////////////////Heros
 
-        Spell ejdeha7SarSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.spellCard,"Ejdeha7SarSpell",0,0,1,0,new DisarmEffect(1,BuffType.Negative));
-        ejdeha7SarSpell.addSpellTypes(SpellType.onMinionOrHero,SpellType.onEnemy,SpellType.onTarget,SpellType.onFriend);
-        Hero ejdeha7Sar = new Hero("Ejdeha7Sar", 4, 50, 8000, AttackType.Melee, 1,ejdeha7SarSpell );
+        Hero diveSepid = new Hero("DiveSepid", 4, 50, 8000, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.friend, TargetType.onHero, ActiveTime.onClick,
+                        Type.SpecialSpell, "SP", 0, 1, 2, 10,
+                        new AttackPoint(+4, 1, PON.Positive, ActiveTime.perTurn)));
+        shopCards.add(diveSepid);
+
+        //
+        Hero simorgh = new Hero("Simorgh", 4, 50, 9000, AttackType.Melee, 1,
+                new Spell(Area.allWarrior, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onClick,
+                        Type.SpecialSpell, "SP", 0, 5, 8, 10,
+                        new Stun(1, PON.Negative, ActiveTime.perTurn)));
+        shopCards.add(simorgh);
+
+        //
+        Hero ejdeha7Sar = new Hero("Ejdeha7sar", 4, 50, 8000, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack,
+                        Type.SpecialSpell, "SP", 0, 0, 2, 1,
+                        new Disarm(2, PON.Negative, ActiveTime.perTurn)));
         shopCards.add(ejdeha7Sar);
 
-
-        Spell rakhshSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.spellCard,"rakhshSpell",0,1,2,0,new StunEffect(1,BuffType.Negative));
-        rakhshSpell.addSpellTypes(SpellType.onMinionOrHero,SpellType.onEnemy,SpellType.onTarget);
-        Hero rakhsh = new Hero("Rakhsh", 4, 50, 8000, AttackType.Melee, 1,rakhshSpell );
+        //
+        Hero rakhsh = new Hero("Rakhsh", 4, 50, 8000, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack,
+                        Type.SpecialSpell, "SP", 0, 1, 2, 1,
+                        new Stun(2, PON.Negative, ActiveTime.perTurn)));
         shopCards.add(rakhsh);
 
-        Spell zahakSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnAttack,SpellKind.spellCard,"ZahakSpell",0,0,0,0,new ChangeHealthEffect(-1,3,BuffType.Negative));
-        zahakSpell.addSpellTypes(SpellType.onEnemy,SpellType.onTarget,SpellType.onMinionOrHero);
-        Hero zahhak = new Hero("Zahhak", 2, 50, 10000, AttackType.Melee, 1,zahakSpell );
+        //
+        Hero zahhak = new Hero("Zahhak", 2, 50, 10000, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack,
+                        Type.SpecialSpell, "SP", 0, 0, 0, 1,
+                        new HealthPoint(-1, 3, PON.Negative, ActiveTime.perTurn)));
         shopCards.add(zahhak);
 
-        Spell kavehSpell = new Spell(SpellTarget.CellEffect,SpellActiveTime.OnUSe,SpellKind.spellCard,"KavehSpell",0,1,2,1,new HolyEffect(1,3,BuffType.Positive));
-        kavehSpell.addSpellTypes(SpellType.onMinionOrHero,SpellType.onFriend,SpellType.onEnemy,SpellType.onSquare);
-        Hero kaveh = new Hero("Kaveh", 4, 50, 8000, AttackType.Melee, 1,kavehSpell );
+        //
+        Hero kaveh = new Hero("kaveh", 4, 50, 8000, AttackType.Melee, 1,
+                new Spell(Area.onOneTarget, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onInsert,
+                        Type.SpecialSpell, "SP", 0, 1, 3, 10,
+                        new HealthPoint(+1, 3, PON.Positive, ActiveTime.onAttack)));
         shopCards.add(kaveh);
 
-        Spell arashSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.spellCard,"ArashSpell",0,2,2,0,new ChangeHealthEffect(-4,1,BuffType.Negative)); //cellEffect Or Warrior!!
-        arashSpell.addSpellTypes(SpellType.onMinionOrHero,SpellType.onEnemy,SpellType.onRow,SpellType.onTarget);
-        Hero arash = new Hero("Arash", 2, 30, 10000, AttackType.Ranged, 6,arashSpell );
+        //
+        Hero arash = new Hero("Arash", 2, 30, 10000, AttackType.Ranged, 6,
+                new Spell(Area.onRow, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onClick,
+                        Type.SpecialSpell, "SP", 0, 2, 2, 10,
+                        new HealthPoint(-4, 1, PON.Negative, ActiveTime.perTurn)));
         shopCards.add(arash);
 
-        Spell afsanehSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.spellCard,"AfsanehSpell",0,1,2,0,new DeBuff(1,BuffType.Negative));
-        afsanehSpell.addSpellTypes(SpellType.onTarget,SpellType.onEnemy,SpellType.onMinionOrHero);
-        Hero afsaneh = new Hero("Afsane", 3, 40, 11000, AttackType.Ranged, 3,afsanehSpell);
+        //
+        Hero afsaneh = new Hero("Afsane", 3, 40, 11000, AttackType.Ranged, 3,
+                new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack,
+                        Type.SpecialSpell, "SP", 0, 1, 2, 1,
+                        new DeBuff(1, PON.Negative, ActiveTime.perTurn, BuffType.deBuffPositives)));
         shopCards.add(afsaneh);
 
-        // Spell!
-        Hero esfandiar = new Hero("Esfandiar", 3, 35, 12000,AttackType.Hybrid,3,  );
+        //
+        Hero esfandiar = new Hero("Esfandiar", 3, 35, 12000, AttackType.Hybrid, 3,
+                new Spell(Area.onOneTarget, FOE.friend, TargetType.onHero, ActiveTime.onDefend,
+                        Type.SpecialSpell, "SP", 0, 0, 6, 1,
+                        new HealthPoint(+1, 3, PON.Positive, ActiveTime.onDefend, true)));
         shopCards.add(esfandiar);
 
-        Hero rostam = new Hero("Rostam",7,55,8000,AttackType.Hybrid,4,null );
+        //
+        Hero rostam = new Hero("Rostam", 7, 55, 8000, AttackType.Hybrid, 4, null);
         shopCards.add(rostam);
 
-        Minion persianArcher = new Minion("PersianArcher", 2, 4, 6, 300, AttackType.Ranged, 7, null);
-        shopCards.add(persianArcher);
+        // Passives And Collectibles
 
-        Spell persianSwordSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnAttack,SpellKind.spellCard,"persinaSwordSpell",0,0,0,0,new StunEffect(1,BuffType.Negative));
-        persianSwordSpell.addSpellTypes(SpellType.onMinionOrHero,SpellType.onEnemy,SpellType.onTarget);
-        Minion persianSword = new Minion("PersianSword", 2, 4, 6, 400, AttackType.Melee, 1,persianSwordSpell,false);
-        shopCards.add(persianSword);
+        Spell tajeDanaiSpell = new Spell(Area.onOneTarget, FOE.friend, TargetType.onHero, ActiveTime.Passive,
+                Type.Usable, "TajeDanai", 0, 0, 1000, 10,
+                new Mana(+1, 3, PON.Positive, ActiveTime.perTurn));
+        Passive tajeDanai = new Passive("TajeDanai", 300, tajeDanaiSpell, FOE.friend, TargetType.onPlayer);
+        shopCards.add(tajeDanai);
 
-        Minion persianSpeared = new Minion("PersianSpeared", 1, 3, 5, 500, AttackType.Hybrid, 3, null,false);
-        shopCards.add(persianSpeared);
+        //
+        Spell namooseSeparSpell = new Spell(Area.onOneTarget, FOE.friend, TargetType.onHero, ActiveTime.Passive,
+                Type.Usable, "NamooseSepar", 0, 0, 1000, 10,
+                new HealthPoint(+2, 6, PON.Positive, ActiveTime.perTurn, true));
+        Passive namooseSepar = new Passive("NamooseSepar", 4000, namooseSeparSpell, FOE.friend, TargetType.onHero);
+        shopCards.add(namooseSepar);
 
-        Minion persianHorseRider = new Minion("PersianHorseRider", 4, 6, 10, 200, AttackType.Melee, 1, null,false);
-        shopCards.add(persianHorseRider);
+        //
+        Spell kamaneDamoolSpell = new Spell(Area.onOneTarget, FOE.friend, TargetType.onHero, ActiveTime.onAttack,
+                Type.Usable, "KamaneDamool", 0, 0, 1000, 10,
+                new Disarm(2, PON.Negative, ActiveTime.onAttack, true));
+        Passive kamaneDamool = new Passive("KamaneDamool", 30000, kamaneDamoolSpell, FOE.friend, TargetType.onHero);
+        shopCards.add(kamaneDamool);
 
-        // spell!
-        Minion persianHero = new Minion("PersianHero",9,6,24,600,AttackType.Melee,1,null,false);
-        shopCards.add(persianHero);
+        //
+        Spell nooshDaroo = new Spell(Area.randomWarrior, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onClick,
+                Type.Collectible, "NooshDaroo", 0, 0, 0, 10,
+                new HealthPoint(+6, 1, PON.Positive, ActiveTime.perTurn));
+        shopCards.add(nooshDaroo);
 
-        Minion persianGard = new Minion("PersianGard",7,4,12,800,AttackType.Melee,1,null,true);
-        shopCards.add(persianGard);
+        //
+        Spell tire2Sakh = new Spell(Area.randomWarrior, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onClick,
+                Type.Collectible, "TireDoSakh", 0, 0, 0, 10,
+                new AttackPoint(+2, 1, PON.Positive, ActiveTime.perTurn));
+        shopCards.add(tire2Sakh);
 
-        Minion turanArcher = new Minion("TuranArcher", 1, 4, 3, 500, AttackType.Hybrid, 5, null,false);
-        shopCards.add(turanArcher);
+        //
+        Spell pareSimorghSpell = new Spell(Area.onOneTarget, FOE.enemy, TargetType.onHero, ActiveTime.onAttack,
+                Type.Usable, "PareSimorgh", 0, 0, 0, 10,
+                new AttackPoint(-1, 1, PON.Negative, ActiveTime.perTurn));
+        Passive pareSimorgh = new Passive("PareSimorgh", 3500, pareSimorghSpell, FOE.enemy, TargetType.onHero);
+        shopCards.add(pareSimorgh);
 
-        Minion turanStoneThrower = new Minion("TuranStoneThrower", 1, 2, 4, 600, AttackType.Ranged, 7, null,false);
-        shopCards.add(turanStoneThrower);
+        //
+        Spell elksir = new Spell(Area.onOneTarget, FOE.friend, TargetType.onHero, ActiveTime.onClick,
+                Type.Collectible, "Elksir", 0, 0, 0, 10,
+                new HealthPoint(+3, 1, PON.Positive, ActiveTime.perTurn),
+                new AttackPoint(+3, 1, PON.Positive, ActiveTime.perTurn);
+        shopCards.add(elksir);
 
-        Minion turanSpear = new Minion("TuranSpear", 1, 4, 4, 600, AttackType.Hybrid, 3, null,false);
-        shopCards.add(turanSpear);
+        //
+        Spell majooneMana = new Spell(Area.onOneTarget, FOE.friend, TargetType.onPlayer, ActiveTime.onClick,
+                Type.Collectible, "MajooneMana", 0, 0, 0, 10,
+                new Mana(+3, 1, PON.Positive, ActiveTime.perTurn));
+        shopCards.add(majooneMana);
 
-        Spell turanSpySpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnAttack,SpellKind.spellCard,"turnaSpySpell",0,0,0,0,new DisarmEffect(1,BuffType.Negative),new ChangeHealthEffect(-4,4,BuffType.Negative));
-        turanSpySpell.addSpellTypes(SpellType.onTarget,SpellType.onEnemy,SpellType.onMinionOrHero);
-        Minion turanSpy = new Minion("TurnSpy", 4, 6, 6, 700, AttackType.Melee, 1,turanSpySpell,false);
-        shopCards.add(turanSpy);
+        //
+        Spell rooyinTan = new Spell(Area.onOneTarget, FOE.friend, TargetType.onHero, ActiveTime.onClick,
+                Type.Collectible, "MajooneRooyinTan", 0, 0, 0, 10,
+                new HealthPoint(+5, 4, PON.Positive, ActiveTime.onDefend));
+        shopCards.add(rooyinTan);
 
-        Minion turanSwampy = new Minion("TuranSwampy", 2, 10, 3, 600, AttackType.Melee, 1, null,false);
-        shopCards.add(turanSwampy);
+        //
+        Spell nefrineMarg = new Spell(Area.onOneTarget, FOE.enemy, TargetType.onHero, ActiveTime.onClick,
+                Type.Collectible, "NefrineMarg", 0, 0, 0, 10,
+                new HealthPoint(-8, 1, PON.Negative, ActiveTime.perTurn));
+        shopCards.add(nefrineMarg);
 
-        Minion turanPrince = new Minion("TuranPrince",6,10,6,800,AttackType.Melee,1,null,true);
-        shopCards.add(turanPrince);
+        //
+        Spell randomDamage = new Spell(Area.randomWarrior, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onClick,
+                Type.Collectible, "RandomDamage", 0, 0, 0, 10,
+                new AttackPoint(+2, 1, PON.Positive, ActiveTime.perTurn));
+        shopCards.add(randomDamage);
 
-        Minion blackGiant = new Minion("BlackGiant", 9, 10, 14, 300, AttackType.Hybrid, 7, null,false);
-        shopCards.add(blackGiant);
+        //
+        Spell terrorHoodSpell = new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack,
+                Type.Usable, "TerrorHood", 0, 0, 0, 10,
+                new AttackPoint(-1, 1, PON.Negative, ActiveTime.perTurn));
+        Passive terrorHood = new Passive("TerrorHood", 5000, terrorHoodSpell, FOE.friend, TargetType.onMinionOrHero);
+        shopCards.add(terrorHood);
 
-        Minion stoneGiant = new Minion("StoneGiant", 9, 12, 12, 300, AttackType.Ranged, 7, null,false);
-        shopCards.add(stoneGiant);
+        //
+        Spell bladesOfAgility = new Spell(Area.randomWarrior, FOE.friend, TargetType.onMinionOrHero, ActiveTime.onClick,
+                Type.Collectible, "BladesOfAgility", 0, 0, 0, 10,
+                new AttackPoint(+6, 1, PON.Positive, ActiveTime.perTurn));
+        shopCards.add(bladesOfAgility);
 
-        Spell eagleSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.Passive,SpellKind.spellCard,"eagleSpell", 0, 0, 0, 0,new ChangeHealthEffect(10,1,BuffType.Positive));
-        eagleSpell.addSpellTypes(SpellType.onFriend,SpellType.onMinionOrHero,SpellType.onTarget);
-        Minion eagle = new Minion("Eagle", 2, 1, 2, 200, AttackType.Ranged, 3,eagleSpell,false);
-        shopCards.add(eagle);
+        //
+        Spell kingWisdomSpell = new Spell(Area.allWarrior, FOE.friend, TargetType.onHero, ActiveTime.Passive,
+                Type.Usable, "KingWisdom", 0, 0, 0, 10,
+                new Mana(+1, 100, PON.Positive, ActiveTime.perTurn, true));
+        Passive kingWisdom = new Passive("KingWisdom", 9000, kingWisdomSpell, FOE.friend, TargetType.onPlayer);
+        shopCards.add(kingWisdom);
 
-        Minion hogRider = new Minion("HogRider", 4, 8, 16, 300, AttackType.Melee, 1, null,false);
-        shopCards.add(hogRider);
+        //
+        Spell poisonousDaggerSpell = new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack,
+                Type.Usable, "PoisonousDagger", 0, 0, 0, 0,
+                new HealthPoint(-1, 1, PON.Negative, ActiveTime.perTurn));
+        Passive poisonousDagger = new Passive("PoisonousDagger", 7000, poisonousDaggerSpell, FOE.friend, TargetType.onMinionOrHero);
+        shopCards.add(poisonousDagger);
 
+        //
+        Spell shockHammerSpell = new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack,
+                Type.Usable, "ShockHammer", 0, 0, 0, 1,
+                new Disarm(2, PON.Negative, ActiveTime.perTurn));
+        Passive shockHammer = new Passive("ShockHammer", 15000, shockHammerSpell, FOE.friend, TargetType.onHero);
+        shopCards.add(shockHammer);
 
-        Spell oneEyeGiantSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnDeath,SpellKind.spellCard,"oneEyeGiantSpell",0,0,0,0,new ChangeHealthEffect(2,1,BuffType.Negative));
-        oneEyeGiantSpell.addSpellTypes(SpellType.onTarget,SpellType.onMinion,SpellType.minionAround,SpellType.onEnemy);
-        Minion oneEyeGiant = new Minion("OneEyeGiant",7,11,12,500,AttackType.Hybrid,3,oneEyeGiantSpell,false);
-        shopCards.add(oneEyeGiant); // dar mogheii ke mimirad position haye atraf dade shavad
+        //
+        Spell soulEaterSpell = new Spell(Area.onOneTarget, FOE.friend, TargetType.onHero, ActiveTime.onDeath,
+                Type.Usable, "SoulEater", 0, 0, 0, 10,
+                new HealthPoint(+1, 1, PON.Positive, ActiveTime.perTurn));
+        Passive soulEater = new Passive("SoulEater", 25000, soulEaterSpell, FOE.friend, TargetType.onMinionOrHero);
+        shopCards.add(soulEater);
 
-        Spell poisonSnakeSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnAttack,SpellKind.spellCard,"poisonSnakeSpell",0,0,0,0,new ChangeHealthEffect(-1,3,BuffType.Negative));
-        poisonSnakeSpell.addSpellTypes(SpellType.onEnemy,SpellType.onMinionOrHero,SpellType.onTarget);
-        Minion poisonSnake = new Minion("poisonSnake",4,6,5,0,AttackType.Ranged,4,poisonSnakeSpell,false);
-        shopCards.add(poisonSnake);
+        //
+        Spell ghosleTamidSpell = new Spell(Area.onOneTarget, FOE.friend, TargetType.onMinion, ActiveTime.onInsert,
+                Type.Usable, "GhosleTamid", 0, 0, 0, 10,
+                new HealthPoint(+1, 2, PON.Positive, ActiveTime.onDefend));
+        Passive ghosleTamid = new Passive("GhosleTamid", 20000, ghosleTamidSpell, FOE.friend, TargetType.onMinion);
+        shopCards.add(ghosleTamid);
 
-        Minion fireDragon = new Minion("FireDragon", 5, 5, 9, 250, AttackType.Ranged, 4, null,false);
-        shopCards.add(fireDragon);
+        //
+        Spell shamshireChini = new Spell(Area.onOneTarget, FOE.friend, TargetType.onHero, ActiveTime.onClick,
+                Type.Collectible, "ShamshireChini", 0, 0, 0, 10,
+                new AttackPoint(+5, 1, PON.Positive, ActiveTime.perTurn));
+        shopCards.add(shamshireChini);
 
-        // spell!
-        //Minion lion = new Minion("Lion",2,8,1,600,AttackType.Melee,1,,false);
-
-        // minion Giant Snake
-        Spell gorazSpell = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnDefend,SpellKind.spellCard,"gorazSpell",0,0,0,0,new DeBufDisarm(1,BuffType.Positive));
-        gorazSpell.addSpellTypes(SpellType.onTarget,SpellType.onMinionOrHero,SpellType.onFriend);
-        Minion goraz = new Minion("goraz",6,14,10,500,AttackType.Melee,1,gorazSpell,false);
-        shopCards.add(goraz);
-
-
-
-
-        Minion poisonSnake = new Minion("PoisonSnake", 4, 6, 5, 300, AttackType.Ranged, 4, MinionSpellType.OnAttack);
-        poisonSnake.setSpecialSpell(SpellKind.spellCard, 0, 0, 3, 0, 0, 1, 0, -1, SpellType.onEnemy, SpellType.onMinionOrHero, SpellType.HealthPoint);
-        shopCards.add(poisonSnake);
-
-        Random random = new Random();
-        random.
-
-    }
-    public void addCollectibles(){
-        Spell nooshDaroo = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"NooshDaroo",0,0,0,0,new ChangeAttackPoint(2,1,BuffType.Positive));
-        nooshDaroo.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
-
-        Spell tireDoShakh = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"tireDoShakh",0,0,0,0,new ChangeHealthEffect(6,1,BuffType.Positive));
-        tireDoShakh.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
-
-        Spell oksir = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"oksir",0,0,0,0,new ChangeHealthEffect(3,1,BuffType.Positive),new ChangeAttackPoint(3,1,BuffType.Positive));
-        oksir.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
-
-        Spell invulnerable = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"invulnerable",0,0,0,0,new HolyEffect(10,2,BuffType.Positive));
-        invulnerable.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
-
-        Spell randomDamage = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"randomDamage",0,0,0,0,new ChangeAttackPoint(2,1,BuffType.Positive));
-        randomDamage.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
-
-        Spell Bladesofagility = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"Bladesofagility",0,0,0,0,new ChangeAttackPoint(6,1,BuffType.Positive));
-        Bladesofagility.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
-
-        Spell ChineseSword = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"ChineseSword",0,0,0,0,new ChangeAttackPoint(5,1,BuffType.Positive));
-        ChineseSword.addSpellTypes(SpellType.onFriend,SpellType.randomWarrior);
-
-        Spell mana = new Spell(SpellTarget.OnWarrior,SpellActiveTime.OnUSe,SpellKind.Collectible,"mana",0,0,0,0,new ChangeMana(3,1,BuffType.Positive));
-        mana.addSpellTypes(SpellType.onFriend,SpellType.changeMana);
-
-
-
+        //
     }
 }

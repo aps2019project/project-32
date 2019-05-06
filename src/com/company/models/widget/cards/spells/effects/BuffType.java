@@ -1,6 +1,6 @@
 package com.company.models.widget.cards.spells.effects;
 
-public enum BuffType
+public enum  BuffType
 {
-    Positive,Negative
+    deBuffHoly, deBuffPoison, deBuffDisarm, deBuffNegatives, deBuffPositives
 }

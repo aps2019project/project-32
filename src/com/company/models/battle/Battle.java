@@ -8,8 +8,7 @@ import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.Spell;
-import com.company.models.widget.cards.spells.SpellKind;
-import com.company.models.widget.cards.spells.SpellType;
+import com.company.models.widget.cards.spells.Type;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -112,9 +111,9 @@ public abstract class Battle
             switch (randomNumber)
             {
                 case 0:
-//                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff, "PoisonBuff", 0, 0, 0, 3, 0, 0, 0, 0, -1, SpellType.HealthPoint, SpellType.onMinionOrHero, SpellType.onEnemyOrFriend);
+//                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(Type.Buff, "PoisonBuff", 0, 0, 0, 3, 0, 0, 0, 0, -1, SpellType.HealthPoint, SpellType.onMinionOrHero, SpellType.enemyOrFriend);
                 case 1:
-//                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(SpellKind.Buff, "FieryBuff", 0, 0, 0, 3, 0, 0, 0, 0, -2, SpellType.HealthPoint, SpellType.onMinionOrHero, SpellType.onEnemyOrFriend);
+//                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(Type.Buff, "FieryBuff", 0, 0, 0, 3, 0, 0, 0, 0, -2, SpellType.HealthPoint, SpellType.onMinionOrHero, SpellType.enemyOrFriend);
                 case 2:
 //                     spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col];
             }
@@ -154,6 +153,16 @@ public abstract class Battle
     {
         Player playerHasTurn;
         int turnNumber;
+
+        public int getTurnNumber()
+        {
+            return turnNumber;
+        }
+
+        public void setTurnNumber(int turnNumber)
+        {
+            this.turnNumber = turnNumber;
+        }
 
         public Player getPlayerInRest()
         {
@@ -298,7 +307,7 @@ public abstract class Battle
         battleMap.warriorsOnMap[sourcePosition.row][sourcePosition.col] = null;
         Spell widget = battleMap.spellsAndCollectibleOnMap[destinationPosition.row][destinationPosition.col];
 
-        if (widget != null && widget.getSpellKind() == SpellKind.Collectible)
+        if (widget != null && widget.getType() == Type.Collectible)
             collect(intendedWarrior, widget);
 
         battleMap.warriorsOnMap[destinationPosition.row][destinationPosition.col] = intendedWarrior;
@@ -308,7 +317,7 @@ public abstract class Battle
 
     public void collect(Card intendedCard, Widget widget)
     {
-        if (widget instanceof Spell && ((Spell) widget).getSpellKind() == SpellKind.Collectible)
+        if (widget instanceof Spell && ((Spell) widget).getType() == Type.Collectible)
         {
             intendedCard.getOwnerPlayer().getPlayerHand().getCollectedItems().add(((Spell) widget));
             widget.setOwnerPlayer(intendedCard.getOwnerPlayer());
@@ -350,6 +359,8 @@ public abstract class Battle
 
         return null;
     }
+
+
 
     public BattleMode getBattleMode()
     {

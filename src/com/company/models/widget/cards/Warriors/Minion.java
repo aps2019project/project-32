@@ -7,20 +7,18 @@ import com.company.models.widget.cards.spells.Spell;
 public class Minion extends Warrior
 {
     private int manaCost;
-    private boolean canCombo;
 
-    public Minion(String name, int manaCost, int power, int health, int price, AttackType attackType, int attackRange, Spell spell,boolean canCombo)
+    public Minion(String name, int manaCost, int power, int health, int price, AttackType attackType, int attackRange, Spell spell)
     {
         super(name, price, health, power, attackType, attackRange,spell);
         this.manaCost = manaCost;
-        this.canCombo = canCombo;
     }
 
-    public Minion(Minion minion)
+    @Override
+    public Object clone() throws CloneNotSupportedException
     {
-        this(minion.name, minion.manaCost, minion.power, minion.health, minion.price, minion.attackType,minion.attackRadius, minion.specialSpell,minion.canCombo);
+        return new Minion(name,manaCost,power,health,price,attackType,attackRadius, ((Spell) specialSpell.clone()));
     }
-
 
     public String toShow()
     {

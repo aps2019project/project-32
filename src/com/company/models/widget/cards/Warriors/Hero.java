@@ -9,11 +9,11 @@ public class Hero extends Warrior
         super(name, price, health, power, attackType, attackRadius, spell);
     }
 
-    public Hero(Hero hero)
+    @Override
+    public Object clone() throws CloneNotSupportedException
     {
-        this(hero.name, hero.power, hero.health, hero.price, hero.attackType, hero.attackRadius, new Spell(hero.specialSpell));
+        return new Hero(name,power,health,price,attackType,attackRadius, ((Spell) specialSpell.clone()));
     }
-
 
     public String toShow()
     {

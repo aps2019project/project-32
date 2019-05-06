@@ -8,7 +8,7 @@ import com.company.models.widget.cards.Warriors.Hero;
 import com.company.models.widget.cards.Warriors.Minion;
 import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.Spell;
-import com.company.models.widget.cards.spells.SpellKind;
+import com.company.models.widget.cards.spells.Type;
 
 import java.io.Serializable;
 import java.security.SecureRandom;
@@ -110,12 +110,6 @@ public class Player implements Serializable
             return null;
         }
 
-        public void addTOCollection(Card card)
-        {
-            getCards().add(card);
-            card.setOwnerPlayer(Controller.getInstance().getCurrentPlayer());
-        }
-
         public void removeFromCollection(int cardID) throws CardNotFound
         {
             for (Deck deck : getDecks())
@@ -153,7 +147,7 @@ public class Player implements Serializable
             int count = 0;
             for (Card card : cards)
             {
-                if (card instanceof Spell && ((Spell) card).getSpellKind() == SpellKind.Usable)
+                if (card instanceof Spell && ((Spell) card).getType() == Type.Usable)
                     count++;
             }
             return count;
@@ -197,14 +191,14 @@ public class Player implements Serializable
 
         public void addCardToDeck(Card card) throws DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready
         {
-            if ((card instanceof Spell && ((Spell) card).getSpellKind() == SpellKind.spellCard) || card instanceof Minion)
+            if ((card instanceof Spell && ((Spell) card).getType() == Type.NormalSpell) || card instanceof Minion)
                 if (cards.size() >= 20)
                     throw new DeckIsFull();
                 else if (cards.contains(card))
                     throw new CardExistInDeckAlready();
                 else
                     cards.add(card);
-            else if (card instanceof Spell && ((Spell) card).getSpellKind() == SpellKind.Usable)
+            else if (card instanceof Spell && ((Spell) card).getType() == Type.Usable)
                 if (passiveItem != null)
                     throw new DeckHasPassiveAlready();
                 else if (passiveItem.equals(card))
@@ -300,7 +294,7 @@ public class Player implements Serializable
         {
             int counter = 0;
             for (Spell collectedItem : collectedItems)
-                if (collectedItem.getSpellKind() == SpellKind.Flag)
+                if (collectedItem.getType() == Type.Flag)
                     counter++;
 
             return counter;
