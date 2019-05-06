@@ -543,5 +543,6 @@ public class ShopMenu implements AbstractMenu
         shopCards.add(shamshireChini);
 
         //
+
     }
 }
