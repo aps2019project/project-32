@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="junit-4.12">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Newfolder (3)/project-32/junit-4.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Newfolder (3)/project-32/jmockit-0.999.18.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

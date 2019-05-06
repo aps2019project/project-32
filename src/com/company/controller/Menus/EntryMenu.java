@@ -65,7 +65,7 @@ public class EntryMenu implements AbstractMenu
         }
     }
 
-    private boolean checkPassWordSafety(String passWord)
+    public boolean checkPassWordSafety(String passWord)
     {
         boolean passWordHas8Character = false;
         boolean passWordHasDigit = false;

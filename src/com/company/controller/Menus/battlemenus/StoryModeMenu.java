@@ -47,12 +47,18 @@ public class StoryModeMenu implements AbstractMenu
             case 1:
                 BattleMenu.getInstance().setCurrentBattle(new DeadBattle
                         (Controller.getInstance().getCurrentPlayer(), AIPlayer.getAIPlayer(), 500));
+                Controller.getInstance().changeCurrentMenuTo(BattleMenu.getInstance());
+                break;
             case 2:
                 BattleMenu.getInstance().setCurrentBattle(new CollectFlagBattle
                         (Controller.getInstance().getCurrentPlayer(), AIPlayer.getAIPlayer(), 1000, 7));
+                Controller.getInstance().changeCurrentMenuTo(BattleMenu.getInstance());
+                break;
             case 3:
                 BattleMenu.getInstance().setCurrentBattle(new KeepFlagBattle
                         (Controller.getInstance().getCurrentPlayer(), AIPlayer.getAIPlayer(), 1500));
+                Controller.getInstance().changeCurrentMenuTo(BattleMenu.getInstance());
+                break;
         }
     }
 }

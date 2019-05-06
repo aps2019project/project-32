@@ -25,7 +25,7 @@ public class BattleMenu implements AbstractMenu
     }
 
     @Override
-    public void selectOptionByCommand(String command) throws UnSelectable, CardNotFound, InvalidPosition, InvalidTargetException, InvalidAttackException, OpponentMinionIsUnvalidForAttack, InvalidWarriorForAttack, CoolDownRemaining, NotEnoughMana
+    public void selectOptionByCommand(String command) throws UnSelectable, CardNotFound, InvalidPosition, InvalidTargetException, InvalidAttackException, OpponentMinionIsUnvalidForAttack, InvalidWarriorForAttack, CoolDownRemaining, NotEnoughMana, GameIsNotOver
     {
         if (command.matches("Game Information"))
             View.getInstance().show(currentBattle.toShowGameInfo());
@@ -73,10 +73,10 @@ public class BattleMenu implements AbstractMenu
 
     private void selectActions(int cardID) throws UnSelectable
     {
-        Widget widget = currentBattle.getBattleMap().selectCard(cardID);
-        if (widget instanceof Warrior)
+        Warrior warrior = currentBattle.getBattleMap().selectCard(cardID);
+        if (warrior!=null)
         {
-            WarriorSelectMenu.getInstance().setCurrentWarrior(((Warrior) widget));
+            WarriorSelectMenu.getInstance().setCurrentWarrior(warrior);
             Controller.getInstance().changeCurrentMenuTo(WarriorSelectMenu.getInstance());
         }
         else
@@ -110,7 +110,7 @@ public class BattleMenu implements AbstractMenu
         BattleMenu.getInstance().currentBattle = currentBattle;
     }
 
-    public void insertCard(String command) throws CardNotFound, InvalidPosition
+    public void insertCard(String command) throws CardNotFound, InvalidPosition, GameIsNotOver
     {
         String cardName = command.split(" ")[1];
         int row = Integer.parseInt(command.split(" ")[4]);
@@ -123,6 +123,8 @@ public class BattleMenu implements AbstractMenu
 
         currentBattle.getBattleMap().insertCard(intendedCard, position);
         intendedCard.getOwnerPlayer().getPlayerHand().putCardFromHandActions(intendedCard);
+        Battle.getInstance().checkBattleResult();
+
     }
 }
 

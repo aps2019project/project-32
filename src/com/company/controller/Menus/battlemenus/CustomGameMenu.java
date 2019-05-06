@@ -1,7 +1,12 @@
 package com.company.controller.Menus.battlemenus;
 
+import com.company.controller.Controller;
 import com.company.controller.Exceptions.*;
 import com.company.controller.Menus.AbstractMenu;
+import com.company.models.AIPlayer;
+import com.company.models.battle.CollectFlagBattle;
+import com.company.models.battle.DeadBattle;
+import com.company.models.battle.KeepFlagBattle;
 
 public class CustomGameMenu implements AbstractMenu
 {
@@ -17,12 +22,46 @@ public class CustomGameMenu implements AbstractMenu
     }
 
     @Override
-    public void selectOptionByCommand(String command) throws WrongPassword, UserNameDidntExist, WeekPassword, UserNameAlreadyExist, InvalidDeck, DeckNameAlreadyExist, CardNotFound, DeckNotFound, DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready, UnSelectable, NotEnoughCash, CantAddUsableItems, InvalidTargetException, InvalidAttackException, OpponentMinionIsUnvalidForAttack, InvalidWarriorForAttack, CoolDownRemaining, NotEnoughMana, BattleHasNotInitialise, InvalidPosition
+    public void selectOptionByCommand(String command) throws  InvalidBattleName
     {
 
+        if (command.matches("Start Game \\w \\d+")){
+            setCollectFlagBattle(command);
+        }
+        if (command.matches("Start Game \\w")){
+            setBattle(command);
+        }
 
 
+    }
 
+    public void setCollectFlagBattle(String command) throws InvalidBattleName
+    {
+        String battleName = command.split(" ")[2];
+        int numberOfFlag = Integer.parseInt(command.split(" ")[3]);
+        if (battleName.equals("CollectFlag")){
+            BattleMenu.getInstance().setCurrentBattle(new CollectFlagBattle
+                    (Controller.getInstance().getCurrentPlayer(), AIPlayer.getAIPlayer(), 1000, numberOfFlag));
+            Controller.getInstance().changeCurrentMenuTo(BattleMenu.getInstance());
+        }
+        else
+            throw new InvalidBattleName();
+    }
+    public void setBattle(String command) throws InvalidBattleName
+    {
+        String battleName = command.split(" ")[2];
+        if (battleName.equals("DeadBattle")){
+            BattleMenu.getInstance().setCurrentBattle(new DeadBattle
+                    (Controller.getInstance().getCurrentPlayer(), AIPlayer.getAIPlayer(), 500));
+            Controller.getInstance().changeCurrentMenuTo(BattleMenu.getInstance());
+        }
+        else if (battleName.equals("KeepFlag")){
+            BattleMenu.getInstance().setCurrentBattle(new KeepFlagBattle
+                    (Controller.getInstance().getCurrentPlayer(), AIPlayer.getAIPlayer(), 1500));
+            Controller.getInstance().changeCurrentMenuTo(BattleMenu.getInstance());
+        }
+        else
+            throw new InvalidBattleName();
     }
 
     @Override
