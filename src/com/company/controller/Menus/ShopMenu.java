@@ -31,7 +31,7 @@ public class ShopMenu implements AbstractMenu
     private ArrayList<Card> shopCards = new ArrayList<>();
 
     @Override
-    public void selectOptionByCommand(String command) throws CardNotFound, NotEnoughCash, CantAddUsableItems
+    public void selectOptionByCommand(String command) throws CardNotFound, NotEnoughCash, CantAddUsableItems, CloneNotSupportedException
     {
         if (command.matches("Exit"))
             Controller.getInstance().changeCurrentMenuTo(MainMenu.getInstance());
@@ -62,13 +62,12 @@ public class ShopMenu implements AbstractMenu
     {
         String cardName = command.split(" ")[1];
         Card card = searchCard(cardName);
+        Player currentPlayerInShop = Controller.getInstance().getCurrentPlayer();
+
         if (card == null)
             throw new CardNotFound();
-
-        Player currentPlayerInShop = Controller.getInstance().getCurrentPlayer();
         if (card.getPrice() > currentPlayerInShop.getCash())
             throw new NotEnoughCash();
-
         if (currentPlayerInShop.getCollection().getNumberOfUsable() == 3)
             throw new CantAddUsableItems();
 
