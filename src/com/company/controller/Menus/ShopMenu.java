@@ -275,6 +275,7 @@ public class ShopMenu implements AbstractMenu
         Minion sepahSalar = new Minion("SepahSalarFars", 7, 4, 12, 800, AttackType.Melee, 1,
                 null);
         shopCards.add(sepahSalar);
+
         //
         Minion kamandareToorani = new Minion("KamandareToorani", 1, 4, 3, 500, AttackType.Ranged, 5,
                 null);
