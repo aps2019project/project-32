@@ -10,14 +10,14 @@ public class Minion extends Warrior
 
     public Minion(String name, int manaCost, int power, int health, int price, AttackType attackType, int attackRange, Spell spell)
     {
-        super(name, price, health, power, attackType, attackRange,spell);
+        super(name, price, health, power, attackType, attackRange, spell);
         this.manaCost = manaCost;
     }
 
     @Override
     public Object clone() throws CloneNotSupportedException
     {
-        return new Minion(name,manaCost,power,health,price,attackType,attackRadius, ((Spell) specialSpell.clone()));
+        return new Minion(name, manaCost, power, health, price, attackType, attackRadius, ((Spell) specialSpell.clone()));
     }
 
     public String toShow()
@@ -30,7 +30,6 @@ public class Minion extends Warrior
     {
 
     }
-
 
 
     public int getManaCost()

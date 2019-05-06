@@ -12,7 +12,7 @@ public class Hero extends Warrior
     @Override
     public Object clone() throws CloneNotSupportedException
     {
-        return new Hero(name,power,health,price,attackType,attackRadius, ((Spell) specialSpell.clone()));
+        return new Hero(name, power, health, price, attackType, attackRadius, ((Spell) specialSpell.clone()));
     }
 
     public String toShow()

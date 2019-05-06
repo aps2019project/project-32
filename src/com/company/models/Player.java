@@ -7,12 +7,14 @@ import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.Warriors.Hero;
 import com.company.models.widget.cards.Warriors.Minion;
 import com.company.models.widget.cards.Warriors.Warrior;
+import com.company.models.widget.cards.spells.Passive;
 import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.spells.Type;
 
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Player implements Serializable
 {
@@ -45,7 +47,7 @@ public class Player implements Serializable
 
     private ArrayList<Deck> decks = new ArrayList<>();
     private Deck mainDeck;
-    private ArrayList<Card> copiedMainDeck;
+    private Deck copiedMainDeck;
 
     public void addNewDeck(String name)
     {
@@ -161,14 +163,40 @@ public class Player implements Serializable
             this.name = name;
         }
 
-        public Deck(Hero hero, ArrayList<Spell> spells, ArrayList<Minion> minions, Spell passiveItem)
+        public Deck(Hero hero, ArrayList<Spell> spells, ArrayList<Minion> minions, Passive passiveItem)
         {
+            cards.addAll(spells);
+            cards.addAll(minions);
+            this.hero = hero;
+            this.passiveItem = passiveItem;
+        }
 
+        public Deck(Hero hero,ArrayList<Card> cards,Passive passiveItem)
+        {
+            this.hero = hero;
+            this.cards = cards;
+            this.passiveItem = passiveItem;
+        }
+
+        @Override
+        public Object clone() throws CloneNotSupportedException
+        {
+            ArrayList<Card> copiedCard = new ArrayList<>();
+            for (Card card : cards)
+            {
+                if(card instanceof Spell)
+                    copiedCard.add(((Card) ((Spell) card).clone()));
+                if(card instanceof Minion)
+                    copiedCard.add(((Card) ((Minion) card).clone()));
+            }
+            Hero copiedHero = ((Hero) this.hero.clone());
+            Passive copiedPassive = ((Passive) this.passiveItem.clone());
+            return new Deck(copiedHero,copiedCard,copiedPassive);
         }
 
         private String name;
         private Hero hero;
-        private Spell passiveItem;
+        private Passive passiveItem;
         private ArrayList<Card> cards = new ArrayList<>();
 
         public String toShowDeck()
@@ -251,7 +279,7 @@ public class Player implements Serializable
             this.hero = hero;
         }
 
-        public Spell getPassiveItem()
+        public  getPassiveItem()
         {
             return passiveItem;
         }
@@ -274,6 +302,11 @@ public class Player implements Serializable
         public ArrayList<Card> getCards()
         {
             return cards;
+        }
+
+        public Passive getPassiveItem()
+        {
+            return passiveItem;
         }
     }
 
@@ -466,7 +499,7 @@ public class Player implements Serializable
         String leaderBoardString = "";
         ArrayList<Player> playersCopy = new ArrayList<>(players);
 
-        playersCopy.sort((o1, o2) -> o1.winNumber - o2.winNumber);
+        playersCopy.sort(Comparator.comparingInt(o -> o.winNumber));
 
         int counter = 1;
         for (Player player : playersCopy)
@@ -474,13 +507,37 @@ public class Player implements Serializable
                     (String.format("%d - UserName : %s - WinNumber : %d\n", counter++, player.name, player.winNumber));
     }
 
+    public void addPassiveOnPlayerCards() throws CloneNotSupportedException
+    {
+        Passive playerCopiedPassive = this.getCopiedMainDeck().getPassiveItem();
+
+        switch (playerCopiedPassive.getTargetType())
+        {
+            case onMinion:
+                for (Card card : this.getCopiedMainDeck().getCards())
+                    if (card instanceof Minion)
+                        ((Minion) card).setPassiveSpell(((Spell) playerCopiedPassive.getSpell().clone()));
+
+                break;
+            case onHero:
+                this.getCopiedMainDeck().getHero().setPassiveSpell
+                        (((Spell) playerCopiedPassive.getSpell().clone()));
+
+                break;
+            case onMinionOrHero:
+                for (Card card : this.getCopiedMainDeck().getCards())
+                    if (card instanceof Minion)
+                        ((Minion) card).setPassiveSpell(((Spell) playerCopiedPassive.getSpell().clone()));
+
+                this.getCopiedMainDeck().getHero().setPassiveSpell
+                        (((Spell) playerCopiedPassive.getSpell().clone()));
+
+                break;
+        }
+    }
+
     public String toShowPlayer()
     {
-//         name;
-//         passWord;
-//         price;
-//         winNumber;
-//         loseNumber;
         return String.format
                 ("UserName : %s - Cash : %d - WinNumber : %d - LoseNumber : %d",
                         this.name, this.cash, this.winNumber, this.loseNumber);
@@ -605,12 +662,12 @@ public class Player implements Serializable
         this.mainDeck = mainDeck;
     }
 
-    public ArrayList<Card> getCopiedMainDeck()
+    public Deck getCopiedMainDeck()
     {
         return copiedMainDeck;
     }
 
-    public void setCopiedMainDeck(ArrayList<Card> copiedMainDeck)
+    public void setCopiedMainDeck(Deck copiedMainDeck)
     {
         this.copiedMainDeck = copiedMainDeck;
     }
@@ -684,7 +741,6 @@ public class Player implements Serializable
     {
         return collection;
     }
-
 
 }
 

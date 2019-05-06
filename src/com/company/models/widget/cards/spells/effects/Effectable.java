@@ -8,6 +8,7 @@ public abstract class Effectable
     protected final ActiveTime activeTime;
     protected final int turnNumber;
     protected final PON pon;
+    // fon
     protected int turnRemaining;
     protected boolean isContinuous = false;
 
@@ -41,5 +42,30 @@ public abstract class Effectable
     public void setTurnRemaining(int turnRemaining)
     {
         this.turnRemaining = turnRemaining;
+    }
+
+    public ActiveTime getActiveTime()
+    {
+        return activeTime;
+    }
+
+    public int getTurnNumber()
+    {
+        return turnNumber;
+    }
+
+    public PON getPon()
+    {
+        return pon;
+    }
+
+    public boolean isContinuous()
+    {
+        return isContinuous;
+    }
+
+    public void setContinuous(boolean continuous)
+    {
+        isContinuous = continuous;
     }
 }

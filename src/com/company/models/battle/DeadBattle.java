@@ -1,18 +1,27 @@
 package com.company.models.battle;
 
+import com.company.controller.Exceptions.InvalidDeck;
 import com.company.models.Player;
 
 public class DeadBattle extends Battle
 {
-    public DeadBattle(Player firstPlayer, Player secondPlayer, int winnerPrize)
+    private DeadBattle(Player firstPlayer, Player secondPlayer, int winnerPrize) throws InvalidDeck
     {
         super(firstPlayer, secondPlayer, winnerPrize);
+        initialiseBattle();
     }
 
-    @Override
-    public void makeBattle(Player firstPlayer, Player secondPlayer, int winnerPrize)
+    private static DeadBattle deadBattleInstance;
+
+
+    public static void setBattle(Player firstPlayer, Player secondPlayer, int winnerPrize) throws InvalidDeck
     {
-        currentBattle = new DeadBattle(firstPlayer,secondPlayer,winnerPrize);
+        deadBattleInstance = new DeadBattle(firstPlayer, secondPlayer, winnerPrize);
+    }
+
+    public static DeadBattle getInstance()
+    {
+        return deadBattleInstance;
     }
 
     @Override

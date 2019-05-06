@@ -28,7 +28,7 @@ class WarriorSelectMenu extends BattleMenu
     }
 
     @Override
-    public void selectOptionByCommand(String command) throws InvalidTargetException, InvalidAttackException, OpponentMinionIsUnvalidForAttack, InvalidWarriorForAttack, WarriorUnderStun, WarriorIsTired, CoolDownRemaining, NotEnoughMana
+    public void selectOptionByCommand(String command) throws InvalidTargetException, InvalidAttackException, OpponentMinionIsUnvalidForAttack, InvalidWarriorForAttack, CoolDownRemaining, NotEnoughMana
     {
         if (command.matches("Move to \\d \\d"))
             moveCard(command);
@@ -59,7 +59,7 @@ class WarriorSelectMenu extends BattleMenu
 
     }
 
-    public void moveCard(String command) throws InvalidTargetException, WarriorUnderStun, WarriorIsTired
+    public void moveCard(String command) throws InvalidTargetException
     {
         Position cardPosition = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getPosition(getCurrentWarrior());
         Widget[][] map = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getWarriorsOnMap();
@@ -87,10 +87,10 @@ class WarriorSelectMenu extends BattleMenu
         if (row != cardPosition.row && col != cardPosition.col && map[cardPosition.row][col] != null && map[row][cardPosition.col] != null)
             throw new InvalidTargetException();
 
-        BattleMenu.getInstance().getCurrentBattle().moveWarriorOptions(currentWarrior, cardPosition, new Position(row, col));
+        //BattleMenu.getAIPlayer().getCurrentBattle().moveWarriorOptions(currentWarrior, cardPosition, new Position(row, col));
     }
 
-    public void attack(String command) throws InvalidAttackException, InvalidWarriorForAttack, OpponentMinionIsUnvalidForAttack, WarriorUnderStun, WarriorIsTired
+    public void attack(String command) throws InvalidAttackException, InvalidWarriorForAttack, OpponentMinionIsUnvalidForAttack
     {
         Position cardPosition = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getPosition(getCurrentWarrior());
         int col = Integer.parseInt(command.split(" ")[2]);
@@ -105,7 +105,7 @@ class WarriorSelectMenu extends BattleMenu
         if (Math.abs(cardPosition.col - col) + Math.abs(cardPosition.row - row) > currentWarrior.getAttackRadius())
             throw new OpponentMinionIsUnvalidForAttack();
 
-        BattleMenu.getInstance().getCurrentBattle().attackActions(currentWarrior, (Warrior) map[row][col]);
+       // BattleMenu.getAIPlayer().getCurrentBattle().attackActions(currentWarrior, (Warrior) map[row][col]);
     }
 
 

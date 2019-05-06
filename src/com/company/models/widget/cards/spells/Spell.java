@@ -1,6 +1,8 @@
 package com.company.models.widget.cards.spells;
 
 import com.company.controller.Exceptions.InvalidAttack;
+import com.company.controller.Exceptions.InvalidPosition;
+import com.company.controller.Menus.battlemenus.BattleMenu;
 import com.company.models.Position;
 import com.company.models.battle.Battle;
 import com.company.models.widget.cards.Card;
@@ -61,117 +63,154 @@ public class Spell extends Card
                 "Buy Cost : %d \n", this.name, this.manaCost, this.coolDown, this.price / 2, this.price);
     }
 
-
-    // fucking deBuffHoly shit
-
     public void generalDo(Battle.Map map, Position generalPosition)
     {
         doForArea(map, generalPosition);
     }
 
-
-    private void doForArea(Battle.Map map, Position positionInserted)
+    private void doForArea(Battle.Map map, Position positionInserted) throws Exception
     {
         switch (this.area)
         {
             case onCol:
+
                 for (int i = 0; i < 5; i++)
                     if (map.getWarriorsOnMap()[i][positionInserted.col] != null)
                         checkingWarriorType(map.getWarriorsOnMap()[i][positionInserted.col]);
+                break;
 
             case onRow:
+
                 for (int i = 0; i < 9; i++)
                     if (map.getWarriorsOnMap()[positionInserted.row][i] != null)
                         checkingWarriorType(map.getWarriorsOnMap()[positionInserted.row][i]);
 
+                break;
+
             case onOneTarget:
+
                 checkingWarriorType(map.getWarriorsOnMap()[positionInserted.row][positionInserted.col]);
 
+                break;
+
             case NearHero:
-                int heroRow = 0;
-                int heroCol = 0;
-                for (int i = 0; i < 5; i++)
-                    for (int j = 0; j < 9; j++)
-                        if (map.getWarriorsOnMap()[i][j] instanceof Hero && map.getWarriorsOnMap()[i][j].getOwnerPlayer() == this.getOwnerPlayer())
-                        {
-                            heroRow = i;
-                            heroCol = j;
-                            break;
-                        }
-                if (Math.pow((positionInserted.col - heroCol), 2) + Math.pow((positionInserted.row - heroRow), 2) <= 2)
-                {
+
+                Position heroPosition = BattleMenu.getInstance().getCurrentBattle()
+                        .getBattleMap().getHeroPosition(this.ownerPlayer);
+
+                if (Math.pow((positionInserted.col - heroPosition.col), 2) + Math.pow((positionInserted.row - heroPosition.row), 2) <= spellRange * spellRange * 2)
                     checkingWarriorType(map.getWarriorsOnMap()[positionInserted.row][positionInserted.col]);
-                }
+                else
+                    throw new InvalidPosition();
+
+                break;
 
             case allWarrior:
+
                 for (int i = 0; i < 5; i++)
                     for (int j = 0; j < 9; j++)
                         if (map.getWarriorsOnMap()[i][j] != null)
                             checkingWarriorType(map.getWarriorsOnMap()[i][j]);
 
+                break;
+
             case randomWarrior:
 
+                boolean hasException = true;
+                while (hasException)
+                {
+                    Position position;
+                    try
+                    {
+                        position = Position.getRandomCaptured();
+                        checkingWarriorType(BattleMenu.getInstance().getCurrentBattle()
+                                .getBattleMap().getWarriorsOnMap()[position.row][position.col]);
+                        hasException = false;
+                    }
+                    catch (Exception e)
+                    {
+                        hasException = true;
+                    }
+                }
 
+                break;
             case onSquare:
                 for (int i = positionInserted.row; i < positionInserted.row + spellRange; i++)
                     for (int j = positionInserted.col; j < positionInserted.col + spellRange; j++)
                         if (map.getWarriorsOnMap()[i][j] != null)
                             checkingWarriorType(map.getWarriorsOnMap()[i][j]);
+                break;
 
             case onAround:
+
+                break;
         }
     }
 
-    public void checkingWarriorType(Warrior warrior)
+    private void checkingWarriorType(Warrior warrior) throws Exception
     {
         switch (targetType)
         {
             case onMinion:
                 if (warrior instanceof Minion)
-                {
                     checkingFOE(warrior);
-                }
+                else
+                    throw new Exception();
+
+                break;
+
             case onHero:
                 if (warrior instanceof Hero)
-                {
                     checkingFOE(warrior);
-                }
+                else
+                    throw new Exception();
+
+                break;
+
             case onMinionOrHero:
                 checkingFOE(warrior);
+
+                break;
         }
     }
 
-    private void checkingFOE(Warrior warrior)
+    private void checkingFOE(Warrior warrior) throws Exception
     {
         switch (foe)
         {
             case friend:
                 if (warrior.getOwnerPlayer().equals(this.ownerPlayer))
                     addAndDoOnce(warrior);
+                else
+                    throw new Exception();
 
+                break;
             case enemy:
                 if (!warrior.getOwnerPlayer().equals(this.ownerPlayer))
                     addAndDoOnce(warrior);
+                else
+                    throw new Exception();
 
+                break;
             case enemyOrFriend:
                 addAndDoOnce(warrior);
+                break;
         }
     }
 
-    public void addAndDoOnce(Warrior warrior)
+    private void addAndDoOnce(Warrior warrior)
     {
         addEffects(warrior);
         doOnce(warrior);
     }
 
-
-    public void addEffects(Warrior warrior)
+    private void addEffects(Warrior warrior)
     {
         for (Effectable effect : this.effects)
             warrior.getEffectsOnWarrior().add(effect);
     }
 
-    public void doOnce(Warrior warrior)
+    private void doOnce(Warrior warrior)
     {
         warrior.doEffect();
         effects.removeIf(effectable -> effectable.getTurnRemaining() == 0);
@@ -210,29 +249,29 @@ public class Spell extends Card
 //        }
 //    }
 
-    public void initialSpell()
-    {
-        if (type == Type.Usable)
-        {
+//    public void initialSpell()
+//    {
+//        if (type == Type.Usable)
+//        {
+//
+//        }
+//        else if (type == Type.Collectible)
+//        {
+//            checkKindOfCollectible();
+//        }
+//    }
 
-        }
-        else if (type == Type.Collectible)
-        {
-            checkKindOfCollectible();
-        }
-    }
-
-    private void checkKindOfCollectible()
-    {
-        if (spellTypes.contains(SpellType.randomWarrior))
-        {
-            checkEnemyOrFriend();
-        }
-        else if (spellTypes.contains(SpellType.changeMana))
-        {
-            effects.get(0).doEffect(Battle.getInstance().getRandomWarrior(this.ownerPlayer, SpellType.onFriend));
-        }
-    }
+//    private void checkKindOfCollectible()
+//    {
+//        if (spellTypes.contains(SpellType.randomWarrior))
+//        {
+//            checkEnemyOrFriend();
+//        }
+//        else if (spellTypes.contains(SpellType.changeMana))
+//        {
+//            effects.get(0).doEffect(Battle.getAIPlayer().getRandomWarrior(this.ownerPlayer, SpellType.onFriend));
+//        }
+//    }
 
 //    private void checkEnemyOrFriend()
 //    {
@@ -245,15 +284,6 @@ public class Spell extends Card
 //            doEffectOnRandomWarrior(SpellType.enemy);
 //        }
 //    }
-
-    private void doEffectOnRandomWarrior(SpellType spellType)
-    {
-        Warrior warrior = Battle.getInstance().getRandomWarrior(this.ownerPlayer, spellType);
-        addEffectsAndDoOnce(warrior);
-        addToWarrior(warrior);
-
-    }
-//
 //    private void doForArea(Battle.Map map, Position position)
 //    {
 //        for (int i = 0; i < spellRange; i++)
@@ -268,17 +298,6 @@ public class Spell extends Card
     {
         for (Effectable effect : this.effects)
             warrior.getEffectsOnWarrior().add(effect.clone());
-    }
-
-    private void checkWarriorTarget(Warrior warrior) throws InvalidAttack
-    {
-        if (getSpellTypes().contains(SpellType.onMinion))
-            if (!(warrior instanceof Minion))
-                throw new InvalidAttack();
-
-        if (getSpellTypes().contains(SpellType.onHero))
-            if (!(warrior instanceof Hero))
-                throw new InvalidAttack();
     }
 
     public int getManaCost()
@@ -306,10 +325,6 @@ public class Spell extends Card
         this.coolDownRemaining = coolDownRemaining;
     }
 
-    public void setSpellTypes(ArrayList<SpellType> spellTypes)
-    {
-        this.spellTypes = spellTypes;
-    }
 
     public int getSpellRange()
     {
@@ -340,4 +355,20 @@ public class Spell extends Card
     {
         this.effects = effects;
     }
+
+    public FOE getFoe()
+    {
+        return foe;
+    }
+
+    public TargetType getTargetType()
+    {
+        return targetType;
+    }
+
+    public Area getArea()
+    {
+        return area;
+    }
+
 }

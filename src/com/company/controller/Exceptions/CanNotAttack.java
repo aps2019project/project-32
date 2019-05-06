@@ -1,8 +1,8 @@
 package com.company.controller.Exceptions;
 
-public class CantAttack extends Exception
+public class CanNotAttack extends Exception
 {
-    public CantAttack()
+    public CanNotAttack()
     {
         super("Warrior Cant Attack!");
     }

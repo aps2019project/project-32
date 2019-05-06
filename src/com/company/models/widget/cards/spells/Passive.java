@@ -27,4 +27,19 @@ public class Passive extends Card
     {
         return new Passive(name, price, ((Spell) spell.clone()), foe, targetType);
     }
+
+    public Spell getSpell()
+    {
+        return spell;
+    }
+
+    public FOE getFoe()
+    {
+        return foe;
+    }
+
+    public TargetType getTargetType()
+    {
+        return targetType;
+    }
 }

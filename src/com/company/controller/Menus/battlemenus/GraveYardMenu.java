@@ -9,9 +9,7 @@ public class GraveYardMenu implements AbstractMenu
     private GraveYardMenu()
     {
     }
-
-    private static GraveYardMenu graveYardMenuInstance;
-
+    private static GraveYardMenu graveYardMenuInstance = new GraveYardMenu();
     public static AbstractMenu getInstance()
     {
         return graveYardMenuInstance;

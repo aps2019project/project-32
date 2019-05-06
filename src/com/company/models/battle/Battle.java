@@ -1,36 +1,34 @@
 package com.company.models.battle;
 
 import com.company.controller.Exceptions.*;
+import com.company.controller.Menus.ShopMenu;
 import com.company.models.AIPlayer;
 import com.company.models.Player;
 import com.company.models.Position;
 import com.company.models.TimeHandler;
 import com.company.models.widget.Widget;
 import com.company.models.widget.cards.Card;
+import com.company.models.widget.cards.Warriors.Hero;
+import com.company.models.widget.cards.Warriors.Minion;
 import com.company.models.widget.cards.Warriors.Warrior;
+import com.company.models.widget.cards.spells.ActiveTime;
 import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.spells.Type;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
 
 public abstract class Battle
 {
-    protected Battle(Player firstPlayer, Player secondPlayer, int winnerPrize)
+    protected Battle(Player firstPlayer, Player secondPlayer, int winnerPrize) throws
+            InvalidDeck, CloneNotSupportedException
     {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.winnerPrize = winnerPrize;
+        initialiseBattle();
+        firstPlayer.addPassiveOnPlayerCards();
+        secondPlayer.addPassiveOnPlayerCards();
     }
-
-    protected static Battle currentBattle;
-
-    public static Battle getInstance()
-    {
-        return currentBattle;
-    }
-
-    public abstract void makeBattle(Player firstPlayer, Player secondPlayer, int winnerPrize);
 
     protected BattleMode battleMode;
     protected Map battleMap = new Map();
@@ -41,12 +39,17 @@ public abstract class Battle
     private SecureRandom randomMaker = new SecureRandom();
     protected int winnerPrize;
 
+    public void addPassiveSpells() throws CloneNotSupportedException
+    {
+        firstPlayer.addPassiveOnPlayerCards();
+        secondPlayer.addPassiveOnPlayerCards();
+    }
 
     public class Map
     {
         Map()
         {
-            addCollectibleItemOnMapRandomise();
+            addCollectibleItemOnMapRandomise(0);
         }
 
         protected Warrior[][] warriorsOnMap = new Warrior[5][9];
@@ -62,28 +65,11 @@ public abstract class Battle
             return spellsAndCollectibleOnMap;
         }
 
-        public Position getRandomPosition()
+        public void addCollectibleItemOnMapRandomise(int counter)
         {
-            int row;
-            int col;
-            while (true)
-            {
-                row = randomMaker.nextInt(5);
-                col = randomMaker.nextInt(9);
-                if (warriorsOnMap[row][col] == null)
-                    return new Position(row, col);
-            }
-        }
-
-        public void addCollectibleItemOnMapRandomise()
-        {
-            ArrayList<Spell> collectibles = new ArrayList<>(5);
-            // make and add 5 collectable item to collectibles
-            ArrayList<Position> randomPositions = new ArrayList<>(5);
-            for (int i = 0; i < 5; i++)
-                randomPositions.add(getRandomPosition());
-
-            // add to warriorsOnMap 5 collectibles
+            Position randomPosition = Position.getRandomFreePosition(Spell.class);
+            spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col]
+                    = ShopMenu.getInstance().getCollectibleCards().get(counter);
         }
 
         public void removeDeadCardFromMap(Card intendedDeadCard)
@@ -97,7 +83,7 @@ public abstract class Battle
         public Warrior selectCard(int cardID)
         {
             for (Warrior[] warriors : warriorsOnMap)
-                for (Warrior warrior  : warriors)
+                for (Warrior warrior : warriors)
                     if (warrior != null && warrior.getID() == cardID)
                         return warrior;
 
@@ -106,18 +92,7 @@ public abstract class Battle
 
         public void addBuffRandomise()
         {
-            Position randomPosition = getRandomPosition();
-            int randomNumber = randomMaker.nextInt() % 3;
-
-            switch (randomNumber)
-            {
-                case 0:
-//                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(Type.Buff, "PoisonBuff", 0, 0, 0, 3, 0, 0, 0, 0, -1, SpellType.HealthPoint, SpellType.onMinionOrHero, SpellType.enemyOrFriend);
-                case 1:
-//                    spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col] = new Spell(Type.Buff, "FieryBuff", 0, 0, 0, 3, 0, 0, 0, 0, -2, SpellType.HealthPoint, SpellType.onMinionOrHero, SpellType.enemyOrFriend);
-                case 2:
-//                     spellsAndCollectibleOnMap[randomPosition.row][randomPosition.col];
-            }
+            //TODO
         }
 
         public Position getPosition(Widget widget)
@@ -149,18 +124,42 @@ public abstract class Battle
             return widgetsString;
         }
 
-        public void insertCard(Card intendedCard, Position position) throws InvalidPosition
+        public Position getHeroPosition(Player player)
         {
-            if (intendedCard instanceof Spell){
-                // do effect
-            }
-            else if (intendedCard instanceof Warrior)
-            {
-                if (warriorsOnMap[position.row][position.col] == null)
-                    warriorsOnMap[position.row][position.col] = (Warrior) intendedCard;
-                else
-                    throw new InvalidPosition();
-            }
+            for (int i = 0; i < 5; i++)
+                for (int j = 0; j < 9; j++)
+                    if (warriorsOnMap[i][j] instanceof Hero && warriorsOnMap[i][j].getOwnerPlayer() == player)
+                        return new Position(i, j);
+
+            return null;
+        }
+    }
+
+    public void insertCard(Card intendedCard, Position position) throws InvalidPosition, NotEnoughMana
+    {
+        if (intendedCard instanceof Spell)
+        {
+            Spell spell = ((Spell) intendedCard);
+            if (spell.getOwnerPlayer().getPlayerCurrentMana() < spell.getManaCost())
+                throw new NotEnoughMana();
+
+            spell.generalDo(battleMap, position);
+            spell.getOwnerPlayer().decreaseMana(spell.getManaCost());
+        }
+        else if (intendedCard instanceof Minion)
+        {
+            Minion minion = ((Minion) battleMap.warriorsOnMap[position.row][position.col]);
+            if (minion == null)
+                throw new InvalidPosition();
+
+            if (minion.getOwnerPlayer().getPlayerCurrentMana() < minion.getManaCost())
+                throw new NotEnoughMana();
+
+            if (minion.getSpecialSpell().getActiveTime() == ActiveTime.onInsert)
+                minion.getSpecialSpell().generalDo(battleMap, battleMap.getPosition(minion));
+
+            battleMap.warriorsOnMap[position.row][position.col] = (Warrior) intendedCard;
+            minion.getOwnerPlayer().decreaseMana(minion.getManaCost());
         }
     }
 
@@ -187,6 +186,7 @@ public abstract class Battle
                 return firstPlayer;
         }
 
+
         private void changeCoolDownRemaining()
         {
             for (Widget[] widgets : battleMap.warriorsOnMap)
@@ -198,6 +198,9 @@ public abstract class Battle
         public void changeTurn()
         {
             turnNumber++;
+
+            battleMap.addCollectibleItemOnMapRandomise(turnNumber % 8);
+
             if (playerHasTurn.equals(firstPlayer))
             {
                 playerHasTurn = secondPlayer;
@@ -210,10 +213,11 @@ public abstract class Battle
                 firstPlayer.setPlayerManaSpace(firstPlayer.getPlayerManaSpace() + 1);
                 firstPlayer.setPlayerCurrentMana(firstPlayer.getPlayerManaSpace());
             }
+
             changeCoolDownRemaining();
-            if (playerHasTurn == AIPlayer.getAIPlayer()){
+
+            if (playerHasTurn == AIPlayer.getInstance().getAIPlayer())
                 AIPlayer.getInstance().doOrder();
-            }
         }
 
         public Player getPlayerHasTurn()
@@ -222,12 +226,11 @@ public abstract class Battle
         }
     }
 
-    public void initialiseBattle(BattleMode battleMode) throws InvalidDeck
+    protected void initialiseBattle() throws InvalidDeck, CloneNotSupportedException
     {
         checkBothPlayersDeckValidity();
-
-        firstPlayer.setCopiedMainDeck(firstPlayer.getMainDeck().getCards());
-        secondPlayer.setCopiedMainDeck(secondPlayer.getMainDeck().getCards());
+        firstPlayer.setCopiedMainDeck(((Player.Deck) firstPlayer.getMainDeck().clone()));
+        secondPlayer.setCopiedMainDeck(((Player.Deck) secondPlayer.getMainDeck().clone()));
         turnHandler.playerHasTurn = firstPlayer;
         setHeroPositionInBeginning();
         setBothPlayersHandInBeginning();
@@ -256,19 +259,19 @@ public abstract class Battle
         if (gameResault == GameResault.UnCertain)
             throw new GameIsNotOver();
 
-        if (gameResault == GameResault.FristPlayerWin)
+        switch (gameResault)
         {
-            firstPlayer.addGameResultToBattleHistories
-                    (secondPlayer, true, TimeHandler.getInstance().getTime());
-            secondPlayer.addGameResultToBattleHistories
-                    (firstPlayer, false, TimeHandler.getInstance().getTime());
-        }
-        else if (gameResault == GameResault.SecondPlayerWin)
-        {
-            secondPlayer.addGameResultToBattleHistories
-                    (firstPlayer, true, TimeHandler.getInstance().getTime());
-            firstPlayer.addGameResultToBattleHistories
-                    (secondPlayer, false, TimeHandler.getInstance().getTime());
+            case FristPlayerWin:
+                firstPlayer.addGameResultToBattleHistories
+                        (secondPlayer, true, TimeHandler.getInstance().getTime());
+                secondPlayer.addGameResultToBattleHistories
+                        (firstPlayer, false, TimeHandler.getInstance().getTime());
+
+            case SecondPlayerWin:
+                secondPlayer.addGameResultToBattleHistories
+                        (firstPlayer, true, TimeHandler.getInstance().getTime());
+                firstPlayer.addGameResultToBattleHistories
+                        (secondPlayer, false, TimeHandler.getInstance().getTime());
         }
     }
 
@@ -278,14 +281,6 @@ public abstract class Battle
     }
 
     public abstract void checkBattleResult() throws GameIsNotOver;
-
-    public void putSpellCardOnMap(Spell spell, Position position) throws NotEnoughMana, InvalidAttack
-    {
-        if (spell.getOwnerPlayer().getPlayerCurrentMana() >= spell.getManaCost())
-            throw new NotEnoughMana();
-
-        spell.initialSpell(battleMap, position);
-    }
 
     public void doWarriorSpell(Warrior warrior, Position position) throws NotEnoughMana, CoolDownRemaining
     {
@@ -300,12 +295,15 @@ public abstract class Battle
         warrior.getOwnerPlayer().decreaseMana(warrior.getSpecialSpell().getManaCost());
     }
 
-    public void winActions(Player player)
+    public void winActions(Player player) throws GameIsNotOver
     {
         player.increaseCash(winnerPrize);
         player.increaseWinNumber();
         getOtherPlayer(player).increasLoseNumber();
-        player.addGameResultToBattleHistories(getOtherPlayer(player), true, TimeHandler.getInstance().getTime());
+        if (firstPlayer.equals(player))
+            addBattleToBattleHistories(GameResault.FristPlayerWin);
+        else
+            addBattleToBattleHistories(GameResault.SecondPlayerWin);
     }
 
     public Player getOtherPlayer(Player player)
@@ -342,10 +340,10 @@ public abstract class Battle
         }
     }
 
-    public void attackActions(Warrior attacker, Warrior defender) throws CantAttack
+    public void attackActions(Warrior attacker, Warrior defender) throws CanNotAttack
     {
         if (!attacker.canAttack())
-            throw new CantAttack();
+            throw new CanNotAttack();
 
         attacker.attack(defender);
         attacker.attackTiredAffect();
@@ -377,8 +375,6 @@ public abstract class Battle
 
         return null;
     }
-
-
 
     public BattleMode getBattleMode()
     {

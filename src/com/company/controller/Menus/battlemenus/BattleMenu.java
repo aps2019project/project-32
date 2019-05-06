@@ -4,6 +4,7 @@ import com.company.controller.Controller;
 import com.company.controller.Exceptions.*;
 import com.company.controller.Menus.AbstractMenu;
 import com.company.controller.Menus.MainMenu;
+import com.company.models.Player;
 import com.company.models.Position;
 import com.company.models.battle.Battle;
 import com.company.models.widget.Widget;
@@ -13,12 +14,14 @@ import com.company.view.View;
 
 public class BattleMenu implements AbstractMenu
 {
-    protected Battle currentBattle;
+    private Battle currentBattle;
 
     protected BattleMenu()
     {
     }
+
     private static BattleMenu battleMenuInstance = new BattleMenu();
+
     public static BattleMenu getInstance()
     {
         return battleMenuInstance;
@@ -61,20 +64,23 @@ public class BattleMenu implements AbstractMenu
 
         else if (command.matches("Insert \\w+ in \\d \\d"))
             insertCard(command);
+
+        else if (command.matches("Determent"))
+            determent();
     }
 
 
     @Override
     public String toShowMenu()
     {
-        return "1.Game Information 2.My Minions 3.Opponent Minions 4.Show Card Information 5.Select 6.Enter GraveYard" +
-                " 7.End Game 8.End Turn 9.Show Collectible 10.Show Hand";
+        return "1.Game Information\n2.My Minions\n3.Opponent Minions\n4.Show Card Information\n5.Select\n6.Enter GraveYard\n" +
+                "7.End Game\n8.End Turn\n9.Show Collectible\n10.Show Hand\n11.Inset\n12.Determent\n";
     }
 
     private void selectActions(int cardID) throws UnSelectable
     {
         Warrior warrior = currentBattle.getBattleMap().selectCard(cardID);
-        if (warrior!=null)
+        if (warrior != null)
         {
             WarriorSelectMenu.getInstance().setCurrentWarrior(warrior);
             Controller.getInstance().changeCurrentMenuTo(WarriorSelectMenu.getInstance());
@@ -123,8 +129,16 @@ public class BattleMenu implements AbstractMenu
 
         currentBattle.getBattleMap().insertCard(intendedCard, position);
         intendedCard.getOwnerPlayer().getPlayerHand().putCardFromHandActions(intendedCard);
-        Battle.getInstance().checkBattleResult();
+        BattleMenu.getInstance().getCurrentBattle().checkBattleResult();
+    }
 
+    public void determent() throws GameIsNotOver
+    {
+        Player determentPlayer = Controller.getInstance().getCurrentPlayer();
+        Player winnerPlayer = currentBattle.getOtherPlayer(determentPlayer);
+        currentBattle.winActions(winnerPlayer);
+        EndGameMenu.getInstance().setWinnerAndLosePlayer(winnerPlayer,determentPlayer);
+        Controller.getInstance().changeCurrentMenuTo(EndGameMenu.getInstance());
     }
 }
 

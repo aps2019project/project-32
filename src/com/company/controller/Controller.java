@@ -12,7 +12,9 @@ public class Controller
     private Controller()
     {
     }
+
     private static Controller controllerInstance = new Controller();
+
     public static Controller getInstance()
     {
         return controllerInstance;
@@ -24,14 +26,16 @@ public class Controller
     public void run()
     {
         currentMenu = EntryMenu.getInstance();
-        ((ShopMenu) ShopMenu.getInstance()).addCardToShop();
+        View.getInstance().show(EntryMenu.getInstance().toShowMenu());
+        ShopMenu.getInstance().initialiseShop();
         while (true)
         {
             String command = Request.getInstance().getNewCommand();
             try
             {
                 currentMenu.selectOptionByCommand(command);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 View.getInstance().show(e.getMessage());
             }

@@ -9,13 +9,15 @@ public abstract class Widget
     protected int ID;
     protected static int idCounter;
 
-    public Widget(String name) {
+    public Widget(String name)
+    {
         this.name = name;
         this.ID = idCounter;
         idCounter++;
     }
 
     public abstract String toShow();
+
     public Player getOwnerPlayer()
     {
         return ownerPlayer;

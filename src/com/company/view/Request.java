@@ -15,7 +15,7 @@ public class Request
         return requestInstance;
     }
 
-    Scanner input = new Scanner(System.in);
+    private Scanner input = new Scanner(System.in);
 
     public String getNewCommand()
     {
