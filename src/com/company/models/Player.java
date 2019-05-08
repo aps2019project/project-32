@@ -22,7 +22,7 @@ public class Player implements Serializable
     {
         this.name = name;
         this.passWord = passWord;
-        cash = 15000;
+        cash = 35000;
         winNumber = 0;
         loseNumber = 0;
     }
@@ -70,7 +70,9 @@ public class Player implements Serializable
 
     public String toShowAllDecks()
     {
-        String allDeck = Controller.getInstance().getCurrentPlayer().getMainDeck().getName();
+        String allDeck = "";
+        if (mainDeck != null)
+            allDeck = mainDeck.toShowDeck();
         for (Player.Deck deck : Controller.getInstance().getCurrentPlayer().getDecks())
             allDeck = allDeck.concat(deck.toShowDeck());
 
@@ -114,21 +116,20 @@ public class Player implements Serializable
 
         public void removeFromCollection(int cardID) throws CardNotFound
         {
-            for (Deck deck : getDecks())
-            {
+            for (Deck deck : decks)
                 if (deck.serchCard(cardID) != null)
                 {
                     deck.removeCardFromDeck(cardID);
                     break;
                 }
-            }
+
             findCardInCollection(cardID).setOwnerPlayer(null);
             getCards().remove(findCardInCollection(cardID));
         }
 
         public String toShowSearchResult(String cardOrItemName) throws CardNotFound
         {
-            Widget intendedWidget = findCardInCollection(Integer.parseInt(cardOrItemName));
+            Widget intendedWidget = findCardInCollection(cardOrItemName);
             if (intendedWidget == null)
                 throw new CardNotFound();
             else
@@ -149,7 +150,7 @@ public class Player implements Serializable
             int count = 0;
             for (Card card : cards)
             {
-                if (card instanceof Spell && ((Spell) card).getType() == Type.Usable)
+                if (card instanceof Passive)
                     count++;
             }
             return count;
@@ -171,7 +172,7 @@ public class Player implements Serializable
             this.passiveItem = passiveItem;
         }
 
-        public Deck(Hero hero,ArrayList<Card> cards,Passive passiveItem)
+        public Deck(Hero hero, ArrayList<Card> cards, Passive passiveItem)
         {
             this.hero = hero;
             this.cards = cards;
@@ -184,14 +185,14 @@ public class Player implements Serializable
             ArrayList<Card> copiedCard = new ArrayList<>();
             for (Card card : cards)
             {
-                if(card instanceof Spell)
+                if (card instanceof Spell)
                     copiedCard.add(((Card) ((Spell) card).clone()));
-                if(card instanceof Minion)
+                if (card instanceof Minion)
                     copiedCard.add(((Card) ((Minion) card).clone()));
             }
             Hero copiedHero = ((Hero) this.hero.clone());
             Passive copiedPassive = ((Passive) this.passiveItem.clone());
-            return new Deck(copiedHero,copiedCard,copiedPassive);
+            return new Deck(copiedHero, copiedCard, copiedPassive);
         }
 
         private String name;
@@ -203,11 +204,17 @@ public class Player implements Serializable
         {
             String deckString = "";
             deckString = deckString.concat(String.format("DeckName : %s", this.name));
-            deckString = deckString.concat("Hero : \n");
-            deckString = deckString.concat(hero.toShow());
 
-            deckString = deckString.concat("PassiveItem : \n");
-            deckString = deckString.concat(passiveItem.toShow());
+            if (hero != null)
+            {
+                deckString = deckString.concat("Hero : \n");
+                deckString = deckString.concat(hero.toShow());
+            }
+            if (passiveItem != null)
+            {
+                deckString = deckString.concat("PassiveItem : \n");
+                deckString = deckString.concat(passiveItem.toShow());
+            }
 
             deckString = deckString.concat("Cards : \n");
             int counter = 1;
@@ -226,17 +233,17 @@ public class Player implements Serializable
                     throw new CardExistInDeckAlready();
                 else
                     cards.add(card);
-            else if (card instanceof Spell && ((Spell) card).getType() == Type.Usable)
+            else if (card instanceof Passive)
                 if (passiveItem != null)
                     throw new DeckHasPassiveAlready();
-                else if (passiveItem.equals(card))
+                else if (passiveItem != null && passiveItem.equals(card))
                     throw new CardExistInDeckAlready();
                 else
-                    passiveItem = ((Spell) card);
+                    passiveItem = ((Passive) card);
             else if (card instanceof Hero)
                 if (hero != null)
                     throw new DeckHasHeroAlready();
-                else if (hero.equals(card))
+                else if (hero != null && hero.equals(card))
                     throw new CardExistInDeckAlready();
                 else
                     hero = ((Hero) card);
@@ -279,16 +286,6 @@ public class Player implements Serializable
             this.hero = hero;
         }
 
-        public  getPassiveItem()
-        {
-            return passiveItem;
-        }
-
-        public void setPassiveItem(Spell passiveItem)
-        {
-            this.passiveItem = passiveItem;
-        }
-
         public String getName()
         {
             return name;
@@ -314,7 +311,7 @@ public class Player implements Serializable
     public class Hand
     {
         private ArrayList<Card> handCards = new ArrayList<>();
-        private ArrayList<Spell> collectedItems; // new in battle and after game going null
+        private ArrayList<Spell> collectedItems = new ArrayList<>(); // new in battle and after game going null
         private Card nextCard;
         private SecureRandom randomMaker = new SecureRandom();
 
@@ -339,18 +336,20 @@ public class Player implements Serializable
             int randomNumber;
             while (counter != 5)
             {
-                randomNumber = randomMaker.nextInt(20);
-                if (copiedMainDeck.get(randomNumber) != null)
+                randomNumber = Math.abs(randomMaker.nextInt()) % 20;
+                if (copiedMainDeck.getCards().get(randomNumber) != null)
                 {
-                    handCards.add(copiedMainDeck.get(randomNumber));
-                    copiedMainDeck.remove(randomNumber);
+                    handCards.add(copiedMainDeck.getCards().get(randomNumber));
+                    copiedMainDeck.getCards().set(randomNumber,null);
                     counter++;
                 }
             }
+            setNextCardInHand();
         }
 
-        public String getRandomCardNameFromHand(){
-            int random = randomMaker.nextInt()%5;
+        public String getRandomCardNameFromHand()
+        {
+            int random = Math.abs(randomMaker.nextInt()) % 5;
             return handCards.get(random).getName();
         }
 
@@ -359,11 +358,11 @@ public class Player implements Serializable
             int randomNumber;
             while (true)
             {
-                randomNumber = randomMaker.nextInt(20);
-                if (copiedMainDeck.get(randomNumber) != null)
+                randomNumber = Math.abs(randomMaker.nextInt()) % 20;
+                if (copiedMainDeck.getCards().get(randomNumber) != null)
                 {
-                    nextCard = copiedMainDeck.get(randomNumber);
-                    copiedMainDeck.remove(randomNumber);
+                    nextCard = copiedMainDeck.getCards().get(randomNumber);
+                    copiedMainDeck.getCards().remove(randomNumber);
                     break;
                 }
             }
@@ -536,6 +535,7 @@ public class Player implements Serializable
         }
     }
 
+
     public String toShowPlayer()
     {
         return String.format
@@ -558,7 +558,8 @@ public class Player implements Serializable
         winNumber++;
     }
 
-    public void increasLoseNumber(){
+    public void increasLoseNumber()
+    {
         loseNumber++;
     }
 

@@ -14,7 +14,7 @@ public class AttackPoint extends Effectable
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException
+    public Object clone() throws CloneNotSupportedException
     {
         return new AttackPoint(changeAttackPoint,turnNumber,pon,activeTime);
     }

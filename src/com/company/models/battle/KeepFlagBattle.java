@@ -6,16 +6,16 @@ import com.company.models.widget.Flag;
 
 public class KeepFlagBattle extends Battle
 {
-    private KeepFlagBattle(Player firstPlayer, Player secondPlayer, int winnerPrize) throws InvalidDeck
+    public KeepFlagBattle(Player firstPlayer, Player secondPlayer, int winnerPrize) throws InvalidDeck, CloneNotSupportedException
     {
         super(firstPlayer, secondPlayer, winnerPrize);
-        initialiseBattle();
         battleMap.spellsAndCollectibleOnMap[2][4] = new Flag();
     }
 
     private static KeepFlagBattle keepFlagBattleInstance;
 
-    public static void setBattle(Player firstPlayer, Player secondPlayer, int winnerPrize) throws InvalidDeck
+    public static void setBattle(Player firstPlayer, Player secondPlayer, int winnerPrize) throws
+            InvalidDeck, CloneNotSupportedException
     {
         keepFlagBattleInstance = new KeepFlagBattle(firstPlayer,secondPlayer,winnerPrize);
     }
@@ -39,7 +39,9 @@ public class KeepFlagBattle extends Battle
     @Override
     public String toShowGameInfo()
     {
-        return null;
+        String toShow = "Battle : KeepFlagBattle\n";
+        toShow = toShow + super.toShowGameInfo();
+        return toShow;
     }
 
     public void dropFlagAfterDead()

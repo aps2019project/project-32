@@ -13,6 +13,7 @@ public class Position
         this.row = row;
         this.col = col;
     }
+
     private static SecureRandom randomMaker = new SecureRandom();
 
     public static Position getRandomFreePosition(Class type)
@@ -21,8 +22,8 @@ public class Position
         int col;
         while (true)
         {
-            row = randomMaker.nextInt() % 5;
-            col = randomMaker.nextInt() % 9;
+            row = Math.abs(randomMaker.nextInt()) % 5;
+            col = Math.abs(randomMaker.nextInt()) % 9;
             if (type == Warrior.class)
             {
                 if (BattleMenu.getInstance().getCurrentBattle().getBattleMap().getWarriorsOnMap()[row][col] == null)
@@ -42,11 +43,11 @@ public class Position
         int col;
         while (true)
         {
-            row = randomMaker.nextInt() % 5;
-            col = randomMaker.nextInt() % 9;
+            row =  Math.abs(randomMaker.nextInt()) % 5;
+            col =  Math.abs(randomMaker.nextInt()) % 9;
 
-            if(BattleMenu.getInstance().getCurrentBattle().getBattleMap().getWarriorsOnMap()[row][col] != null)
-                return new Position(row,col);
+            if (BattleMenu.getInstance().getCurrentBattle().getBattleMap().getWarriorsOnMap()[row][col] != null)
+                return new Position(row, col);
         }
     }
 

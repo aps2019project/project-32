@@ -19,13 +19,19 @@ public class Passive extends Card
     @Override
     public String toShow()
     {
-        return String.format("(Passive) Name : %s - Price : %d - TargetType : %s", name, price, targetType);
+        return String.format("(Passive) Name : %s - SellCost : %d - BuyCost : %d- TargetType : %s\n\n"
+                , name, price / 2, price, targetType);
     }
 
     @Override
     public Object clone() throws CloneNotSupportedException
     {
-        return new Passive(name, price, ((Spell) spell.clone()), foe, targetType);
+        Passive passive = null;
+        passive = new Passive(name, price, ((Spell) spell.clone()), foe, targetType);
+
+        passive.ownerPlayer = this.ownerPlayer;
+
+        return passive;
     }
 
     public Spell getSpell()

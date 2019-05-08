@@ -2,6 +2,7 @@ package com.company.controller.Menus.battlemenus;
 
 import com.company.controller.Controller;
 import com.company.controller.Menus.AbstractMenu;
+import com.company.controller.Menus.MainMenu;
 
 public class StartBattleMenu implements AbstractMenu
 {
@@ -26,14 +27,20 @@ public class StartBattleMenu implements AbstractMenu
             Controller.getInstance().changeCurrentMenuTo(StoryModeMenu.getInstance());
 
         else if (command.matches("Multy Player"))
-        {
-            //TODO
-        }
+            multiPlayer();
+
+        else if (command.matches("Exit"))
+            Controller.getInstance().changeCurrentMenuTo(MainMenu.getInstance());
     }
 
     @Override
     public String toShowMenu()
     {
-        return "1.Story Mode\n2.Custom Game\n3.NetWork Game";
+        return "1.Story Mode\n2.Custom Game\n3.NetWork Game\n4.Exit\n";
+    }
+
+    public void multiPlayer()
+    {
+        //TODO
     }
 }

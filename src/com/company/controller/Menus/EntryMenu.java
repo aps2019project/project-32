@@ -28,13 +28,13 @@ public class EntryMenu implements AbstractMenu
         if (command.matches("Create Account \\w+"))
             entryMenuInstance.register(command);
 
-        else if (command.matches("login \\w+"))
+        else if (command.matches("Login \\w+"))
             entryMenuInstance.login(command);
 
-        else if (command.matches("help"))
+        else if (command.matches("Help"))
             View.getInstance().show(entryMenuInstance.toShowMenu());
 
-        else if (command.matches("exit"))
+        else if (command.matches("Exit"))
             System.exit(0);
     }
 
@@ -61,7 +61,7 @@ public class EntryMenu implements AbstractMenu
                 break;
             }
             else
-                throw new WeekPassword();
+                System.out.println("PassWord is Weak! Please Choose Stronger Password! (Digit LowerCase UpperCase More Than 8 Char)");
         }
     }
 

@@ -1,7 +1,6 @@
 package com.company.models.widget.cards.Warriors;
 
 import com.company.controller.Menus.battlemenus.BattleMenu;
-import com.company.models.Player;
 import com.company.models.Position;
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.spells.ActiveTime;
@@ -20,9 +19,9 @@ public class Warrior extends Card implements Attackable
     protected Spell specialSpell;
     protected Spell passiveSpell;
 
-    protected boolean canMove;
-    protected boolean canAttack;
-    protected ArrayList<Effectable> effectsOnWarrior;
+    protected boolean canMove = true;
+    protected boolean canAttack = true;
+    protected ArrayList<Effectable> effectsOnWarrior = new ArrayList<>();
 
     public Warrior(String name, int price, int health, int power, AttackType attackType, int attackRadius, Spell specialSpell)
     {
@@ -43,15 +42,14 @@ public class Warrior extends Card implements Attackable
     @Override
     public String toShow()
     {
-        return String.format("(Warrior) CardName : %s - CardID : %d - Health : %d - Power : %d\n",
-                this.getName(), this.getID(), this.getHealth(), this.getPower());
+        return String.format("(Warrior) CardName : %s - CardID : %d - Health : %d - Power : %d - ID : %d\n",
+                this.getName(), this.getID(), this.getHealth(), this.getPower(), this.ID);
     }
 
-    public void doOnAttackSpells(Spell spell, Warrior defender)
+    public void doOnAttackSpells(Spell spell, Warrior defender) throws Exception
     {
         Position attackerPosition = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getPosition(this);
         Position defenderPosition = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getPosition(defender);
-
 
         if (spell.getActiveTime() == ActiveTime.onAttack)
         {
@@ -99,61 +97,90 @@ public class Warrior extends Card implements Attackable
         }
     }
 
+    public void doOnDefendSpells(Spell spell, Warrior defender) throws Exception
+    {
+        Position attackerPosition = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getPosition(this);
+        Position defenderPosition = BattleMenu.getInstance().getCurrentBattle().getBattleMap().getPosition(defender);
+
+        if (spell.getActiveTime() == ActiveTime.onDefend)
+        {
+            switch (spell.getFoe())
+            {
+                case enemy:
+
+                    switch (spell.getTargetType())
+                    {
+                        case onMinion:
+                            if (this instanceof Minion)
+                                spell.generalDo(BattleMenu.getInstance().getCurrentBattle().getBattleMap(),
+                                        attackerPosition);
+                            break;
+                        case onHero:
+                            if (this instanceof Hero)
+                                spell.generalDo(BattleMenu.getInstance().getCurrentBattle().getBattleMap(),
+                                        BattleMenu.getInstance().getCurrentBattle().getBattleMap().getHeroPosition
+                                                (defender.ownerPlayer));
+
+                            break;
+                        case onMinionOrHero:
+                            spell.generalDo(BattleMenu.getInstance().getCurrentBattle().getBattleMap(),
+                                    attackerPosition);
+
+                            break;
+                    }
+
+                case friend:
+
+                    switch (spell.getTargetType())
+                    {
+                        case onMinion:
+                            if (defender instanceof Minion)
+                                spell.generalDo(BattleMenu.getInstance().getCurrentBattle().getBattleMap(),
+                                        defenderPosition);
+
+                        case onHero:
+                            if (defender instanceof Hero)
+                                spell.generalDo(BattleMenu.getInstance().getCurrentBattle().getBattleMap(),
+                                        defenderPosition);
+
+                        case onMinionOrHero:
+                            spell.generalDo(BattleMenu.getInstance().getCurrentBattle().getBattleMap(),
+                                    defenderPosition);
+
+                    }
+
+            }
+        }
+    }
+
     @Override
     public void attack(Warrior defender)
     {
-
         defender.health -= this.power;
+        try
+        {
+            for (Effectable effectable : this.effectsOnWarrior)
+                if (effectable.getActiveTime() == ActiveTime.onAttack)
+                    effectable.doEffect(this);
 
-        for (Effectable effectable : this.effectsOnWarrior)
-            if (effectable.getActiveTime() == ActiveTime.onAttack)
-                effectable.doEffect(this);
+            this.effectsOnWarrior.removeIf(effectable -> effectable.getTurnRemaining() == 0);
 
-        this.effectsOnWarrior.removeIf(effectable -> effectable.getTurnRemaining() == 0);
-
-        doOnAttackSpells(specialSpell, defender);
-        doOnAttackSpells(passiveSpell, defender);
-
-        for (Effectable effectable : defender.effectsOnWarrior)
-            if (effectable.getActiveTime() == ActiveTime.onDefend)
-                effectable.doEffect(defender);
-
-        defender.effectsOnWarrior.removeIf(effectable -> effectable.getTurnRemaining() == 0);
+            doOnAttackSpells(specialSpell, defender);
+            doOnAttackSpells(passiveSpell, defender);
 
 
+            for (Effectable effectable : defender.effectsOnWarrior)
+                if (effectable.getActiveTime() == ActiveTime.onDefend)
+                    effectable.doEffect(defender);
 
-        if (defender)
+            defender.effectsOnWarrior.removeIf(effectable -> effectable.getTurnRemaining() == 0);
 
-//        if (this instanceof Minion && ((Minion) this).getMinionSpellType() == MinionSpellType.onAttack)
-//        {
-//            this.getSpecialSpell().doEffectAction(BattleMenu.getAIPlayer().getCurrentBattle().getBattleMap(), defenderPosition);
-//        }
-//        else if (!defender.isDisarm() && defender instanceof Minion && ((Minion) this).getMinionSpellType() == MinionSpellType.OnDefense)
-//        {
-//            if (defender.getSpecialSpell().getSpellTypes().contains(SpellType.enemy))
-//                defender.getSpecialSpell().doEffectAction(BattleMenu.getAIPlayer().getCurrentBattle().getBattleMap(), attackerPosition);
-//            if (defender.getSpecialSpell().getSpellTypes().contains(SpellType.friend))
-//                defender.getSpecialSpell().doEffectAction(BattleMenu.getAIPlayer().getCurrentBattle().getBattleMap(), defenderPosition);
-//
-//        }
-//        if (!defender.isDisarm() && defender.getAttackType() == AttackType.Melee)
-//        {
-//            if (attackerPosition.col - defenderPosition.col == 1 || attackerPosition.row - defenderPosition.row == 1)
-//            {
-//                this.changeHealth(-defender.getPower());
-//            }
-//        }
-//        else if (!defender.isDisarm() && defender.getAttackType() == AttackType.Hybrid)
-//        {
-//            this.changeHealth(-defender.getPower());
-//        }
-//        else if (!defender.isDisarm() && defender.getAttackType() == AttackType.Ranged)
-//        {
-//            if (attackerPosition.col - defenderPosition.col != 1 && attackerPosition.row - defenderPosition.row != 1)
-//            {
-//                this.changeHealth(-defender.getPower());
-//            }
-//        }
+            doOnDefendSpells(defender.specialSpell, defender);
+            doOnDefendSpells(defender.passiveSpell, defender);
+        }
+        catch (Exception ignored)
+        {
+        }
     }
 
     public boolean isDead()

@@ -23,7 +23,7 @@ public class StoryModeMenu implements AbstractMenu
     }
 
     @Override
-    public void selectOptionByCommand(String command) throws CloneNotSupportedException
+    public void selectOptionByCommand(String command) throws CloneNotSupportedException, InvalidDeck
     {
         if (command.matches("Step 1") || command.matches("Step 2") || command.matches("Step 3"))
             startStoryModeGame(Integer.parseInt(command.split(" ")[1]));

@@ -31,7 +31,7 @@ public class EndGameMenu implements AbstractMenu
     @Override
     public String toShowMenu()
     {
-        return winnerPlayer.getName() + "Has Won\n" + loserPlayer.getName() + "Has Lost\n\n" + "1.Exit\n";
+        return winnerPlayer.getName() + " has Won!\n" + loserPlayer.getName() + " has Lost!\n" + "1.Exit\n";
     }
 
     public Player getWinnerPlayer()

@@ -1,7 +1,9 @@
 package com.company.models.battle;
 
+import com.company.controller.Controller;
 import com.company.controller.Exceptions.*;
 import com.company.controller.Menus.ShopMenu;
+import com.company.controller.Menus.battlemenus.EndGameMenu;
 import com.company.models.AIPlayer;
 import com.company.models.Player;
 import com.company.models.Position;
@@ -14,6 +16,7 @@ import com.company.models.widget.cards.Warriors.Warrior;
 import com.company.models.widget.cards.spells.ActiveTime;
 import com.company.models.widget.cards.spells.Spell;
 import com.company.models.widget.cards.spells.Type;
+import com.company.models.widget.cards.spells.effects.Effectable;
 
 import java.security.SecureRandom;
 
@@ -39,17 +42,10 @@ public abstract class Battle
     private SecureRandom randomMaker = new SecureRandom();
     protected int winnerPrize;
 
-    public void addPassiveSpells() throws CloneNotSupportedException
-    {
-        firstPlayer.addPassiveOnPlayerCards();
-        secondPlayer.addPassiveOnPlayerCards();
-    }
-
     public class Map
     {
         Map()
         {
-            addCollectibleItemOnMapRandomise(0);
         }
 
         protected Warrior[][] warriorsOnMap = new Warrior[5][9];
@@ -74,10 +70,10 @@ public abstract class Battle
 
         public void removeDeadCardFromMap(Card intendedDeadCard)
         {
-            for (Widget[] cards : warriorsOnMap)
-                for (Widget card : cards)
-                    if (intendedDeadCard.equals(card))
-                        card = null;
+            for (int i = 0; i < 5; i++)
+                for (int j = 0; j < 9; j++)
+                    if (intendedDeadCard.equals(warriorsOnMap[i][j]))
+                        warriorsOnMap[i][j] = null;
         }
 
         public Warrior selectCard(int cardID)
@@ -90,16 +86,11 @@ public abstract class Battle
             return null;
         }
 
-        public void addBuffRandomise()
-        {
-            //TODO
-        }
-
         public Position getPosition(Widget widget)
         {
             for (int i = 0; i < 9; i++)
                 for (int j = 0; j < 5; j++)
-                    if (warriorsOnMap[j][i].equals(widget))
+                    if (warriorsOnMap[j][i] != null && warriorsOnMap[j][i].equals(widget))
                         return new Position(j, i);
 
             return null;
@@ -111,14 +102,15 @@ public abstract class Battle
             for (int i = 0; i < 9; i++)
                 for (int j = 0; j < 5; j++)
                 {
-                    Warrior widget = warriorsOnMap[j][i];
-                    if (widget.getOwnerPlayer().equals(intendedPlayer))
-                        widgetsString = widgetsString.concat(String.format("(Warrior) %s - Location (%d,%d)\n",
-                                widget.toShow(), i, j));
+                    Warrior warrior = warriorsOnMap[j][i];
+                    if (warrior != null && warrior.getOwnerPlayer().equals(intendedPlayer))
+                        widgetsString = widgetsString.concat(String.format("(Warrior) %s - Location (%d,%d)\n\n",
+                                warrior.toShow(), i, j));
 
                     Widget item = spellsAndCollectibleOnMap[j][i];
-                    widgetsString = widgetsString.concat(String.format
-                            ("(Collectible) CardName : %s - Location (%d,%d)", item.getName(), i, j));
+                    if (item != null)
+                        widgetsString = widgetsString.concat(String.format
+                                ("(Collectible) CardName : %s - Location (%d,%d)\n\n", item.getName(), i, j));
                 }
 
             return widgetsString;
@@ -135,7 +127,7 @@ public abstract class Battle
         }
     }
 
-    public void insertCard(Card intendedCard, Position position) throws InvalidPosition, NotEnoughMana
+    public void insertCard(Card intendedCard, Position position) throws Exception
     {
         if (intendedCard instanceof Spell)
         {
@@ -145,37 +137,38 @@ public abstract class Battle
 
             spell.generalDo(battleMap, position);
             spell.getOwnerPlayer().decreaseMana(spell.getManaCost());
+
         }
         else if (intendedCard instanceof Minion)
         {
             Minion minion = ((Minion) battleMap.warriorsOnMap[position.row][position.col]);
-            if (minion == null)
+            if (minion != null)
                 throw new InvalidPosition();
 
-            if (minion.getOwnerPlayer().getPlayerCurrentMana() < minion.getManaCost())
+            if (intendedCard.getOwnerPlayer().getPlayerCurrentMana() < ((Minion) intendedCard).getManaCost())
                 throw new NotEnoughMana();
 
-            if (minion.getSpecialSpell().getActiveTime() == ActiveTime.onInsert)
-                minion.getSpecialSpell().generalDo(battleMap, battleMap.getPosition(minion));
+            if ((((Minion) intendedCard).getSpecialSpell() != null && ((Minion) intendedCard).getSpecialSpell().getActiveTime() == ActiveTime.onInsert))
+                ((Minion) intendedCard).getSpecialSpell().generalDo(battleMap, battleMap.getPosition(minion));
 
             battleMap.warriorsOnMap[position.row][position.col] = (Warrior) intendedCard;
-            minion.getOwnerPlayer().decreaseMana(minion.getManaCost());
+            intendedCard.getOwnerPlayer().decreaseMana(((Minion) intendedCard).getManaCost());
         }
+
+        checkDeadActions();
+        checkBattleResult();
     }
 
     public class TurnHandler
     {
+        int firstPlayerHasFlagTurnNumber;
+        int secondPlayerHasFlagTurnNumber;
         Player playerHasTurn;
         int turnNumber;
 
         public int getTurnNumber()
         {
             return turnNumber;
-        }
-
-        public void setTurnNumber(int turnNumber)
-        {
-            this.turnNumber = turnNumber;
         }
 
         public Player getPlayerInRest()
@@ -186,20 +179,21 @@ public abstract class Battle
                 return firstPlayer;
         }
 
-
         private void changeCoolDownRemaining()
         {
             for (Widget[] widgets : battleMap.warriorsOnMap)
                 for (Widget widget : widgets)
                     if (widget instanceof Warrior)
-                        ((Warrior) widget).getSpecialSpell().decreaseCoolDownRemaining();
+                        if (((Warrior) widget).getSpecialSpell() != null)
+                            ((Warrior) widget).getSpecialSpell().decreaseCoolDownRemaining();
         }
 
-        public void changeTurn()
+        public void changeTurn() throws Exception
         {
             turnNumber++;
 
-            battleMap.addCollectibleItemOnMapRandomise(turnNumber % 8);
+            if (turnNumber % 2 == 0)
+                battleMap.addCollectibleItemOnMapRandomise(turnNumber % 8);
 
             if (playerHasTurn.equals(firstPlayer))
             {
@@ -216,8 +210,37 @@ public abstract class Battle
 
             changeCoolDownRemaining();
 
+            doPerTurnActions();
+
+            setCanMoveAndAttack();
+
+            checkDeadActions();
+
+            checkBattleResult();
+
             if (playerHasTurn == AIPlayer.getInstance().getAIPlayer())
+            {
                 AIPlayer.getInstance().doOrder();
+                changeTurn();
+            }
+        }
+
+        public void doPerTurnActions()
+        {
+            for (int i = 0; i < 5; i++)
+                for (int j = 0; j < 9; j++)
+                {
+                    Warrior warriorInPosition = battleMap.warriorsOnMap[i][j];
+                    if (warriorInPosition != null)
+                    {
+                        for (Effectable effectable : warriorInPosition.getEffectsOnWarrior())
+                            if (effectable != null && effectable.getActiveTime() == ActiveTime.perTurn)
+                                effectable.doEffect(warriorInPosition);
+
+                        warriorInPosition.getEffectsOnWarrior().removeIf(effectable -> effectable.getTurnRemaining() == 0);
+                    }
+                }
+            //
         }
 
         public Player getPlayerHasTurn()
@@ -226,11 +249,27 @@ public abstract class Battle
         }
     }
 
+    public void setCanMoveAndAttack()
+    {
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 5; j++)
+                if (battleMap.warriorsOnMap[j][i] != null)
+                {
+                    battleMap.warriorsOnMap[j][i].setCanMove(true);
+                    battleMap.warriorsOnMap[j][i].setCanAttack(true);
+                }
+    }
+
+
     protected void initialiseBattle() throws InvalidDeck, CloneNotSupportedException
     {
         checkBothPlayersDeckValidity();
         firstPlayer.setCopiedMainDeck(((Player.Deck) firstPlayer.getMainDeck().clone()));
         secondPlayer.setCopiedMainDeck(((Player.Deck) secondPlayer.getMainDeck().clone()));
+        firstPlayer.setPlayerManaSpace(7);
+        secondPlayer.setPlayerManaSpace(7);
+        firstPlayer.setPlayerCurrentMana(firstPlayer.getPlayerManaSpace());
+        secondPlayer.setPlayerCurrentMana(secondPlayer.getPlayerManaSpace());
         turnHandler.playerHasTurn = firstPlayer;
         setHeroPositionInBeginning();
         setBothPlayersHandInBeginning();
@@ -245,7 +284,7 @@ public abstract class Battle
     private void setHeroPositionInBeginning()
     {
         battleMap.warriorsOnMap[2][0] = firstPlayer.getMainDeck().getHero();
-        battleMap.warriorsOnMap[2][9] = secondPlayer.getMainDeck().getHero();
+        battleMap.warriorsOnMap[2][8] = secondPlayer.getMainDeck().getHero();
     }
 
     private void setBothPlayersHandInBeginning()
@@ -254,11 +293,8 @@ public abstract class Battle
         secondPlayer.getPlayerHand().makeRandomiseHand();
     }
 
-    protected void addBattleToBattleHistories(GameResault gameResault) throws GameIsNotOver
+    protected void addBattleToBattleHistories(GameResault gameResault)
     {
-        if (gameResault == GameResault.UnCertain)
-            throw new GameIsNotOver();
-
         switch (gameResault)
         {
             case FristPlayerWin:
@@ -275,14 +311,9 @@ public abstract class Battle
         }
     }
 
-    public String toShowEndGameDetails()
-    {
-        return new String("a");
-    }
+    public abstract void checkBattleResult();
 
-    public abstract void checkBattleResult() throws GameIsNotOver;
-
-    public void doWarriorSpell(Warrior warrior, Position position) throws NotEnoughMana, CoolDownRemaining
+    public void doWarriorSpell(Warrior warrior, Position position) throws Exception
     {
         if (warrior.getOwnerPlayer().getPlayerCurrentMana() < warrior.getSpecialSpell().getManaCost())
             throw new NotEnoughMana();
@@ -290,20 +321,27 @@ public abstract class Battle
         else if (warrior.getSpecialSpell().getCoolDownRemaining() >= 0)
             throw new CoolDownRemaining();
 
-        //TODO
-        //warrior.getSpecialSpell().doEffectAction(battleMap, position);
+        warrior.getSpecialSpell().generalDo(battleMap, position);
         warrior.getOwnerPlayer().decreaseMana(warrior.getSpecialSpell().getManaCost());
+        checkDeadActions();
     }
 
-    public void winActions(Player player) throws GameIsNotOver
+    public void winActions(Player player)
     {
         player.increaseCash(winnerPrize);
         player.increaseWinNumber();
         getOtherPlayer(player).increasLoseNumber();
+
+        firstPlayer.getPlayerHand().getCollectedItems().clear();
+        secondPlayer.getPlayerHand().getCollectedItems().clear();
+
         if (firstPlayer.equals(player))
             addBattleToBattleHistories(GameResault.FristPlayerWin);
         else
             addBattleToBattleHistories(GameResault.SecondPlayerWin);
+
+        EndGameMenu.getInstance().setWinnerAndLosePlayer(player, getOtherPlayer(player));
+        Controller.getInstance().changeCurrentMenuTo(EndGameMenu.getInstance());
     }
 
     public Player getOtherPlayer(Player player)
@@ -328,7 +366,6 @@ public abstract class Battle
 
         battleMap.warriorsOnMap[destinationPosition.row][destinationPosition.col] = intendedWarrior;
         battleMap.spellsAndCollectibleOnMap[destinationPosition.row][destinationPosition.col] = null;
-        battleMap.warriorsOnMap[destinationPosition.row][destinationPosition.col] = null;
     }
 
     public void collect(Card intendedCard, Widget widget)
@@ -340,45 +377,81 @@ public abstract class Battle
         }
     }
 
-    public void attackActions(Warrior attacker, Warrior defender) throws CanNotAttack
+    public void attackActions(Warrior attacker, Warrior defender) throws Exception
     {
         if (!attacker.canAttack())
             throw new CanNotAttack();
 
         attacker.attack(defender);
         attacker.attackTiredAffect();
-        checkDeadActions(attacker, defender);
+        checkDeadActions();
+        checkBattleResult();
     }
 
-    public void checkDeadActions(Warrior... warriors)
+    private void checkDeadActions() throws Exception
     {
-        for (Warrior warrior : warriors)
-            if (warrior.isDead())
+        for (int i = 0; i < 5; i++)
+            for (int j = 0; j < 9; j++)
             {
-                warrior.getOwnerPlayer().getGraveYard().getGraveYardList().add(warrior);
-                battleMap.removeDeadCardFromMap(warrior);
-            }
-    }
+                Warrior warrior = battleMap.warriorsOnMap[i][j];
+                if (warrior != null && warrior.isDead())
+                {
+                    doOnDeathSpells(warrior.getSpecialSpell(), warrior);
+                    doOnDeathSpells(warrior.getPassiveSpell(), warrior);
 
-    public Warrior getRandomWarrior(Player player, SpellType spellType)
-    {
-        for (int i = 0; i < 9; i++)
-            for (int j = 0; j < 5; j++)
-            {
-                Warrior warrior = battleMap.warriorsOnMap[j][i];
-                if ((spellType == SpellType.onFriend) && warrior.getOwnerPlayer().equals(player))
-                    return warrior;
+                    warrior.getOwnerPlayer().getGraveYard().getGraveYardList().add(warrior);
+                    battleMap.removeDeadCardFromMap(warrior);
+                }
 
-                if ((spellType == SpellType.onEnemy) && !warrior.getOwnerPlayer().equals(player))
-                    return warrior;
             }
 
-        return null;
     }
 
-    public BattleMode getBattleMode()
+    public void doOnDeathSpells(Spell spell, Warrior warrior) throws Exception
     {
-        return battleMode;
+        if (spell.getActiveTime() == ActiveTime.onDeath)
+        {
+            switch (spell.getFoe())
+            {
+                case enemy:
+
+                    switch (spell.getTargetType())
+                    {
+                        case onHero:
+                            spell.generalDo
+                                    (battleMap, battleMap.getHeroPosition(getOtherPlayer(warrior.getOwnerPlayer())));
+
+                            break;
+
+                        case onMinion:
+                        case onPlayer:
+                        case onMinionOrHero:
+                            spell.generalDo
+                                    (battleMap, battleMap.getPosition(warrior));
+
+                            break;
+                    }
+
+                case friend:
+
+                    switch (spell.getTargetType())
+                    {
+                        case onHero:
+                            spell.generalDo(battleMap, battleMap.getHeroPosition(warrior.getOwnerPlayer()));
+
+                            break;
+                        case onMinion:
+                        case onMinionOrHero:
+                        case onPlayer:
+                            spell.generalDo
+                                    (battleMap, battleMap.getPosition(warrior));
+
+                            break;
+                    }
+
+
+            }
+        }
     }
 
     public Map getBattleMap()
@@ -386,21 +459,24 @@ public abstract class Battle
         return battleMap;
     }
 
-    public Player getFirstPlayer()
-    {
-        return firstPlayer;
-    }
-
-    public Player getSecondPlayer()
-    {
-        return secondPlayer;
-    }
-
     public TurnHandler getTurnHandler()
     {
         return turnHandler;
     }
 
-    public abstract String toShowGameInfo();
+    public String toShowGameInfo()
+    {
+        String gameInfoString = "";
+
+        gameInfoString = gameInfoString.concat
+                (firstPlayer.getName() + " Hero Health is " + firstPlayer.getMainDeck().getHero().getHealth() + "\n");
+        gameInfoString = gameInfoString.concat
+                (secondPlayer.getName() + " Hero Health is " + secondPlayer.getMainDeck().getHero().getHealth() + "\n");
+
+        gameInfoString = gameInfoString.concat
+                (turnHandler.playerHasTurn.getName() + " Mana Point is " + turnHandler.playerHasTurn.getPlayerCurrentMana());
+
+        return gameInfoString;
+    }
 
 }

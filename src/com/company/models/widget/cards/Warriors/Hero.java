@@ -12,13 +12,28 @@ public class Hero extends Warrior
     @Override
     public Object clone() throws CloneNotSupportedException
     {
-        return new Hero(name, power, health, price, attackType, attackRadius, ((Spell) specialSpell.clone()));
+        Hero hero = null;
+
+        if (this.getSpecialSpell() != null)
+            hero = new Hero(name, power, health, price, attackType, attackRadius, ((Spell) specialSpell.clone()));
+        else
+            hero = new Hero(name, power, health, price, attackType, attackRadius, null);
+
+        hero.ownerPlayer = this.ownerPlayer;
+
+        return hero;
     }
 
     public String toShow()
     {
-        return String.format("(Hero) Name : %s - AP : %d - HP : %d - Class : %s SellCost : %d - BuyCost : %d - SpecialSpellCD : %d\n",
-                this.name, this.power, this.health,
-                this.attackType.toString(), this.price / 2, this.price, this.getSpecialSpell().getCoolDown());
+        String show = String.format("(Hero) Name : %s - AP : %d - HP : %d - Class : %s SellCost : %d - BuyCost : %d - CardID : %d - ",
+                this.name, this.power, this.health, this.attackType.toString(), this.price / 2, this.price, this.ID);
+
+        if (specialSpell == null)
+            show = show.concat(String.format("No SpecialSpell\n"));
+        else
+            show = show.concat(String.format("SpecialSpellCD : %d\n", specialSpell.getCoolDown()));
+
+        return show;
     }
 }

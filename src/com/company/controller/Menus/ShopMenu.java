@@ -5,7 +5,6 @@ import com.company.controller.Exceptions.CantAddUsableItems;
 import com.company.controller.Exceptions.CardNotFound;
 import com.company.controller.Exceptions.NotEnoughCash;
 import com.company.models.Player;
-import com.company.models.battle.Battle;
 import com.company.models.widget.cards.Card;
 import com.company.models.widget.cards.Warriors.AttackType;
 import com.company.models.widget.cards.Warriors.Hero;
@@ -21,7 +20,9 @@ public class ShopMenu implements AbstractMenu
     private ShopMenu()
     {
     }
+
     private static ShopMenu shopMenuInstance = new ShopMenu();
+
     public static ShopMenu getInstance()
     {
         return shopMenuInstance;
@@ -121,13 +122,9 @@ public class ShopMenu implements AbstractMenu
     private String showCards()
     {
         String total = "";
-        int counter = 1;
         for (Card card : shopCards)
-        {
-            total = total.concat(counter + " ");
             total = total.concat(card.toShow() + "\n");
-            counter++;
-        }
+
         return total;
     }
 
@@ -223,6 +220,8 @@ public class ShopMenu implements AbstractMenu
 
         shopCards.add(ghooleTakCheshm);
 
+        shopCards.add(removeGoodOneDispel);
+
         shopCards.add(mareSammi);
 
         shopCards.add(ejdehayeAtashAndaz);
@@ -302,8 +301,6 @@ public class ShopMenu implements AbstractMenu
         shopCards.add(ghosleTamid);
 
         collectibleCards.add(shamshireChini);
-
-        shopCards.add(removeGoodOneDispel);
 
     }
 
@@ -418,7 +415,8 @@ public class ShopMenu implements AbstractMenu
     //
     private Minion pahlavaneFars = new Minion("PahlavaneFars", 9, 6, 24, 600, AttackType.Melee, 1,
             new Spell(Area.onOneTarget, FOE.enemy, TargetType.onMinionOrHero, ActiveTime.onAttack, Type.SpecialSpell, "SP", 0, 0, 0, 1,
-                    new HealthPoint(Battle.getInstance().getTurnHandler().getTurnNumber() / 2, 1, PON.Negative, ActiveTime.perTurn)));
+                    new HealthPoint
+                            (-3, 1, PON.Negative, ActiveTime.perTurn)));
 
     //
     private Minion sepahSalar = new Minion("SepahSalarFars", 7, 4, 12, 800, AttackType.Melee, 1,

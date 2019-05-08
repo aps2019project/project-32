@@ -4,13 +4,13 @@ import com.company.controller.Exceptions.InvalidDeck;
 import com.company.models.Player;
 import com.company.models.Position;
 import com.company.models.widget.Flag;
+import com.company.models.widget.cards.spells.Spell;
 
 public class CollectFlagBattle extends Battle
 {
-    private CollectFlagBattle(Player firstPlayer, Player secondPlayer, int winnerPrize, int flagNumbers) throws InvalidDeck
+    public CollectFlagBattle(Player firstPlayer, Player secondPlayer, int winnerPrize, int flagNumbers) throws InvalidDeck, CloneNotSupportedException
     {
         super(firstPlayer, secondPlayer, winnerPrize);
-        initialiseBattle();
         this.flagNumbers = flagNumbers;
         addFlagsToMap();
     }
@@ -18,7 +18,7 @@ public class CollectFlagBattle extends Battle
     private static CollectFlagBattle collectFlagBattleInstance;
 
 
-    public static void setBattle(Player firstPlayer, Player secondPlayer, int winnerPrize, int flagNumbers) throws InvalidDeck
+    public static void setBattle(Player firstPlayer, Player secondPlayer, int winnerPrize, int flagNumbers) throws InvalidDeck, CloneNotSupportedException
     {
         collectFlagBattleInstance = new CollectFlagBattle(firstPlayer, secondPlayer, winnerPrize, flagNumbers);
     }
@@ -43,14 +43,16 @@ public class CollectFlagBattle extends Battle
     @Override
     public String toShowGameInfo()
     {
-        return null;
+        String toShow = "Battle : CollectFlagBattle\n";
+        toShow = toShow + super.toShowGameInfo();
+        return toShow;
     }
 
     private void addFlagsToMap()
     {
         for (int i = 0; i < flagNumbers; i++)
         {
-            Position randomPosition = Position.getRandomFreePosition();
+            Position randomPosition = Position.getRandomFreePosition(Spell.class);
             battleMap.getSpellsAndCollectibleOnMap()[randomPosition.row][randomPosition.col] = new Flag();
         }
     }

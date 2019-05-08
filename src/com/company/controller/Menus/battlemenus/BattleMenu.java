@@ -28,9 +28,12 @@ public class BattleMenu implements AbstractMenu
     }
 
     @Override
-    public void selectOptionByCommand(String command) throws UnSelectable, CardNotFound, InvalidPosition, InvalidTargetException, InvalidAttackException, OpponentMinionIsUnvalidForAttack, InvalidWarriorForAttack, CoolDownRemaining, NotEnoughMana, GameIsNotOver
+    public void selectOptionByCommand(String command) throws Exception
     {
-        if (command.matches("Game Information"))
+        if(command.matches("Help"))
+            View.getInstance().show(toShowMenu());
+
+        else if (command.matches("Game Information"))
             View.getInstance().show(currentBattle.toShowGameInfo());
 
         else if (command.matches("Show My Minions"))
@@ -73,16 +76,18 @@ public class BattleMenu implements AbstractMenu
     @Override
     public String toShowMenu()
     {
-        return "1.Game Information\n2.My Minions\n3.Opponent Minions\n4.Show Card Information\n5.Select\n6.Enter GraveYard\n" +
+        return "0.Help\n1.Game Information\n2.My Minions\n3.Opponent Minions\n4.Show Card Information\n5.Select\n6.Enter GraveYard\n" +
                 "7.End Game\n8.End Turn\n9.Show Collectible\n10.Show Hand\n11.Inset\n12.Determent\n";
     }
 
-    private void selectActions(int cardID) throws UnSelectable
+    public void selectActions(int cardID) throws UnSelectable
     {
         Warrior warrior = currentBattle.getBattleMap().selectCard(cardID);
-        if (warrior != null)
+        if (warrior != null && BattleMenu.getInstance().getCurrentBattle()
+                .getTurnHandler().getPlayerHasTurn() == warrior.getOwnerPlayer())
         {
             WarriorSelectMenu.getInstance().setCurrentWarrior(warrior);
+            WarriorSelectMenu.getInstance().setCurrentBattle(this.currentBattle);
             Controller.getInstance().changeCurrentMenuTo(WarriorSelectMenu.getInstance());
         }
         else
@@ -101,11 +106,6 @@ public class BattleMenu implements AbstractMenu
         return currentBattle.getTurnHandler().getPlayerHasTurn().getPlayerHand().toShowHand(); //send to view
     }
 
-    public String toShowEndGameInfo()
-    {
-        return currentBattle.toShowEndGameDetails();
-    }
-
     public Battle getCurrentBattle()
     {
         return currentBattle;
@@ -116,7 +116,7 @@ public class BattleMenu implements AbstractMenu
         BattleMenu.getInstance().currentBattle = currentBattle;
     }
 
-    public void insertCard(String command) throws CardNotFound, InvalidPosition, GameIsNotOver
+    public void insertCard(String command) throws Exception
     {
         String cardName = command.split(" ")[1];
         int row = Integer.parseInt(command.split(" ")[4]);
@@ -127,18 +127,16 @@ public class BattleMenu implements AbstractMenu
         if (intendedCard == null)
             throw new CardNotFound();
 
-        currentBattle.getBattleMap().insertCard(intendedCard, position);
+        currentBattle.insertCard(intendedCard,position);
         intendedCard.getOwnerPlayer().getPlayerHand().putCardFromHandActions(intendedCard);
         BattleMenu.getInstance().getCurrentBattle().checkBattleResult();
     }
 
-    public void determent() throws GameIsNotOver
+    public void determent()
     {
         Player determentPlayer = Controller.getInstance().getCurrentPlayer();
         Player winnerPlayer = currentBattle.getOtherPlayer(determentPlayer);
         currentBattle.winActions(winnerPlayer);
-        EndGameMenu.getInstance().setWinnerAndLosePlayer(winnerPlayer,determentPlayer);
-        Controller.getInstance().changeCurrentMenuTo(EndGameMenu.getInstance());
     }
 }
 

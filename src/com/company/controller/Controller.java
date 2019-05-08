@@ -26,8 +26,11 @@ public class Controller
     public void run()
     {
         currentMenu = EntryMenu.getInstance();
+
         View.getInstance().show(EntryMenu.getInstance().toShowMenu());
+
         ShopMenu.getInstance().initialiseShop();
+
         while (true)
         {
             String command = Request.getInstance().getNewCommand();
@@ -35,9 +38,9 @@ public class Controller
             {
                 currentMenu.selectOptionByCommand(command);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                View.getInstance().show(e.getMessage());
+                View.getInstance().show(ex.getMessage());
             }
         }
     }

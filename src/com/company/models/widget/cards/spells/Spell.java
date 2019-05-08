@@ -1,6 +1,5 @@
 package com.company.models.widget.cards.spells;
 
-import com.company.controller.Exceptions.InvalidAttack;
 import com.company.controller.Exceptions.InvalidPosition;
 import com.company.controller.Menus.battlemenus.BattleMenu;
 import com.company.models.Position;
@@ -13,7 +12,6 @@ import com.company.models.widget.cards.spells.effects.Effectable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class Spell extends Card
 {
@@ -27,7 +25,7 @@ public class Spell extends Card
     private TargetType targetType;
     private ActiveTime activeTime;
     private Area area;
-    private ArrayList<Effectable> effects;
+    private ArrayList<Effectable> effects = new ArrayList<>();
 
     public Spell(Area area, FOE foe, TargetType targetType, ActiveTime activeTime, Type type, String name, int price, int manaCost, int coolDown, int spellRange, Effectable... effectables)
     {
@@ -40,7 +38,7 @@ public class Spell extends Card
         this.coolDown = coolDown;
         this.spellRange = spellRange;
         this.type = type;
-        Collections.addAll(effects, effectables);
+        effects.addAll(Arrays.asList(effectables));
     }
 
     @Override
@@ -50,8 +48,12 @@ public class Spell extends Card
         for (Effectable effect : effects)
             clonedEffects.add(((Effectable) effect.clone()));
 
-        return new Spell(area, foe, targetType, activeTime, type, name, price, manaCost, coolDown, spellRange,
+        Spell spell = new Spell(area, foe, targetType, activeTime, type, name, price, manaCost, coolDown, spellRange,
                 clonedEffects.toArray(new Effectable[0]));
+
+        spell.ownerPlayer = this.ownerPlayer;
+
+        return spell;
     }
 
     @Override
@@ -60,10 +62,11 @@ public class Spell extends Card
         return String.format("(Spell) - Name : %s – " +
                 "MP : %d - CoolDown : %d - " +
                 "Sell Cost : %d - " +
-                "Buy Cost : %d \n", this.name, this.manaCost, this.coolDown, this.price / 2, this.price);
+                "Buy Cost : %d - " +
+                "ID : %d\n", this.name, this.manaCost, this.coolDown, this.price / 2, this.price, this.ID);
     }
 
-    public void generalDo(Battle.Map map, Position generalPosition)
+    public void generalDo(Battle.Map map, Position generalPosition) throws Exception
     {
         doForArea(map, generalPosition);
     }
@@ -216,88 +219,10 @@ public class Spell extends Card
         effects.removeIf(effectable -> effectable.getTurnRemaining() == 0);
     }
 
-//    private void doForArea(Battle.Map map, Warrior warrior)
-//    {
-//
-//
-//    }
-
-
-//    public void doOnADP(Warrior warrior) // for onAttack onDefend Passive
-//    {
-//        addEffectsAndDoOnce(warrior);
-//    }
-
-
-//    public void initialSpell(Battle.Map map, Position position) throws InvalidAttack
-//    {
-//        Warrior warrior = map.getWarriorsOnMap()[position.row][position.col];
-//        if (target == Target.CellEffect)
-//        {
-//            doForArea(map, position);
-//            doForArea(map, position);
-//        }
-//        else if (target == Target.OnWarrior && warrior != null)
-//        {
-//            checkWarriorTarget(warrior);
-//            doForArea(map, position);
-//            addToWarrior(warrior);
-//        }
-//        else
-//        {
-//            // invalid attack
-//        }
-//    }
-
-//    public void initialSpell()
-//    {
-//        if (type == Type.Usable)
-//        {
-//
-//        }
-//        else if (type == Type.Collectible)
-//        {
-//            checkKindOfCollectible();
-//        }
-//    }
-
-//    private void checkKindOfCollectible()
-//    {
-//        if (spellTypes.contains(SpellType.randomWarrior))
-//        {
-//            checkEnemyOrFriend();
-//        }
-//        else if (spellTypes.contains(SpellType.changeMana))
-//        {
-//            effects.get(0).doEffect(Battle.getAIPlayer().getRandomWarrior(this.ownerPlayer, SpellType.onFriend));
-//        }
-//    }
-
-//    private void checkEnemyOrFriend()
-//    {
-//        if (spellTypes.contains(SpellType.friend))
-//        {
-//            doEffectOnRandomWarrior(SpellType.friend);
-//        }
-//        else if (spellTypes.contains(SpellType.enemy))
-//        {
-//            doEffectOnRandomWarrior(SpellType.enemy);
-//        }
-//    }
-//    private void doForArea(Battle.Map map, Position position)
-//    {
-//        for (int i = 0; i < spellRange; i++)
-//            for (int j = 0; j < spellRange; j++)
-//            {
-//                Position newPosition = new Position(position.row + i, position.col + j);
-//                map.getSpellsAndCollectibleOnMap()[newPosition.row][newPosition.col] = new Spell(this);
-//            }
-//    }
-
-    private void addToWarrior(Warrior warrior)
+    private void addToWarrior(Warrior warrior) throws CloneNotSupportedException
     {
         for (Effectable effect : this.effects)
-            warrior.getEffectsOnWarrior().add(effect.clone());
+            warrior.getEffectsOnWarrior().add(((Effectable) effect.clone()));
     }
 
     public int getManaCost()
@@ -317,7 +242,8 @@ public class Spell extends Card
 
     public void decreaseCoolDownRemaining()
     {
-        coolDownRemaining--;
+        if (coolDownRemaining != 0)
+            coolDownRemaining--;
     }
 
     public void setCoolDownRemaining(int coolDownRemaining)

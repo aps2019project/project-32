@@ -32,7 +32,7 @@ public class CollectionMenu implements AbstractMenu
     }
 
     @Override
-    public void selectOptionByCommand(String command) throws InvalidDeck, DeckNameAlreadyExist, CardNotFound, DeckNotFound, DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready
+    public void selectOptionByCommand(String command) throws InvalidDeck, DeckNameAlreadyExist, CardNotFound, DeckNotFound, DeckIsFull, DeckHasHeroAlready, CardExistInDeckAlready, DeckHasPassiveAlready, ValidateDeck
     {
         if (command.matches("Exit"))
             Controller.getInstance().changeCurrentMenuTo(MainMenu.getInstance());
@@ -81,17 +81,17 @@ public class CollectionMenu implements AbstractMenu
     private void createDeck(String command) throws DeckNameAlreadyExist
     {
         String deckName = command.split(" ")[2];
-        if (Controller.getInstance().getCurrentPlayer().findDeck(deckName) == null)
-            Controller.getInstance().getCurrentPlayer().addNewDeck(deckName);
+        if (Controller.getInstance().getCurrentPlayer().findDeck(deckName) != null)
+            throw new DeckNameAlreadyExist();
 
-        throw new DeckNameAlreadyExist();
+        Controller.getInstance().getCurrentPlayer().addNewDeck(deckName);
     }
 
-    private void selectDeckAsMainDeck(String deckName) throws DeckNameAlreadyExist, InvalidDeck
+    private void selectDeckAsMainDeck(String deckName) throws DeckNameAlreadyExist, InvalidDeck, DeckNotFound
     {
         Player.Deck intendedDeck = Controller.getInstance().getCurrentPlayer().findDeck(deckName);
         if (intendedDeck == null)
-            throw new DeckNameAlreadyExist();
+            throw new DeckNotFound();
         if (!intendedDeck.isValidDeck())
             throw new InvalidDeck();
 
@@ -115,19 +115,27 @@ public class CollectionMenu implements AbstractMenu
         intendedDeck.addCardToDeck(intendedCard);
     }
 
-    private void removeCard(String command) throws CardNotFound
+    private void removeCard(String command) throws CardNotFound, DeckNotFound
     {
         int cardID = Integer.parseInt(command.split(" ")[1]);
         String deckName = command.split(" ")[4];
         Player.Deck intendedDeck = Controller.getInstance().getCurrentPlayer().findDeck(deckName);
+        if(intendedDeck == null)
+            throw new DeckNotFound();
+
         intendedDeck.removeCardFromDeck(cardID);
     }
 
-    private void isValidDeck(String command) throws InvalidDeck
+    private void isValidDeck(String command) throws InvalidDeck, DeckNotFound, ValidateDeck
     {
         String deckName = command.split(" ")[2];
+        if(Controller.getInstance().getCurrentPlayer().findDeck(deckName) == null)
+            throw new DeckNotFound();
         if (!Controller.getInstance().getCurrentPlayer().findDeck(deckName).isValidDeck())
             throw new InvalidDeck();
+        else
+            throw new ValidateDeck();
+
     }
 
     @Override

@@ -17,13 +17,22 @@ public class Minion extends Warrior
     @Override
     public Object clone() throws CloneNotSupportedException
     {
-        return new Minion(name, manaCost, power, health, price, attackType, attackRadius, ((Spell) specialSpell.clone()));
+        Minion minion = null;
+        if (this.getSpecialSpell() != null)
+            minion = new Minion(name, manaCost, power, health, price, attackType, attackRadius, ((Spell) specialSpell.clone()));
+        else
+            minion = new Minion(name, manaCost, power, health, price, attackType, attackRadius, null);
+
+        minion.ownerPlayer = this.ownerPlayer;
+
+        return minion;
     }
 
     public String toShow()
     {
-        return String.format("(Minion) Name : %s - Class : %s - AP : %d - HP : %d - MP : %d - SellCost : %d - Buy Cost : %d \n",
-                this.name, this.attackType.toString(), this.power, this.health, this.manaCost, this.price / 2, this.price);
+        return String.format
+                ("(Minion) Name : %s - Class : %s - AP : %d - HP : %d - MP : %d - SellCost : %d - Buy Cost : %d - CardID : %d\n",
+                        this.name, this.attackType.toString(), this.power, this.health, this.manaCost, this.price / 2, this.price, this.ID);
     }
 
     public void attack(Card defender)
