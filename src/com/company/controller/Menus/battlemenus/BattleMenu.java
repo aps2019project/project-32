@@ -77,7 +77,7 @@ public class BattleMenu implements AbstractMenu
     public String toShowMenu()
     {
         return "0.Help\n1.Game Information\n2.My Minions\n3.Opponent Minions\n4.Show Card Information\n5.Select\n6.Enter GraveYard\n" +
-                "7.End Game\n8.End Turn\n9.Show Collectible\n10.Show Hand\n11.Inset\n12.Determent\n";
+                "7.End Game\n8.End Turn\n9.Show Collectible\n10.Show Hand\n11.Insert\n12.Determent\n";
     }
 
     public void selectActions(int cardID) throws UnSelectable

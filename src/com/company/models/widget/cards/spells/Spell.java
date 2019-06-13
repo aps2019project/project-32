@@ -13,8 +13,7 @@ import com.company.models.widget.cards.spells.effects.Effectable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Spell extends Card
-{
+public class Spell extends Card {
     protected int manaCost;
     protected int coolDown;
     protected int coolDownRemaining;
@@ -27,8 +26,7 @@ public class Spell extends Card
     private Area area;
     private ArrayList<Effectable> effects = new ArrayList<>();
 
-    public Spell(Area area, FOE foe, TargetType targetType, ActiveTime activeTime, Type type, String name, int price, int manaCost, int coolDown, int spellRange, Effectable... effectables)
-    {
+    public Spell(Area area, FOE foe, TargetType targetType, ActiveTime activeTime, Type type, String name, int price, int manaCost, int coolDown, int spellRange, Effectable... effectables) {
         super(name, price);
         this.area = area;
         this.foe = foe;
@@ -38,12 +36,12 @@ public class Spell extends Card
         this.coolDown = coolDown;
         this.spellRange = spellRange;
         this.type = type;
-        effects.addAll(Arrays.asList(effectables));
+        if (effectables != null)
+            effects.addAll(Arrays.asList(effectables));
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException
-    {
+    public Object clone() throws CloneNotSupportedException {
         ArrayList<Effectable> clonedEffects = new ArrayList<>();
         for (Effectable effect : effects)
             clonedEffects.add(((Effectable) effect.clone()));
@@ -57,8 +55,7 @@ public class Spell extends Card
     }
 
     @Override
-    public String toShow()
-    {
+    public String toShow() {
         return String.format("(Spell) - Name : %s – " +
                 "MP : %d - CoolDown : %d - " +
                 "Sell Cost : %d - " +
@@ -66,15 +63,12 @@ public class Spell extends Card
                 "ID : %d\n", this.name, this.manaCost, this.coolDown, this.price / 2, this.price, this.ID);
     }
 
-    public void generalDo(Battle.Map map, Position generalPosition) throws Exception
-    {
+    public void generalDo(Battle.Map map, Position generalPosition) throws Exception {
         doForArea(map, generalPosition);
     }
 
-    private void doForArea(Battle.Map map, Position positionInserted) throws Exception
-    {
-        switch (this.area)
-        {
+    private void doForArea(Battle.Map map, Position positionInserted) throws Exception {
+        switch (this.area) {
             case onCol:
 
                 for (int i = 0; i < 5; i++)
@@ -120,18 +114,14 @@ public class Spell extends Card
             case randomWarrior:
 
                 boolean hasException = true;
-                while (hasException)
-                {
+                while (hasException) {
                     Position position;
-                    try
-                    {
+                    try {
                         position = Position.getRandomCaptured();
                         checkingWarriorType(BattleMenu.getInstance().getCurrentBattle()
                                 .getBattleMap().getWarriorsOnMap()[position.row][position.col]);
                         hasException = false;
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         hasException = true;
                     }
                 }
@@ -150,10 +140,8 @@ public class Spell extends Card
         }
     }
 
-    private void checkingWarriorType(Warrior warrior) throws Exception
-    {
-        switch (targetType)
-        {
+    private void checkingWarriorType(Warrior warrior) throws Exception {
+        switch (targetType) {
             case onMinion:
                 if (warrior instanceof Minion)
                     checkingFOE(warrior);
@@ -177,10 +165,8 @@ public class Spell extends Card
         }
     }
 
-    private void checkingFOE(Warrior warrior) throws Exception
-    {
-        switch (foe)
-        {
+    private void checkingFOE(Warrior warrior) throws Exception {
+        switch (foe) {
             case friend:
                 if (warrior.getOwnerPlayer().equals(this.ownerPlayer))
                     addAndDoOnce(warrior);
@@ -201,99 +187,81 @@ public class Spell extends Card
         }
     }
 
-    private void addAndDoOnce(Warrior warrior)
-    {
+    private void addAndDoOnce(Warrior warrior) {
         addEffects(warrior);
         doOnce(warrior);
     }
 
-    private void addEffects(Warrior warrior)
-    {
+    private void addEffects(Warrior warrior) {
         for (Effectable effect : this.effects)
             warrior.getEffectsOnWarrior().add(effect);
     }
 
-    private void doOnce(Warrior warrior)
-    {
+    private void doOnce(Warrior warrior) {
         warrior.doEffect();
         effects.removeIf(effectable -> effectable.getTurnRemaining() == 0);
     }
 
-    private void addToWarrior(Warrior warrior) throws CloneNotSupportedException
-    {
+    private void addToWarrior(Warrior warrior) throws CloneNotSupportedException {
         for (Effectable effect : this.effects)
             warrior.getEffectsOnWarrior().add(((Effectable) effect.clone()));
     }
 
-    public int getManaCost()
-    {
+    public int getManaCost() {
         return manaCost;
     }
 
-    public int getCoolDown()
-    {
+    public int getCoolDown() {
         return coolDown;
     }
 
-    public int getCoolDownRemaining()
-    {
+    public int getCoolDownRemaining() {
         return coolDownRemaining;
     }
 
-    public void decreaseCoolDownRemaining()
-    {
+    public void decreaseCoolDownRemaining() {
         if (coolDownRemaining != 0)
             coolDownRemaining--;
     }
 
-    public void setCoolDownRemaining(int coolDownRemaining)
-    {
+    public void setCoolDownRemaining(int coolDownRemaining) {
         this.coolDownRemaining = coolDownRemaining;
     }
 
 
-    public int getSpellRange()
-    {
+    public int getSpellRange() {
         return spellRange;
     }
 
-    public void setSpellRange(int spellRange)
-    {
+    public void setSpellRange(int spellRange) {
         this.spellRange = spellRange;
     }
 
-    public ActiveTime getActiveTime()
-    {
+    public ActiveTime getActiveTime() {
         return activeTime;
     }
 
-    public Type getType()
-    {
+    public Type getType() {
         return type;
     }
 
-    public ArrayList<Effectable> getEffects()
-    {
+    public ArrayList<Effectable> getEffects() {
         return effects;
     }
 
-    public void setEffects(ArrayList<Effectable> effects)
-    {
+    public void setEffects(ArrayList<Effectable> effects) {
         this.effects = effects;
     }
 
-    public FOE getFoe()
-    {
+    public FOE getFoe() {
         return foe;
     }
 
-    public TargetType getTargetType()
-    {
+    public TargetType getTargetType() {
         return targetType;
     }
 
-    public Area getArea()
-    {
+    public Area getArea() {
         return area;
     }
 

@@ -24,7 +24,7 @@ public class StartBattleMenu implements AbstractMenu
             Controller.getInstance().changeCurrentMenuTo(StoryModeMenu.getInstance());
 
         else if (command.matches("Custom Game"))
-            Controller.getInstance().changeCurrentMenuTo(StoryModeMenu.getInstance());
+            Controller.getInstance().changeCurrentMenuTo(CustomGameMenu.getInstance());
 
         else if (command.matches("Multy Player"))
             multiPlayer();
