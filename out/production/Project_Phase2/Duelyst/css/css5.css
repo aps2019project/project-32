@@ -1,0 +1,55 @@
+@font-face {
+    font-family: 'Crushed';
+    src: url('Crushed-Regular.ttf');
+}
+
+.root {
+    -fx-font-size: 24pt;
+    -fx-font-family: Crushed;
+    -fx-background-image: url("counterplay-games-chapter-13-dawn-of-vetruvians1-1600-logo.jpg");
+    -fx-background-size: stretch;
+}
+
+.button {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-text-fill: #c4c4c4;
+    -fx-font-size: 20pt;
+    -fx-font-family: Crushed;
+    -fx-background-insets: 2 2 2 2;
+    -fx-background-radius: 15 15 15 15;
+}
+
+
+.button:focused {
+    -fx-background-color: #8F5681;
+    -fx-text-fill: black;
+    -fx-border-width: 1, 1;
+    -fx-border-style: solid;
+    -fx-border-insets: 2 2 2 2;
+    -fx-border-radius: 15 15 15 15;
+
+}
+
+
+#button1:focused {
+}
+
+#button2:focused {
+}
+
+#button3:focused {
+}
+#button4:focused {
+}
+#button5:focused {
+}
+#button6:focused {
+}
+
+.button:pressed {
+    -fx-background-color: #8F5681;
+    -fx-translate-y: 4px;
+    -fx-text-fill: black;
+}

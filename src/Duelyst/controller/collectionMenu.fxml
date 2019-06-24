@@ -1,0 +1,2018 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="stackPane" onKeyPressed="#mainMenuAct" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Duelyst.controller.CollectionHandler">
+    <GridPane fx:id="gridPane" prefHeight="400.0" prefWidth="600.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="551.0" minWidth="10.0" prefWidth="104.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="551.0" minWidth="10.0" prefWidth="95.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="551.0" minWidth="10.0" prefWidth="95.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints maxHeight="90.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="273.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+        <children>
+            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <children>
+                    <Button id="button-add" fx:id="addButton" mnemonicParsing="false" onKeyPressed="#handleOnKeyPressedAdd" onMouseClicked="#addBtnAct" onMouseEntered="#addBtnActFocus" prefHeight="90.0" prefWidth="90.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <GridPane.margin>
+                            <Insets left="10.0" right="10.0" />
+                        </GridPane.margin>
+                        <graphic>
+                            <ImageView fx:id="addImage" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="Duelyst/css/addWhite.png" />
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                    <Button id="delete-button" fx:id="deleteButton" mnemonicParsing="false" onKeyPressed="#handleOnKeyPressedDelete" onMouseClicked="#deleteBtnAct" onMouseEntered="#deleteBtnActFocus" prefHeight="50.0" prefWidth="300.0">
+                        <GridPane.margin>
+                            <Insets left="10.0" right="10.0" />
+                        </GridPane.margin>
+                        <graphic>
+                            <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="Duelyst/css/deleteWhite.png" />
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                    <Button id="create-button" fx:id="createButton" mnemonicParsing="false" onKeyPressed="#handleOnKeyPressedCreate" onMouseClicked="#createBtnAct" onMouseEntered="#createBtnActFocus" prefHeight="50.0" prefWidth="300.0" GridPane.columnIndex="1">
+                        <GridPane.margin>
+                            <Insets left="10.0" right="10.0" />
+                        </GridPane.margin>
+                        <graphic>
+                            <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="Duelyst/css/createWhite.png" />
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                    <Button id="cross-button" fx:id="crossButton" mnemonicParsing="false" onKeyPressed="#handleOnKeyPressedCross" onMouseClicked="#crossBtnAct" onMouseEntered="#crossBtnActFocus" prefHeight="50.0" prefWidth="300.0" GridPane.columnIndex="3">
+                        <GridPane.margin>
+                            <Insets left="10.0" right="10.0" />
+                        </GridPane.margin>
+                        <graphic>
+                            <ImageView fx:id="crossImage" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="Duelyst/css/crossWhite.png" />
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </children>
+            </GridPane>
+            <ScrollPane fx:id="heroes" prefWidth="605.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <content>
+                    <AnchorPane>
+                        <children>
+                            <HBox fx:id="heroHBox" prefWidth="200.0">
+                                <children>
+                                    <VBox id="boxNotBoughtStyle" fx:id="hero1Box" onMouseClicked="#hero1BoxClicked" prefWidth="300.0">
+                                        <children>
+                                            <CheckBox fx:id="hero1" mnemonicParsing="false" onMouseClicked="#hero1CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/hero.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ARASH">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="hero2Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#hero2BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="hero2" mnemonicParsing="false" onMouseClicked="#hero2CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/hero.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="DRAGON">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="hero3Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#hero3BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="hero3" mnemonicParsing="false" onMouseClicked="#hero3CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/hero.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ESFANDYAR">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="hero4Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#hero4BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="hero4" mnemonicParsing="false" onMouseClicked="#hero4CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/hero.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="KAVEH">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="hero5Box" layoutX="379.0" layoutY="10.0" onMouseClicked="#hero5BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="hero5" mnemonicParsing="false" onMouseClicked="#hero5CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/hero.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="LEGEND">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="hero6Box" layoutX="502.0" layoutY="10.0" onMouseClicked="#hero6BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="hero6" mnemonicParsing="false" onMouseClicked="#hero6CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/hero.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="RAKHSH">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="hero7Box" layoutX="625.0" layoutY="10.0" onMouseClicked="#hero7BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="hero7" mnemonicParsing="false" onMouseClicked="#hero7CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/hero.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ROSTAM">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="hero8Box" layoutX="748.0" layoutY="10.0" onMouseClicked="#hero8BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="hero8" mnemonicParsing="false" onMouseClicked="#hero8CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/hero.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="SIMURGH">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="hero9Box" layoutX="871.0" layoutY="10.0" onMouseClicked="#hero9BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="hero9" mnemonicParsing="false" onMouseClicked="#hero9CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/hero.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="WHITE BOGEY">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="hero10Box" layoutX="994.0" layoutY="10.0" onMouseClicked="#hero10BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="hero10" mnemonicParsing="false" onMouseClicked="#hero10CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/hero.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ZAHHAK">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+                        </children>
+                    </AnchorPane>
+                </content>
+            </ScrollPane>
+            <GridPane GridPane.columnIndex="1">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <children>
+                    <Button id="button1" fx:id="button1" mnemonicParsing="false" onKeyPressed="#handleOnKeyPressedHeroes" onMouseClicked="#showHeroes" onMouseEntered="#heroesBtnActFocus" prefHeight="50.0" prefWidth="300.0" text="Hero">
+                        <GridPane.margin>
+                            <Insets left="10.0" right="10.0" />
+                        </GridPane.margin>
+                    </Button>
+                    <Button id="button2" fx:id="button2" mnemonicParsing="false" onKeyPressed="#handleOnKeyPressedMinions" onMouseClicked="#showMinions" onMouseEntered="#minionsBtnActFocus" prefHeight="50.0" prefWidth="159.0" text="Minion" GridPane.columnIndex="1">
+                        <GridPane.margin>
+                            <Insets left="10.0" right="10.0" />
+                        </GridPane.margin>
+                    </Button>
+                    <Button id="button3" fx:id="button3" mnemonicParsing="false" onKeyPressed="#handleOnKeyPressedSpells" onMouseClicked="#showSpells" onMouseEntered="#spellsBtnActFocus" prefHeight="50.0" prefWidth="300.0" text="Spell" GridPane.columnIndex="2">
+                        <GridPane.margin>
+                            <Insets left="10.0" right="10.0" />
+                        </GridPane.margin>
+                    </Button>
+                    <Button id="button4" fx:id="button4" mnemonicParsing="false" onKeyPressed="#handleOnKeyPressedItems" onMouseClicked="#showItems" onMouseEntered="#itemsBtnActFocus" prefHeight="50.0" prefWidth="300.0" text="Passive" GridPane.columnIndex="3">
+                        <GridPane.margin>
+                            <Insets left="10.0" right="10.0" />
+                        </GridPane.margin>
+                    </Button>
+                </children>
+            </GridPane>
+            <GridPane GridPane.columnIndex="3">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <children>
+                    <ComboBox fx:id="deckList" prefHeight="70.0" GridPane.columnIndex="1" />
+                    <Button fx:id="setMainButton" mnemonicParsing="false" onKeyPressed="#handleOnKeyPressedSetMain" onMouseClicked="#setMainBtnAct" onMouseEntered="#setMainBtnActFocus" prefHeight="70.0" style="-fx-font-size: 20px" text="SET AS MAIN DECK" GridPane.columnIndex="0">
+                        <GridPane.margin>
+                            <Insets left="10.0" right="10.0" />
+                        </GridPane.margin>
+                    </Button>
+                </children>
+            </GridPane>
+            <GridPane GridPane.columnIndex="3" GridPane.rowIndex="2">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+            </GridPane>
+            <ScrollPane prefWidth="500.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                <content>
+                    <AnchorPane>
+                        <children>
+                            <VBox fx:id="deckBox">
+                                <children>
+                                    <!--<HBox id="boxNotBoughtStyle">
+                                        <children>
+                                            <CheckBox alignment="CENTER" mnemonicParsing="false">
+                                                <HBox.margin>
+                                                    <Insets top="40.0" left="20"/>
+                                                </HBox.margin>
+                                            </CheckBox>
+                                            <ImageView fitHeight="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/abc.jpg"/>
+                                                </image>
+                                            </ImageView>
+                                            <Label id="label-deck" text="ARASH">
+                                                <HBox.margin>
+                                                    <Insets left="20.0" right="20.0" top="70.0"/>
+                                                </HBox.margin>
+                                            </Label>
+                                        </children>
+                                    </HBox>-->
+                                </children>
+                            </VBox>
+                        </children>
+                    </AnchorPane>
+                </content>
+            </ScrollPane>
+            <ScrollPane fx:id="minions" layoutX="46.0" layoutY="74.0" prefWidth="605.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <content>
+                    <AnchorPane>
+                        <children>
+                            <HBox fx:id="minionHBox" prefWidth="200.0">
+                                <children>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion1Box" onMouseClicked="#minion1BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion1" mnemonicParsing="false" onMouseClicked="#minion1CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ARZHANG BOGEY">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion2Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#minion2BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion2" mnemonicParsing="false" onMouseClicked="#minion2CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ASHKBOUS">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion3Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#minion3BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion3" mnemonicParsing="false" onMouseClicked="#minion3CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="BAHMAN">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion4Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#minion4BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion4" mnemonicParsing="false" onMouseClicked="#minion4CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="BLACK BOGEY">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion5Box" layoutX="379.0" layoutY="10.0" onMouseClicked="#minion5BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion5" mnemonicParsing="false" onMouseClicked="#minion5CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="CATAPULT GIANT">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion6Box" layoutX="502.0" layoutY="10.0" onMouseClicked="#minion6BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion6" mnemonicParsing="false" onMouseClicked="#minion6CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="COLD GRANDMA">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion7Box" layoutX="625.0" layoutY="10.0" onMouseClicked="#minion7BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion7" mnemonicParsing="false" onMouseClicked="#minion7CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="EAGLE">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion8Box" layoutX="748.0" layoutY="10.0" onMouseClicked="#minion8BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion8" mnemonicParsing="false" onMouseClicked="#minion8CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ELF">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion9Box" layoutX="871.0" layoutY="10.0" onMouseClicked="#minion9BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion9" mnemonicParsing="false" onMouseClicked="#minion9CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="FIERY DRAGON">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion10Box" layoutX="994.0" layoutY="10.0" onMouseClicked="#minion10BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion10" mnemonicParsing="false" onMouseClicked="#minion10CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="GIANT COLOSSUS">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion11Box" onMouseClicked="#minion11BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion11" mnemonicParsing="false" onMouseClicked="#minion11CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="GIANT KING">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion12Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#minion12BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion12" mnemonicParsing="false" onMouseClicked="#minion12CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="GIANT MAGICIAN">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion13Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#minion13BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion13" mnemonicParsing="false" onMouseClicked="#minion13CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="GIANT SNAKE">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion14Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#minion14BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion14" mnemonicParsing="false" onMouseClicked="#minion14CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="GIV">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion15Box" layoutX="379.0" layoutY="10.0" onMouseClicked="#minion15BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion15" mnemonicParsing="false" onMouseClicked="#minion15CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="HOG RIDER BOGEY">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion16Box" layoutX="502.0" layoutY="10.0" onMouseClicked="#minion16BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion16" mnemonicParsing="false" onMouseClicked="#minion16CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="IRAJ">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion17Box" layoutX="625.0" layoutY="10.0" onMouseClicked="#minion17BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion17" mnemonicParsing="false" onMouseClicked="#minion17CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="LUPIN LION">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion18Box" layoutX="748.0" layoutY="10.0" onMouseClicked="#minion18BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion18" mnemonicParsing="false" onMouseClicked="#minion18CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="MAGICIAN">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion19Box" layoutX="871.0" layoutY="10.0" onMouseClicked="#minion19BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion19" mnemonicParsing="false" onMouseClicked="#minion19CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ONE EYE GIANT">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion20Box" layoutX="994.0" layoutY="10.0" onMouseClicked="#minion20BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion20" mnemonicParsing="false" onMouseClicked="#minion20CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="PANTHER">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion21Box" onMouseClicked="#minion21BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion21" mnemonicParsing="false" onMouseClicked="#minion21CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="PERSIAN ARCHER">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion22Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#minion22BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion22" mnemonicParsing="false" onMouseClicked="#minion22CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="PERSIAN GENERALISSIMO">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion23Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#minion23BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion23" mnemonicParsing="false" onMouseClicked="#minion23CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="PERSIAN GLADIATOR">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion24Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#minion24BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion24" mnemonicParsing="false" onMouseClicked="#minion24CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="PERSIAN HORSEMAN">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion25Box" layoutX="379.0" layoutY="10.0" onMouseClicked="#minion25BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion25" mnemonicParsing="false" onMouseClicked="#minion25CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="PERSIAN SPEAR">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion26Box" layoutX="502.0" layoutY="10.0" onMouseClicked="#minion26BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion26" mnemonicParsing="false" onMouseClicked="#minion26CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="PERSIAN SWORDSMAN">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion27Box" layoutX="625.0" layoutY="10.0" onMouseClicked="#minion27BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion27" mnemonicParsing="false" onMouseClicked="#minion27CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="PIRAN">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion28Box" layoutX="748.0" layoutY="10.0" onMouseClicked="#minion28BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion28" mnemonicParsing="false" onMouseClicked="#minion28CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="POISON SNAKE">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion29Box" layoutX="871.0" layoutY="10.0" onMouseClicked="#minion29BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion29" mnemonicParsing="false" onMouseClicked="#minion29CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="SIAVASH">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion30Box" layoutX="994.0" layoutY="10.0" onMouseClicked="#minion30BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion30" mnemonicParsing="false" onMouseClicked="#minion30CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="STEEL ARMOR">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion31Box" onMouseClicked="#minion31BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion31" mnemonicParsing="false" onMouseClicked="#minion31CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="TURANIAN ARCHER">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion32Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#minion32BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion32" mnemonicParsing="false" onMouseClicked="#minion32CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="TURANIAN PRINCE">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion33Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#minion33BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion33" mnemonicParsing="false" onMouseClicked="#minion33CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="TURANIAN SPEAR">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion34Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#minion34BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion34" mnemonicParsing="false" onMouseClicked="#minion34CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="TURANIAN SPY">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion35Box" layoutX="379.0" layoutY="10.0" onMouseClicked="#minion35BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion35" mnemonicParsing="false" onMouseClicked="#minion35CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="TURANIAN STONE HOCK">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion36Box" layoutX="502.0" layoutY="10.0" onMouseClicked="#minion36BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion36" mnemonicParsing="false" onMouseClicked="#minion36CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="TURANIAN SWAMPY">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion37Box" layoutX="625.0" layoutY="10.0" onMouseClicked="#minion37BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion37" mnemonicParsing="false" onMouseClicked="#minion37CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="TWO HEAD GIANT">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion38Box" layoutX="748.0" layoutY="10.0" onMouseClicked="#minion38BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion38" mnemonicParsing="false" onMouseClicked="#minion38CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="WHITE WOLF">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion39Box" layoutX="871.0" layoutY="10.0" onMouseClicked="#minion39BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion39" mnemonicParsing="false" onMouseClicked="#minion39CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="WILD HOG">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="minion40Box" layoutX="994.0" layoutY="10.0" onMouseClicked="#minion40BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="minion40" mnemonicParsing="false" onMouseClicked="#minion40CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="WOLF">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+                        </children>
+                    </AnchorPane>
+                </content>
+            </ScrollPane>
+            <ScrollPane fx:id="spells" focusTraversable="false" layoutX="46.0" layoutY="74.0" prefWidth="605.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <content>
+                    <AnchorPane>
+                        <children>
+                            <HBox fx:id="spellHBox" prefWidth="200.0">
+                                <children>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell1Box" onMouseClicked="#spell1BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell1" mnemonicParsing="false" onMouseClicked="#spell1CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ALL ATTACK">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell2Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#spell2BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell2" mnemonicParsing="false" onMouseClicked="#spell2CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ALL DISARM">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell3Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#spell3BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell3" mnemonicParsing="false" onMouseClicked="#spell3CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ALL POISON">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell4Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#spell4BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell4" mnemonicParsing="false" onMouseClicked="#spell4CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ALL POWER">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell5Box" layoutX="379.0" layoutY="10.0" onMouseClicked="#spell5BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell5" mnemonicParsing="false" onMouseClicked="#spell5CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="AREA DISPEL">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell6Box" layoutX="502.0" layoutY="10.0" onMouseClicked="#spell6BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell6" mnemonicParsing="false" onMouseClicked="#spell6CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="DISPEL">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell7Box" layoutX="625.0" layoutY="10.0" onMouseClicked="#spell7BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell7" mnemonicParsing="false" onMouseClicked="#spell7CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="EMPOWER">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell8Box" layoutX="748.0" layoutY="10.0" onMouseClicked="#spell8BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell8" mnemonicParsing="false" onMouseClicked="#spell8CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="FIRE BALL">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell9Box" layoutX="871.0" layoutY="10.0" onMouseClicked="#spell9BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell9" mnemonicParsing="false" onMouseClicked="#spell9CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="GOD STRENGTH">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell10Box" layoutX="994.0" layoutY="10.0" onMouseClicked="#spell10BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell10" mnemonicParsing="false" onMouseClicked="#spell10CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="HEALTH WITH PROFIT">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell11Box" onMouseClicked="#spell11BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell11" mnemonicParsing="false" onMouseClicked="#spell11CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="HELL FIRE">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell12Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#spell12BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell12" mnemonicParsing="false" onMouseClicked="#spell12CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="KINGS GUARD">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell13Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#spell13BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell13" mnemonicParsing="false" onMouseClicked="#spell13CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="LIGHTING BOLT">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell14Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#spell14BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell14" mnemonicParsing="false" onMouseClicked="#spell14CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="MADNESS">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell15Box" layoutX="379.0" layoutY="10.0" onMouseClicked="#spell15BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell15" mnemonicParsing="false" onMouseClicked="#spell15CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="POISON LAKE">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell16Box" layoutX="502.0" layoutY="10.0" onMouseClicked="#spell16BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell16" mnemonicParsing="false" onMouseClicked="#spell16CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="POWER UP">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell17Box" layoutX="625.0" layoutY="10.0" onMouseClicked="#spell17BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell17" mnemonicParsing="false" onMouseClicked="#spell17CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="SACRIFICE">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell18Box" layoutX="748.0" layoutY="10.0" onMouseClicked="#spell18BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell18" mnemonicParsing="false" onMouseClicked="#spell18CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="SHOCK">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell19Box" layoutX="871.0" layoutY="10.0" onMouseClicked="#spell19BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell19" mnemonicParsing="false" onMouseClicked="#spell19CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="TOTAL DISARM">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="spell20Box" layoutX="994.0" layoutY="10.0" onMouseClicked="#spell20BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="spell20" mnemonicParsing="false" onMouseClicked="#spell20CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="WEAKENING">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+                        </children>
+                    </AnchorPane>
+                </content>
+            </ScrollPane>
+            <ScrollPane fx:id="items" layoutX="46.0" layoutY="74.0" prefWidth="605.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <content>
+                    <AnchorPane>
+                        <children>
+                            <HBox fx:id="itemHBox" prefWidth="200.0">
+                                <children>
+                                    <VBox id="boxNotBoughtStyle" fx:id="item1Box" onMouseClicked="#item1BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="item1" mnemonicParsing="false" onMouseClicked="#item1CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="ASSASSINATION DAGGER">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="item2Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#item2BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="item2" mnemonicParsing="false" onMouseClicked="#item2CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="BAPTISM">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="item3Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#item3BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="item3" mnemonicParsing="false" onMouseClicked="#item3CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="CROWN OF WISDOM">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="item4Box" layoutX="10.0" layoutY="10.0" onMouseClicked="#item4BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="item4" mnemonicParsing="false" onMouseClicked="#item4CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="DAMOL ARCHERY">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="item5Box" layoutX="379.0" layoutY="10.0" onMouseClicked="#item5BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="item5" mnemonicParsing="false" onMouseClicked="#item5CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="KING WISDOM">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="item6Box" layoutX="502.0" layoutY="10.0" onMouseClicked="#item6BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="item6" mnemonicParsing="false" onMouseClicked="#item6CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="POISONOUS DAGGER">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="item7Box" layoutX="625.0" layoutY="10.0" onMouseClicked="#item7BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="item7" mnemonicParsing="false" onMouseClicked="#item7CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="SHAME EMBLEM">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="item8Box" layoutX="748.0" layoutY="10.0" onMouseClicked="#item8BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="item8" mnemonicParsing="false" onMouseClicked="#item8CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="SHOCK HAMMER">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="item9Box" layoutX="871.0" layoutY="10.0" onMouseClicked="#item9BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="item9" mnemonicParsing="false" onMouseClicked="#item9CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="SIMURGH PLUME">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="item10Box" layoutX="994.0" layoutY="10.0" onMouseClicked="#item10BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="item10" mnemonicParsing="false" onMouseClicked="#item10CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="SOUL EATER">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                    <VBox id="boxNotBoughtStyle" fx:id="item11Box" layoutX="994.0" layoutY="10.0" onMouseClicked="#item11BoxClicked" prefWidth="100.0">
+                                        <children>
+                                            <CheckBox fx:id="item11" mnemonicParsing="false" onMouseClicked="#item11CheckBox" textAlignment="CENTER">
+                                                <padding>
+                                                    <Insets bottom="40" left="30.0" right="30.0" />
+                                                </padding>
+                                            </CheckBox>
+                                            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                <image>
+                                                    <Image url="Duelyst/css/avatar3.jpg" />
+                                                </image>
+                                                <VBox.margin>
+                                                    <Insets left="5.0" right="5.0" />
+                                                </VBox.margin>
+                                            </ImageView>
+                                            <Label text="TERROR HOOD">
+                                                <VBox.margin>
+                                                    <Insets left="10.0" top="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+                        </children>
+                    </AnchorPane>
+                </content>
+            </ScrollPane>
+        </children>
+    </GridPane>
+</StackPane>
