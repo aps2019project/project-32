@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="project:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/project_jar</output-path>
+    <root id="archive" name="project.jar">
+      <element id="module-output" name="project" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/JavaXCapture/jniwrap-3.12.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/JavaXCapture/jxcapture-3.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/JavaXCapture/jxcapture-samples.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/JavaXCapture/jxcapturedemo.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/JavaXCapture/slf4j-api-1.5.8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/JavaXCapture/slf4j-simple-1.5.8.jar" path-in-jar="/" />
+      <element id="library" level="project" name="junit-4.12" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/controlsfx-8.40.11.jar" path-in-jar="/" />
+      <element id="library" level="project" name="jmockit-0.999.18" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/jfoenix-8.0.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/gson-2.8.2.jar" path-in-jar="/" />
+      <element id="library" level="project" name="jar_files" />
+    </root>
+  </artifact>
+</component>

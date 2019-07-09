@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="jniwrap-3.12">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/JavaXCapture/jniwrap-3.12.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/JavaXCapture/jxcapture-3.5.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/JavaXCapture/jxcapture-samples.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/JavaXCapture/jxcapturedemo.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/JavaXCapture/slf4j-api-1.5.8.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/JavaXCapture/slf4j-simple-1.5.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
